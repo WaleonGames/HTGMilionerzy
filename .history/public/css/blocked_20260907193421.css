@@ -1,0 +1,170 @@
+/* =========================
+   BLOCKED / STATUS STATES
+========================= */
+
+/* =========================
+   BASE
+========================= */
+
+.is-blocked,
+.is-probability,
+.is-coming-soon {
+  position: relative;
+}
+
+/* =========================
+   BLOCKED
+========================= */
+
+.is-blocked {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+
+.is-blocked::after {
+  content: "Zablokowane";
+
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  border-radius: inherit;
+
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+
+  pointer-events: none;
+}
+
+/* =========================
+   PROBABILITY
+========================= */
+
+.is-probability::after {
+  content: attr(data-probability);
+
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 26px;
+  padding: 0 9px;
+
+  border-radius: 999px;
+
+  background: var(--design-surface);
+  color: var(--design-text);
+
+  border: 1px solid var(--design-border);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  box-shadow: var(--design-shadow-sm);
+
+  pointer-events: none;
+}
+
+/* =========================
+   COMING SOON
+========================= */
+
+.is-coming-soon {
+  pointer-events: none;
+  user-select: none;
+}
+
+.is-coming-soon::after {
+  content: "Wkrótce";
+
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  border-radius: inherit;
+
+  background: rgba(0, 0, 0, 0.48);
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+
+  pointer-events: none;
+}
+
+/* =========================
+   DISABLED ELEMENT
+========================= */
+
+.blocked-disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* =========================
+   STATUS BADGE
+========================= */
+
+.blocked-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 24px;
+  padding: 0 8px;
+
+  border: 1px solid var(--design-border);
+  border-radius: 999px;
+
+  background: var(--design-surface-soft);
+  color: var(--design-muted);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================
+   STATUS TYPES
+========================= */
+
+.blocked-status.blocked {
+  color: var(--design-danger);
+  border-color: var(--design-danger-border);
+  background: var(--design-danger-light);
+}
+
+.blocked-status.probability {
+  color: var(--design-primary);
+  border-color: var(--design-primary);
+}
+
+.blocked-status.coming-soon {
+  color: var(--design-muted);
+  background: var(--design-surface-soft);
+}

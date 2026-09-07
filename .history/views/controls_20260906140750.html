@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <title>Milionerzy - Sterowanie</title>
+
+  <link rel="stylesheet" href="../public/css/design.css">
+  <link rel="stylesheet" href="../public/css/game.css">
+  <link rel="stylesheet" href="../public/css/controls.css">
+</head>
+<body class="controls-window">
+  <div class="controls-app">
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="controls-header">
+      <div>
+        <span class="game-eyebrow">
+          HOST
+        </span>
+
+        <h1>
+          Sterowanie
+        </h1>
+      </div>
+
+      <button
+        id="attachControlsButton"
+        class="game-icon-button"
+        type="button"
+        title="Przywróć sterowanie do okna gry"
+        aria-label="Przywróć sterowanie do okna gry"
+      >
+        ↙
+      </button>
+    </header>
+
+    <!-- =========================
+         CONTENT
+    ========================= -->
+
+    <main class="controls-content">
+
+      <!-- =========================
+           PANEL BOCZNY
+      ========================= -->
+
+      <section class="game-control-section">
+        <h3>
+          Panel boczny
+        </h3>
+
+        <button
+          id="toggleSidebarButton"
+          class="game-button"
+          type="button"
+        >
+          Panel boczny
+        </button>
+
+        <div class="game-control-subsection">
+          <span class="game-control-label">
+            Koła ratunkowe
+          </span>
+
+          <div
+            class="game-display-controls game-display-controls-2"
+          >
+            <button
+              id="lifeline5050Button"
+              class="game-button"
+              type="button"
+            >
+              50:50
+            </button>
+
+            <button
+              id="lifelineAudienceButton"
+              class="game-button"
+              type="button"
+            >
+              Publiczność
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+           PANEL GŁÓWNY
+      ========================= -->
+
+      <section class="game-control-section">
+        <h3>
+          Panel główny
+        </h3>
+
+        <button
+          id="showMainPanelButton"
+          class="game-button game-button-primary"
+          type="button"
+        >
+          Pokaż menu główne
+        </button>
+
+        <div class="game-control-subsection">
+          <span class="game-control-label">
+            Pytanie
+          </span>
+
+          <div
+            class="game-display-controls game-display-controls-2"
+          >
+            <button
+              id="showQuestionButton"
+              class="game-button"
+              type="button"
+              disabled
+            >
+              Pytanie
+            </button>
+
+            <button
+              id="showAnswersButton"
+              class="game-button"
+              type="button"
+              disabled
+            >
+              Odpowiedzi
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================
+           ODPOWIEDŹ GRACZA
+      ========================= -->
+
+      <section class="game-control-section">
+        <h3>
+          Odpowiedź gracza
+        </h3>
+
+        <div
+          id="hostAnswerGrid"
+          class="game-host-answers"
+        >
+          <button
+            class="game-button game-host-answer"
+            data-host-answer="A"
+            type="button"
+            disabled
+          >
+            A
+          </button>
+
+          <button
+            class="game-button game-host-answer"
+            data-host-answer="B"
+            type="button"
+            disabled
+          >
+            B
+          </button>
+
+          <button
+            class="game-button game-host-answer"
+            data-host-answer="C"
+            type="button"
+            disabled
+          >
+            C
+          </button>
+
+          <button
+            class="game-button game-host-answer"
+            data-host-answer="D"
+            type="button"
+            disabled
+          >
+            D
+          </button>
+        </div>
+
+        <div class="game-selected-answer">
+          <span>
+            Wybrana odpowiedź
+          </span>
+
+          <strong id="selectedAnswer">
+            Brak
+          </strong>
+
+          <small
+            id="answerConfirmHint"
+            class="game-answer-confirm-hint"
+          >
+            Wybierz odpowiedź.
+          </small>
+        </div>
+      </section>
+
+      <!-- =========================
+           WYNIK
+      ========================= -->
+
+      <section class="game-control-section">
+        <h3>
+          Wynik
+        </h3>
+
+        <div class="game-result">
+          <span>
+            Status
+          </span>
+
+          <strong id="answerResult">
+            Oczekiwanie
+          </strong>
+        </div>
+      </section>
+
+      <!-- =========================
+           ROZGRYWKA
+      ========================= -->
+
+      <section class="game-control-section">
+        <h3>
+          Rozgrywka
+        </h3>
+
+        <button
+          id="nextQuestionButton"
+          class="game-button game-button-primary"
+          type="button"
+          disabled
+        >
+          Następne pytanie
+        </button>
+      </section>
+    </main>
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer class="controls-footer">
+      <button
+        id="exitGameButton"
+        class="game-button game-button-danger"
+        type="button"
+      >
+        Zakończ grę
+      </button>
+    </footer>
+  </div>
+
+  <script src="../public/js/design.js"></script>
+  <script src="../public/js/controls.js"></script>
+</body>
+</html>

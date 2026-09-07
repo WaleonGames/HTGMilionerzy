@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Milionerzy - Pytania</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="../public/css/design.css">
+</head>
+<body>
+  <main class="questions-page">
+    <header class="questions-header">
+      <div>
+        <span class="eyebrow">
+          MILIONERZY
+        </span>
+
+        <h1>Pytania</h1>
+
+        <p>
+          Zarządzaj bazą pytań.
+        </p>
+      </div>
+
+      <button
+        id="backButton"
+        class="back-button"
+        type="button"
+      >
+        Powrót
+      </button>
+    </header>
+
+    <section class="panel">
+      <div class="list-header">
+        <div>
+          <h2>Baza pytań</h2>
+
+          <span id="questionsCount">
+            0 pytań
+          </span>
+        </div>
+
+        <button
+          id="addQuestionButton"
+          class="primary-button"
+          type="button"
+        >
+          Dodaj pytanie
+        </button>
+      </div>
+
+      <div
+        id="questionsList"
+        class="questions-list"
+      ></div>
+    </section>
+  </main>
+
+  <div
+    id="questionModal"
+    class="modal-backdrop"
+    hidden
+  >
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">
+            PYTANIA
+          </span>
+
+          <h2 id="modalTitle">
+            Dodaj pytanie
+          </h2>
+        </div>
+
+        <button
+          id="closeModalButton"
+          class="modal-close"
+          type="button"
+          aria-label="Zamknij"
+        >
+          ×
+        </button>
+      </div>
+
+      <form id="questionForm">
+        <div class="field">
+          <label for="questionInput">
+            Treść pytania
+          </label>
+
+          <textarea
+            id="questionInput"
+            rows="4"
+            placeholder="Wpisz treść pytania..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="answers-grid">
+          <label class="answer-field">
+            <span>A</span>
+
+            <input
+              id="answerA"
+              type="text"
+              placeholder="Odpowiedź A"
+              required
+            >
+          </label>
+
+          <label class="answer-field">
+            <span>B</span>
+
+            <input
+              id="answerB"
+              type="text"
+              placeholder="Odpowiedź B"
+              required
+            >
+          </label>
+
+          <label class="answer-field">
+            <span>C</span>
+
+            <input
+              id="answerC"
+              type="text"
+              placeholder="Odpowiedź C"
+              required
+            >
+          </label>
+
+          <label class="answer-field">
+            <span>D</span>
+
+            <input
+              id="answerD"
+              type="text"
+              placeholder="Odpowiedź D"
+              required
+            >
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="correctAnswer">
+            Poprawna odpowiedź
+          </label>
+
+          <select
+            id="correctAnswer"
+            required
+          >
+            <option value="">
+              Wybierz...
+            </option>
+
+            <option value="A">
+              A
+            </option>
+
+            <option value="B">
+              B
+            </option>
+
+            <option value="C">
+              C
+            </option>
+
+            <option value="D">
+              D
+            </option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            id="cancelModalButton"
+            class="secondary-button"
+            type="button"
+          >
+            Anuluj
+          </button>
+
+          <button
+            class="primary-button"
+            type="submit"
+          >
+            Dodaj pytanie
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../public/js/design.js"></script>
+  <script src="../public/js/questions.js"></script>
+</body>
+</html>

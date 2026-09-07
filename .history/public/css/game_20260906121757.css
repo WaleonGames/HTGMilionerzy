@@ -1,0 +1,831 @@
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,
+body{
+  width:100%;
+  min-height:100%;
+}
+
+body{
+  min-height:100vh;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:var(--design-bg);
+  color:var(--design-text);
+}
+
+button{
+  font:inherit;
+  cursor:pointer;
+}
+
+[hidden]{
+  display:none !important;
+}
+
+/* =========================
+   APP
+========================= */
+
+.game-app{
+  position:relative;
+
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 280px;
+
+  width:100%;
+  min-height:100vh;
+
+  background:var(--design-bg);
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.game-stage{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+
+  min-width:0;
+  min-height:100vh;
+
+  padding:32px 32px 40px 56px;
+}
+
+.game-question-area{
+  width:min(1250px,100%);
+}
+
+/* =========================
+   QUESTION META
+========================= */
+
+.game-question-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+
+  margin-bottom:10px;
+
+  color:var(--design-muted);
+
+  font-size:13px;
+}
+
+/* =========================
+   QUESTION
+========================= */
+
+.game-question{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  min-height:130px;
+
+  padding:24px 30px;
+
+  border:1px solid var(--design-border);
+  border-radius:18px;
+
+  background:var(--design-surface);
+  color:var(--design-text);
+
+  box-shadow:var(--design-shadow-sm);
+
+  font-size:24px;
+  font-weight:700;
+  line-height:1.45;
+
+  text-align:center;
+}
+
+/* =========================
+   ANSWERS
+========================= */
+
+.game-answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+
+  margin-top:18px;
+}
+
+.game-answer{
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  min-height:74px;
+
+  padding:14px 18px;
+
+  border:1px solid var(--design-border);
+  border-radius:14px;
+
+  background:var(--design-surface);
+  color:var(--design-text);
+
+  text-align:left;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
+}
+
+.game-answer:hover{
+  background:var(--design-surface-hover);
+  border-color:var(--design-border-strong);
+}
+
+.game-answer:active{
+  transform:scale(.99);
+}
+
+.game-answer-letter{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:38px;
+  height:38px;
+
+  flex:0 0 38px;
+
+  border-radius:50%;
+
+  background:color-mix(
+    in srgb,
+    var(--design-primary) 14%,
+    var(--design-surface) 86%
+  );
+
+  color:var(--design-primary);
+
+  font-size:15px;
+  font-weight:800;
+}
+
+.game-answer-text{
+  min-width:0;
+
+  color:var(--design-text);
+
+  font-size:17px;
+  line-height:1.4;
+}
+
+/* =========================
+   ANSWER STATES
+========================= */
+
+.game-answer.selected{
+  background:color-mix(
+    in srgb,
+    var(--design-primary) 18%,
+    var(--design-surface) 82%
+  );
+
+  color:var(--design-text);
+
+  border-color:var(--design-primary);
+}
+
+.game-answer.selected .game-answer-letter{
+  background:var(--design-primary);
+  color:#fff;
+}
+
+.game-answer.selected .game-answer-text{
+  color:var(--design-text);
+}
+
+.game-answer.correct{
+  background:var(--design-success-light);
+  color:var(--design-success);
+
+  border-color:var(--design-success-border);
+}
+
+.game-answer.correct .game-answer-letter{
+  background:var(--design-success);
+  color:#fff;
+}
+
+.game-answer.correct .game-answer-text{
+  color:var(--design-success);
+}
+
+.game-answer.wrong{
+  background:var(--design-danger-light);
+  color:var(--design-danger);
+
+  border-color:var(--design-danger-border);
+}
+
+.game-answer.wrong .game-answer-letter{
+  background:var(--design-danger);
+  color:#fff;
+}
+
+.game-answer.wrong .game-answer-text{
+  color:var(--design-danger);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.game-sidebar{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+
+  min-width:0;
+  min-height:100vh;
+
+  padding:20px 16px;
+
+  background:var(--design-surface);
+
+  border-left:1px solid var(--design-border);
+}
+
+/* =========================
+   SIDEBAR VISIBILITY
+========================= */
+
+.game-sidebar.hidden{
+  display:none;
+}
+
+.game-app.sidebar-hidden{
+  grid-template-columns:minmax(0,1fr);
+}
+
+.game-sidebar-section{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.game-sidebar-section-grow{
+  flex:1;
+  min-height:0;
+}
+
+.game-sidebar-title{
+  color:var(--design-muted);
+
+  font-size:11px;
+  font-weight:800;
+
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+/* =========================
+   LIFELINES
+========================= */
+
+.game-lifelines{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.game-lifeline{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  min-width:0;
+  min-height:58px;
+
+  padding:4px;
+
+  background:transparent;
+}
+
+.game-lifeline img{
+  display:block;
+
+  width:100%;
+  max-width:78px;
+  height:auto;
+
+  object-fit:contain;
+
+  user-select:none;
+  pointer-events:none;
+}
+
+/* =========================
+   PRIZE TREE
+========================= */
+
+.game-prize-tree{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+
+  min-height:0;
+}
+
+.game-prize-item{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+
+  min-height:34px;
+
+  padding:6px 9px;
+
+  border-radius:7px;
+
+  color:var(--design-text-soft);
+
+  transition:
+    background .15s ease,
+    color .15s ease;
+}
+
+.game-prize-item:hover{
+  background:var(--design-surface-hover);
+}
+
+.game-prize-level{
+  color:var(--design-muted);
+
+  font-size:12px;
+  font-weight:700;
+}
+
+.game-prize-amount{
+  min-width:0;
+
+  color:inherit;
+
+  font-size:13px;
+  font-weight:700;
+
+  text-align:right;
+}
+
+/* =========================
+   GUARANTEED PRIZE
+========================= */
+
+.game-prize-item.guaranteed{
+  color:var(--design-primary);
+}
+
+.game-prize-item.guaranteed .game-prize-level{
+  color:var(--design-primary);
+}
+
+/* =========================
+   ACTIVE PRIZE
+========================= */
+
+.game-prize-item.active{
+  background:var(--design-primary);
+  color:#fff;
+}
+
+.game-prize-item.active .game-prize-level{
+  color:#fff;
+}
+
+.game-prize-item.active .game-prize-amount{
+  color:#fff;
+}
+
+/* =========================
+   EMPTY PRIZE TREE
+========================= */
+
+.game-prize-empty{
+  padding:14px;
+
+  border:1px dashed var(--design-border);
+  border-radius:8px;
+
+  color:var(--design-muted);
+
+  font-size:13px;
+  text-align:center;
+}
+
+/* =========================
+   CONTROL RAIL
+========================= */
+
+.game-control-rail{
+  position:fixed;
+
+  top:50%;
+  left:0;
+
+  z-index:700;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  height:140px;
+
+  padding:10px 7px;
+
+  border:0;
+  border-right:1px solid var(--design-border);
+
+  border-radius:0 12px 12px 0;
+
+  background:var(--design-surface);
+  color:var(--design-text-soft);
+
+  box-shadow:var(--design-shadow-md);
+
+  transform:translateY(-50%);
+}
+
+.game-control-rail:hover{
+  background:var(--design-surface-hover);
+  color:var(--design-text);
+}
+
+.game-control-rail-line{
+  display:block;
+
+  width:3px;
+  height:70px;
+
+  border-radius:999px;
+
+  background:var(--design-primary);
+}
+
+.game-control-rail-label{
+  writing-mode:vertical-rl;
+
+  transform:rotate(180deg);
+
+  font-size:12px;
+  font-weight:700;
+
+  letter-spacing:.03em;
+}
+
+/* =========================
+   DISPLAY CONTROLS
+========================= */
+
+.game-display-controls{
+  display:grid;
+  gap:8px;
+}
+
+.game-display-controls-2{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.game-display-controls-3{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.game-display-controls .game-button{
+  width:100%;
+  min-width:0;
+  padding:0 8px;
+  font-size:12px;
+}
+
+.game-display-controls .game-button.active{
+  background:var(--design-primary);
+  color:#fff;
+  border-color:var(--design-primary);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.game-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  min-height:40px;
+
+  padding:0 14px;
+
+  border:1px solid var(--design-border);
+  border-radius:9px;
+
+  background:var(--design-surface);
+  color:var(--design-text-soft);
+
+  font-size:14px;
+  font-weight:700;
+}
+
+.game-button:hover{
+  background:var(--design-surface-hover);
+  color:var(--design-text);
+
+  border-color:var(--design-border-strong);
+}
+
+.game-button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.game-button-primary{
+  background:var(--design-primary);
+  color:#fff;
+
+  border-color:var(--design-primary);
+}
+
+.game-button-primary:hover{
+  background:var(--design-primary-hover);
+  color:#fff;
+
+  border-color:var(--design-primary-hover);
+}
+
+.game-button-danger{
+  background:var(--design-danger-light);
+  color:var(--design-danger);
+
+  border-color:var(--design-danger-border);
+}
+
+.game-button-danger:hover{
+  color:var(--design-danger-hover);
+
+  border-color:var(--design-danger-hover);
+}
+
+/* =========================
+   OFFCANVAS BACKDROP
+========================= */
+
+.game-offcanvas-backdrop{
+  position:fixed;
+  inset:0;
+
+  z-index:900;
+
+  background:rgba(0,0,0,.42);
+
+  backdrop-filter:blur(1px);
+}
+
+/* =========================
+   OFFCANVAS
+========================= */
+
+.game-offcanvas{
+  position:fixed;
+
+  top:0;
+  left:0;
+  bottom:0;
+
+  z-index:1000;
+
+  display:flex;
+  flex-direction:column;
+
+  width:min(400px,calc(100vw - 32px));
+
+  background:var(--design-surface);
+
+  border-right:1px solid var(--design-border);
+
+  box-shadow:var(--design-shadow-lg);
+
+  transform:translateX(-105%);
+
+  transition:transform .22s ease;
+}
+
+.game-offcanvas.open{
+  transform:translateX(0);
+}
+
+/* =========================
+   OFFCANVAS HEADER
+========================= */
+
+.game-offcanvas-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+
+  min-height:78px;
+
+  padding:16px 18px;
+
+  border-bottom:1px solid var(--design-border);
+}
+
+.game-offcanvas-header h2{
+  margin-top:3px;
+
+  color:var(--design-text);
+
+  font-size:22px;
+}
+
+.game-eyebrow{
+  color:var(--design-primary);
+
+  font-size:10px;
+  font-weight:800;
+
+  letter-spacing:.14em;
+}
+
+.game-icon-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width:38px;
+  height:38px;
+
+  flex:0 0 38px;
+
+  border:1px solid var(--design-border);
+  border-radius:9px;
+
+  background:var(--design-surface);
+  color:var(--design-text);
+
+  font-size:22px;
+}
+
+.game-icon-button:hover{
+  background:var(--design-surface-hover);
+}
+
+/* =========================
+   OFFCANVAS CONTENT
+========================= */
+
+.game-offcanvas-content{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:18px;
+
+  min-height:0;
+
+  padding:18px;
+
+  overflow:auto;
+}
+
+.game-control-section{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.game-control-section h3{
+  color:var(--design-text);
+
+  font-size:14px;
+}
+
+.game-control-section>.game-button{
+  width:100%;
+}
+
+/* =========================
+   VALUES
+========================= */
+
+.game-selected-answer,
+.game-result{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+
+  padding:13px;
+
+  border:1px solid var(--design-border);
+  border-radius:10px;
+
+  background:var(--design-surface-soft);
+}
+
+.game-selected-answer span,
+.game-result span{
+  color:var(--design-muted);
+
+  font-size:12px;
+}
+
+.game-selected-answer strong,
+.game-result strong{
+  color:var(--design-text);
+
+  font-size:17px;
+}
+
+/* =========================
+   CONTROL GRID
+========================= */
+
+.game-control-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+/* =========================
+   OFFCANVAS FOOTER
+========================= */
+
+.game-offcanvas-footer{
+  padding:16px 18px;
+
+  border-top:1px solid var(--design-border);
+}
+
+.game-offcanvas-footer .game-button{
+  width:100%;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+  .game-app{
+    grid-template-columns:minmax(0,1fr) 230px;
+  }
+
+  .game-sidebar{
+    padding:16px 12px;
+  }
+
+  .game-stage{
+    padding-right:20px;
+  }
+}
+
+@media(max-width:700px){
+  body{
+    overflow:auto;
+  }
+
+  .game-app{
+    display:block;
+  }
+
+  .game-stage{
+    min-height:100vh;
+
+    padding:20px 14px 24px 54px;
+  }
+
+  .game-question{
+    min-height:110px;
+
+    padding:20px;
+
+    font-size:20px;
+  }
+
+  .game-answers{
+    grid-template-columns:1fr;
+  }
+
+  .game-sidebar{
+    min-height:auto;
+
+    border-top:1px solid var(--design-border);
+    border-left:0;
+  }
+
+  .game-control-rail{
+    height:120px;
+  }
+}

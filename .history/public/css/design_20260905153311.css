@@ -1,0 +1,314 @@
+:root{
+  --design-bg:#f4f6f8;
+  --design-surface:#ffffff;
+  --design-surface-hover:#f8fafc;
+  --design-surface-active:#eef4ff;
+
+  --design-text:#172033;
+  --design-text-soft:#344054;
+  --design-muted:#667085;
+
+  --design-border:#e4e7ec;
+  --design-border-strong:#d0d5dd;
+
+  --design-primary:#356df3;
+  --design-primary-hover:#285bd4;
+  --design-primary-light:#eaf0ff;
+
+  --design-danger:#b42318;
+  --design-danger-hover:#912018;
+  --design-danger-light:#fef3f2;
+
+  --design-success:#067647;
+  --design-success-light:#ecfdf3;
+
+  --design-warning:#b54708;
+  --design-warning-light:#fffaeb;
+
+  --design-radius-sm:8px;
+  --design-radius-md:10px;
+  --design-radius-lg:14px;
+
+  --design-shadow-sm:0 1px 3px rgba(16,24,40,.06);
+  --design-shadow-md:0 8px 24px rgba(16,24,40,.08);
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+html{
+  background:var(--design-bg) !important;
+}
+
+body{
+  background:var(--design-bg) !important;
+  color:var(--design-text) !important;
+}
+
+body,
+button,
+input,
+select,
+textarea{
+  font-family:Arial,sans-serif !important;
+}
+
+/* =========================
+   WHITE SURFACES
+========================= */
+
+header,
+.topbar,
+.header,
+.sidebar,
+.settings-sidebar,
+.card,
+.panel,
+.modal,
+.modal-content,
+.settings-card,
+.question-card{
+  background:var(--design-surface) !important;
+  color:var(--design-text) !important;
+}
+
+/* =========================
+   BORDERS
+========================= */
+
+.card,
+.panel,
+.settings-card,
+.question-card,
+.modal,
+.modal-content,
+input,
+select,
+textarea{
+  border-color:var(--design-border) !important;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+  color:var(--design-text) !important;
+}
+
+p,
+.description,
+.subtitle,
+.muted,
+small{
+  color:var(--design-muted) !important;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+select,
+textarea{
+  background:#fff !important;
+  color:var(--design-text) !important;
+  border:1px solid var(--design-border-strong) !important;
+  border-radius:var(--design-radius-md) !important;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:#98a2b3 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--design-primary) !important;
+  box-shadow:0 0 0 3px rgba(53,109,243,.12) !important;
+  outline:none !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button{
+  border-radius:var(--design-radius-md) !important;
+}
+
+button:not(.button-primary):not(.primary):not(.danger):not(.delete-button){
+  background:#fff !important;
+  color:var(--design-text) !important;
+  border-color:var(--design-border) !important;
+}
+
+button:not(.button-primary):not(.primary):not(.danger):not(.delete-button):hover{
+  background:var(--design-surface-hover) !important;
+  border-color:var(--design-border-strong) !important;
+}
+
+.button-primary,
+.primary,
+[data-primary]{
+  background:var(--design-primary) !important;
+  color:#fff !important;
+  border-color:var(--design-primary) !important;
+}
+
+.button-primary:hover,
+.primary:hover,
+[data-primary]:hover{
+  background:var(--design-primary-hover) !important;
+  border-color:var(--design-primary-hover) !important;
+}
+
+/* =========================
+   DANGER
+========================= */
+
+.delete-button,
+.danger{
+  background:var(--design-danger-light) !important;
+  color:var(--design-danger) !important;
+  border-color:#fecdca !important;
+}
+
+.delete-button:hover,
+.danger:hover{
+  background:#fee4e2 !important;
+  color:var(--design-danger-hover) !important;
+}
+
+/* =========================
+   SIDEBAR / NAV
+========================= */
+
+.sidebar,
+.settings-sidebar{
+  border-color:var(--design-border) !important;
+}
+
+.sidebar a,
+.sidebar button,
+.settings-tab{
+  color:var(--design-text-soft) !important;
+}
+
+.sidebar a:hover,
+.sidebar button:hover,
+.settings-tab:hover{
+  background:var(--design-surface-hover) !important;
+  color:var(--design-text) !important;
+}
+
+.sidebar .active,
+.sidebar a.active,
+.sidebar button.active,
+.settings-tab.active{
+  background:var(--design-primary-light) !important;
+  color:var(--design-primary) !important;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.modal-backdrop,
+.modal-overlay{
+  background:rgba(15,23,42,.45) !important;
+}
+
+.modal,
+.modal-content{
+  background:#fff !important;
+  border-color:var(--design-border) !important;
+  box-shadow:var(--design-shadow-md) !important;
+}
+
+/* =========================
+   TABLES
+========================= */
+
+table{
+  background:#fff !important;
+  color:var(--design-text) !important;
+}
+
+thead{
+  background:var(--design-surface-hover) !important;
+}
+
+th,
+td{
+  border-color:var(--design-border) !important;
+}
+
+tr:hover td{
+  background:#fafbfc !important;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card,
+.settings-card,
+.question-card{
+  box-shadow:var(--design-shadow-sm) !important;
+}
+
+.card:hover,
+.question-card:hover{
+  border-color:var(--design-border-strong) !important;
+}
+
+/* =========================
+   SWITCHES
+========================= */
+
+input[type="checkbox"],
+input[type="radio"]{
+  accent-color:var(--design-primary) !important;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+*{
+  scrollbar-color:#cbd5e1 transparent;
+}
+
+*::-webkit-scrollbar{
+  width:9px;
+  height:9px;
+}
+
+*::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+*::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:999px;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background:#aeb8c5;
+}
+
+/* =========================
+   BODY MARKER
+========================= */
+
+body.design-loaded{
+  visibility:visible !important;
+}

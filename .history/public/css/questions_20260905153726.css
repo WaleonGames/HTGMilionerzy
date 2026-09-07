@@ -1,0 +1,267 @@
+.questions-page{
+  width:min(1100px,calc(100% - 32px));
+  margin:0 auto;
+  padding:28px 0;
+}
+
+.questions-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.questions-header h1{
+  margin:4px 0 4px;
+  font-size:30px;
+}
+
+.questions-header p{
+  font-size:14px;
+  color:#aaa4c5;
+}
+
+.back-button,
+.secondary-button{
+  min-height:40px;
+  padding:0 14px;
+  border:1px solid #37305f;
+  border-radius:8px;
+  background:#171331;
+  color:#fff;
+  font-size:14px;
+}
+
+.back-button:hover,
+.secondary-button:hover{
+  background:#211b42;
+}
+
+.list-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.list-header h2{
+  margin-bottom:3px;
+  font-size:20px;
+}
+
+.list-header span{
+  font-size:13px;
+  color:#aaa4c5;
+}
+
+.questions-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.question-card{
+  padding:14px;
+  border:1px solid #302a55;
+  border-radius:10px;
+  background:#0a081a;
+}
+
+.question-card-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.question-card h3{
+  font-size:15px;
+  line-height:1.4;
+}
+
+.delete-button{
+  flex:0 0 auto;
+  min-height:32px;
+  padding:0 10px;
+  border:0;
+  border-radius:7px;
+  background:#401821;
+  color:#ff8794;
+  font-size:13px;
+}
+
+.delete-button:hover{
+  background:#56202b;
+}
+
+.question-answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.question-answer{
+  padding:8px 10px;
+  border-radius:7px;
+  background:#15112d;
+  color:#ccc7df;
+  font-size:14px;
+}
+
+.question-answer strong{
+  margin-right:4px;
+  color:#9284ff;
+}
+
+.question-answer.correct{
+  background:#123426;
+  color:#79e7ad;
+}
+
+.empty-state{
+  padding:28px 16px;
+  border:1px dashed #37305f;
+  border-radius:10px;
+  color:#8e88a5;
+  text-align:center;
+  font-size:14px;
+}
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:rgba(3,2,12,.78);
+}
+
+.modal-backdrop[hidden]{
+  display:none;
+}
+
+.modal{
+  width:min(580px,100%);
+  max-height:calc(100vh - 32px);
+  overflow:auto;
+  padding:18px;
+  border:1px solid #312b58;
+  border-radius:13px;
+  background:#100d25;
+}
+
+.modal-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.modal-header h2{
+  margin-top:3px;
+  font-size:22px;
+}
+
+.modal-close{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  border:1px solid #37305f;
+  border-radius:8px;
+  background:#171331;
+  color:#fff;
+  font-size:22px;
+}
+
+.modal-close:hover{
+  background:#211b42;
+}
+
+.answers-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:14px;
+}
+
+.answer-field{
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  min-height:40px;
+  border:1px solid #37305f;
+  border-radius:8px;
+  background:#0a081a;
+}
+
+.answer-field span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  align-self:stretch;
+  width:40px;
+  background:#1a1636;
+  color:#9d8fff;
+  font-size:13px;
+  font-weight:700;
+}
+
+.answer-field input{
+  min-height:40px;
+  border:0;
+  border-radius:0;
+  font-size:14px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:18px;
+}
+
+@media(max-width:700px){
+  .questions-page{
+    width:calc(100% - 20px);
+    padding:18px 0;
+  }
+
+  .questions-header,
+  .list-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .questions-header h1{
+    font-size:26px;
+  }
+
+  .answers-grid,
+  .question-answers{
+    grid-template-columns:1fr;
+  }
+
+  .list-header .primary-button{
+    width:100%;
+  }
+
+  .modal{
+    padding:14px;
+  }
+
+  .modal-actions{
+    flex-direction:column-reverse;
+  }
+
+  .modal-actions button{
+    width:100%;
+  }
+}

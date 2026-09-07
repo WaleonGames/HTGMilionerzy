@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <title>Milionerzy - Gra</title>
+
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="../public/css/design.css">
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <div class="page-header-main">
+        <span class="eyebrow">
+          MILIONERZY
+        </span>
+
+        <h1 class="page-title">
+          Rozgrywka
+        </h1>
+
+        <p
+          id="gameStatus"
+          class="page-description"
+        >
+          Przygotowanie gry
+        </p>
+      </div>
+
+      <div class="form-actions">
+        <button
+          id="backButton"
+          class="button button-secondary"
+          type="button"
+        >
+          Zakończ
+        </button>
+      </div>
+    </header>
+
+    <section class="grid grid-2">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>
+              Pytanie
+            </h2>
+
+            <span id="questionNumber">
+              Pytanie 1
+            </span>
+          </div>
+        </div>
+
+        <div class="form">
+          <div
+            id="questionText"
+            class="card"
+          >
+            Brak załadowanego pytania.
+          </div>
+
+          <div
+            id="answersGrid"
+            class="grid grid-2"
+          >
+            <button
+              class="button answer-option"
+              data-answer="A"
+              type="button"
+            >
+              <strong>A:</strong>
+              <span id="answerTextA">—</span>
+            </button>
+
+            <button
+              class="button answer-option"
+              data-answer="B"
+              type="button"
+            >
+              <strong>B:</strong>
+              <span id="answerTextB">—</span>
+            </button>
+
+            <button
+              class="button answer-option"
+              data-answer="C"
+              type="button"
+            >
+              <strong>C:</strong>
+              <span id="answerTextC">—</span>
+            </button>
+
+            <button
+              class="button answer-option"
+              data-answer="D"
+              type="button"
+            >
+              <strong>D:</strong>
+              <span id="answerTextD">—</span>
+            </button>
+          </div>
+
+          <div class="form-actions">
+            <button
+              id="showQuestionButton"
+              class="button button-secondary"
+              type="button"
+            >
+              Pokaż pytanie
+            </button>
+
+            <button
+              id="showAnswersButton"
+              class="button button-secondary"
+              type="button"
+            >
+              Pokaż odpowiedzi
+            </button>
+
+            <button
+              id="checkAnswerButton"
+              class="button button-primary"
+              type="button"
+              disabled
+            >
+              Sprawdź odpowiedź
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>
+              Sterowanie
+            </h2>
+
+            <span>
+              Panel hosta
+            </span>
+          </div>
+        </div>
+
+        <div class="form">
+          <div class="card">
+            <div class="form-field">
+              <label>
+                Wybrana odpowiedź
+              </label>
+
+              <strong id="selectedAnswer">
+                Brak
+              </strong>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="form-field">
+              <label>
+                Wynik
+              </label>
+
+              <strong id="answerResult">
+                —
+              </strong>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              id="previousQuestionButton"
+              class="button button-secondary"
+              type="button"
+            >
+              Poprzednie
+            </button>
+
+            <button
+              id="nextQuestionButton"
+              class="button button-primary"
+              type="button"
+            >
+              Następne pytanie
+            </button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>
+            Koła ratunkowe
+          </h2>
+
+          <span>
+            Na razie podstawowe sterowanie
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <button
+          id="lifeline5050"
+          class="button"
+          type="button"
+        >
+          50:50
+        </button>
+
+        <button
+          id="lifelineHost"
+          class="button"
+          type="button"
+        >
+          Pytanie do hosta
+        </button>
+
+        <button
+          id="lifelineChange"
+          class="button"
+          type="button"
+        >
+          Zmiana pytania
+        </button>
+
+        <button
+          id="lifelineDouble"
+          class="button"
+          type="button"
+        >
+          Podwójna odpowiedź
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="../public/js/design.js"></script>
+  <script src="../public/js/game.js"></script>
+</body>
+</html>

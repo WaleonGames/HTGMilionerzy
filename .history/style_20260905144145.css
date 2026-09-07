@@ -1,0 +1,287 @@
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:#080617;
+  color:#fff;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  width:min(1200px,calc(100% - 40px));
+  margin:0 auto;
+  padding:40px 0;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:24px;
+}
+
+.header h1{
+  margin-top:5px;
+  font-size:32px;
+}
+
+.eyebrow{
+  color:#a6a0d8;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:2px;
+}
+
+.status,
+.question-number{
+  padding:10px 14px;
+  border:1px solid #302a5a;
+  border-radius:10px;
+  background:#13102a;
+  color:#c9c5e6;
+}
+
+.panel{
+  margin-bottom:24px;
+  padding:24px;
+  border:1px solid #29244d;
+  border-radius:16px;
+  background:#100d25;
+}
+
+.panel h2{
+  margin-bottom:20px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.field label{
+  color:#cbc7e5;
+  font-size:14px;
+  font-weight:700;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #37305f;
+  border-radius:9px;
+  outline:none;
+  background:#0a081a;
+  color:#fff;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#705cff;
+}
+
+textarea{
+  resize:vertical;
+}
+
+.answers-form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.answer-input{
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border:1px solid #37305f;
+  border-radius:9px;
+  background:#0a081a;
+}
+
+.answer-input span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;
+  align-self:stretch;
+  background:#1a1636;
+  color:#9d8fff;
+  font-weight:700;
+}
+
+.answer-input input{
+  border:0;
+  border-radius:0;
+}
+
+.primary-button,
+.check-button,
+.secondary-button{
+  min-height:46px;
+  padding:0 20px;
+  border:0;
+  border-radius:9px;
+  color:#fff;
+  font-weight:700;
+}
+
+.primary-button,
+.check-button{
+  background:#5b45e0;
+}
+
+.primary-button:hover,
+.check-button:hover:not(:disabled){
+  background:#6c55ef;
+}
+
+.secondary-button{
+  border:1px solid #37305f;
+  background:#1a1636;
+}
+
+.secondary-button:hover:not(:disabled){
+  background:#252044;
+}
+
+button:disabled{
+  cursor:not-allowed;
+  opacity:.4;
+}
+
+.game-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:24px;
+}
+
+.game-header h2{
+  margin-top:7px;
+  margin-bottom:0;
+  font-size:24px;
+}
+
+.game-answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.game-answer{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:70px;
+  padding:14px 18px;
+  border:2px solid #332c60;
+  border-radius:12px;
+  background:#0a081a;
+  color:#fff;
+  text-align:left;
+}
+
+.game-answer strong{
+  display:flex;
+  flex:0 0 38px;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#1c1740;
+  color:#9d8fff;
+}
+
+.game-answer:hover:not(:disabled){
+  border-color:#6657b8;
+}
+
+.game-answer.selected{
+  border-color:#8b78ff;
+  background:#211a4c;
+}
+
+.game-answer.correct{
+  border-color:#21b66f;
+  background:#103c2a;
+}
+
+.game-answer.wrong{
+  border-color:#df4c5c;
+  background:#481a23;
+}
+
+.game-actions{
+  display:flex;
+  gap:12px;
+  margin-top:20px;
+}
+
+.result{
+  margin-top:20px;
+  padding:18px;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:700;
+}
+
+.result.success{
+  border:1px solid #217e53;
+  background:#103c2a;
+  color:#75e6ad;
+}
+
+.result.error{
+  border:1px solid #963847;
+  background:#481a23;
+  color:#ff929c;
+}
+
+@media(max-width:700px){
+  .app{
+    width:min(100% - 24px,1200px);
+    padding:20px 0;
+  }
+
+  .header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .answers-form,
+  .game-answers{
+    grid-template-columns:1fr;
+  }
+
+  .game-header{
+    flex-direction:column;
+  }
+
+  .game-actions{
+    flex-direction:column;
+  }
+}
