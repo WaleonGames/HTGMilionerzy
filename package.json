@@ -1,35 +1,70 @@
 {
-  "name": "milionerzy",
+  "name": "HTGMilionerzy",
   "version": "0.0.2",
-  "description": "",
+  "description": "Gra Milionerzy inspirowana telewizyjnym formatem quizu wiedzy.",
   "main": "app.js",
+  "productName": "HTGMilionerzy",
+  "homepage": "https://github.com/ToJaWG/Milionerzy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ToJaWG/Milionerzy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ToJaWG/Milionerzy/issues"
+  },
+  "keywords": [
+    "htgmilionerzy",
+    "milionerzy",
+    "quiz",
+    "game",
+    "electron",
+    "trivia",
+    "questions"
+  ],
+  "author": "ToJaWG, Kacper",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "start": "electron .",
     "build:linux": "electron-builder --linux",
     "build:windows": "electron-builder --win"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "build": {
-    "appId": "pl.milionerzy.game",
-    "productName": "Milionerzy",
+    "appId": "pl.htgmc.milionerzy",
+    "productName": "HTG Milionerzy",
+    "copyright": "Copyright © 2026 HTGMC",
+    "asar": true,
+    "files": [
+      "**/*",
+      "!node_modules/.cache/**/*"
+    ],
     "directories": {
       "output": "dist"
     },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ],
-      "category": "Game",
-      "maintainer": "HTG"
-    },
     "win": {
       "target": [
-        "nsis",
-        "portable"
-      ]
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-Windows-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game",
+      "artifactName": "${productName}-${version}-Linux-${arch}.${ext}"
     }
   },
   "devDependencies": {
