@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Wersje programu - Milionerzy</title>
+
+    <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="../public/css/design.css" />
+    <link rel="stylesheet" href="../public/css/additional/badge.css" />
+    <link rel="stylesheet" href="../public/css/additional/markdown.css" />
+  </head>
+
+  <body>
+    <main class="page">
+      <!-- =========================
+         HEADER
+    ========================= -->
+
+      <header class="page-header">
+        <div class="page-header-main">
+          <span class="eyebrow"> MILIONERZY </span>
+
+          <h1 class="page-title">Wersje programu</h1>
+
+          <p class="page-description">
+            Historia wydań oraz informacje techniczne programu.
+          </p>
+        </div>
+
+        <div class="page-header-actions">
+          <button id="backButton" class="button button-secondary" type="button">
+            Wróć
+          </button>
+        </div>
+      </header>
+
+      <!-- =========================
+         VERSION LAYOUT
+    ========================= -->
+
+      <section class="version-layout">
+        <!-- =========================
+           SIDEBAR
+      ========================= -->
+
+        <aside class="version-sidebar">
+          <div class="version-sidebar-header">
+            <div>
+              <span class="eyebrow"> WYDANIA </span>
+
+              <h2>Wersje</h2>
+            </div>
+
+            <span id="versionsCount" class="badge"> 0 </span>
+          </div>
+
+          <div id="versionsList" class="version-sidebar-list">
+            <div class="empty">Ładowanie...</div>
+          </div>
+
+          <div class="version-sidebar-footer">
+            <button
+              id="openAllVersionsButton"
+              class="button button-secondary"
+              type="button"
+            >
+              Wszystkie wersje na GitHub
+            </button>
+          </div>
+        </aside>
+
+        <!-- =========================
+           CONTENT
+      ========================= -->
+
+        <div class="version-content">
+          <!-- =========================
+             RELEASE HEADER
+        ========================= -->
+
+          <section class="card version-release-header">
+            <div class="version-release-heading">
+              <div>
+                <span id="selectedVersionEyebrow" class="eyebrow">
+                  WERSJA
+                </span>
+
+                <h2 id="selectedVersionName">Ładowanie...</h2>
+
+                <p id="selectedVersionSubtitle">Pobieranie danych z GitHub.</p>
+              </div>
+
+              <div class="version-release-badges">
+                <span id="selectedVersionType" class="badge"> — </span>
+
+                <span id="selectedVersionTag" class="badge"> — </span>
+              </div>
+            </div>
+
+            <div class="version-release-meta">
+              <div class="version-meta-item">
+                <span> Data wydania </span>
+
+                <strong id="selectedVersionDate"> — </strong>
+              </div>
+
+              <div class="version-meta-item">
+                <span> Status </span>
+
+                <strong id="selectedVersionStatus"> — </strong>
+              </div>
+
+              <div class="version-meta-item">
+                <span> Pliki </span>
+
+                <strong id="selectedVersionAssets"> 0 </strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- =========================
+             RELEASE DESCRIPTION
+        ========================= -->
+
+          <section class="card">
+            <div class="version-section-header">
+              <div>
+                <span class="eyebrow"> AKTUALIZACJA </span>
+
+                <h3>Informacje o wydaniu</h3>
+              </div>
+            </div>
+
+            <div id="selectedVersionDescription" class="release-description">
+              <div class="empty">Ładowanie opisu...</div>
+            </div>
+          </section>
+
+          <!-- =========================
+             TECHNICAL
+        ========================= -->
+
+          <section class="card">
+            <div class="version-section-header">
+              <div>
+                <span class="eyebrow"> TECHNICZNE </span>
+
+                <h3>Informacje techniczne</h3>
+              </div>
+            </div>
+
+            <div class="version-technical-grid">
+              <div class="version-technical-item">
+                <span> Systemy </span>
+
+                <strong id="technicalSystems"> Brak danych </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Node.js </span>
+
+                <strong id="technicalNode"> Brak danych </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Architektura </span>
+
+                <strong id="technicalArchitecture"> Brak danych </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Min. rozdzielczość </span>
+
+                <strong id="technicalResolutionMin"> Brak danych </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Zalecana rozdzielczość </span>
+
+                <strong id="technicalResolutionRecommended">
+                  Brak danych
+                </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Monitory </span>
+
+                <strong id="technicalMonitors"> Brak danych </strong>
+              </div>
+
+              <div class="version-technical-item">
+                <span> Portable </span>
+
+                <strong id="technicalPortable"> Brak danych </strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- =========================
+             ACTIONS
+        ========================= -->
+
+          <div class="version-actions">
+            <button
+              id="openSelectedReleaseButton"
+              class="button button-primary"
+              type="button"
+              disabled
+            >
+              Otwórz wydanie na GitHub
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- =========================
+       STATUS
+  ========================= -->
+
+    <div id="versionStatus" class="status-message" hidden></div>
+
+    <!-- =========================
+       SCRIPTS
+  ========================= -->
+
+    <script src="../public/js/design.js"></script>
+
+    <script src="../public/js/version.js"></script>
+
+    <script>
+      (() => {
+        const MAX_VISIBLE_RELEASES = 10;
+
+        const RELEASES_URL =
+          "https://github.com/WaleonGames/HTGMilionerzy/releases";
+
+        const backButton = document.getElementById("backButton");
+
+        const versionsList = document.getElementById("versionsList");
+
+        const versionsCount = document.getElementById("versionsCount");
+
+        const openAllVersionsButton = document.getElementById(
+          "openAllVersionsButton",
+        );
+
+        const openSelectedReleaseButton = document.getElementById(
+          "openSelectedReleaseButton",
+        );
+
+        const selectedVersionName = document.getElementById(
+          "selectedVersionName",
+        );
+
+        const selectedVersionSubtitle = document.getElementById(
+          "selectedVersionSubtitle",
+        );
+
+        const selectedVersionType = document.getElementById(
+          "selectedVersionType",
+        );
+
+        const selectedVersionTag =
+          document.getElementById("selectedVersionTag");
+
+        const selectedVersionDate = document.getElementById(
+          "selectedVersionDate",
+        );
+
+        const selectedVersionStatus = document.getElementById(
+          "selectedVersionStatus",
+        );
+
+        const selectedVersionAssets = document.getElementById(
+          "selectedVersionAssets",
+        );
+
+        const selectedVersionDescription = document.getElementById(
+          "selectedVersionDescription",
+        );
+
+        const technicalSystems = document.getElementById("technicalSystems");
+
+        const technicalNode = document.getElementById("technicalNode");
+
+        const technicalArchitecture = document.getElementById(
+          "technicalArchitecture",
+        );
+
+        const technicalResolutionMin = document.getElementById(
+          "technicalResolutionMin",
+        );
+
+        const technicalResolutionRecommended = document.getElementById(
+          "technicalResolutionRecommended",
+        );
+
+        const technicalMonitors = document.getElementById("technicalMonitors");
+
+        const technicalPortable = document.getElementById("technicalPortable");
+
+        const versionStatus = document.getElementById("versionStatus");
+
+        let releases = [];
+        let selectedRelease = null;
+
+        /* =========================
+        BACK
+      ========================= */
+
+        backButton?.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+
+        /* =========================
+        STATUS
+      ========================= */
+
+        function showStatus(message) {
+          if (!versionStatus) {
+            return;
+          }
+
+          versionStatus.textContent = message;
+
+          versionStatus.hidden = false;
+
+          clearTimeout(showStatus.timeout);
+
+          showStatus.timeout = setTimeout(() => {
+            versionStatus.hidden = true;
+          }, 2500);
+        }
+
+        /* =========================
+        HTML ESCAPE
+      ========================= */
+
+        function escapeHtml(value) {
+          return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        /* =========================
+        INLINE MARKDOWN
+      ========================= */
+
+        function parseInlineMarkdown(value) {
+          let text = escapeHtml(value);
+
+          /*
+           * LINKS
+           */
+
+          text = text.replace(
+            /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+            (match, label, url) => {
+              return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+            },
+          );
+
+          /*
+           * BOLD
+           */
+
+          text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+          /*
+           * ITALIC
+           */
+
+          text = text.replace(
+            /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g,
+            "<em>$1</em>",
+          );
+
+          /*
+           * INLINE CODE
+           */
+
+          text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+          return text;
+        }
+
+        /* =========================
+        MARKDOWN
+      ========================= */
+
+        function parseMarkdown(markdown) {
+          const lines = String(markdown || "")
+            .replaceAll("\r\n", "\n")
+            .split("\n");
+
+          const output = [];
+
+          let listType = null;
+          let blockquoteOpen = false;
+
+          function closeList() {
+            if (!listType) {
+              return;
+            }
+
+            output.push(listType === "ul" ? "</ul>" : "</ol>");
+
+            listType = null;
+          }
+
+          function closeBlockquote() {
+            if (!blockquoteOpen) {
+              return;
+            }
+
+            output.push("</blockquote>");
+
+            blockquoteOpen = false;
+          }
+
+          lines.forEach((rawLine) => {
+            const line = rawLine.trim();
+
+            /*
+             * EMPTY
+             */
+
+            if (!line) {
+              closeList();
+              closeBlockquote();
+
+              return;
+            }
+
+            /*
+             * HEADINGS
+             */
+
+            const headingMatch = /^(#{1,6})\s+(.+)$/.exec(line);
+
+            if (headingMatch) {
+              closeList();
+              closeBlockquote();
+
+              const level = headingMatch[1].length;
+
+              output.push(
+                `<h${level}>${parseInlineMarkdown(
+                  headingMatch[2],
+                )}</h${level}>`,
+              );
+
+              return;
+            }
+
+            /*
+             * BLOCKQUOTE
+             */
+
+            const quoteMatch = /^>\s?(.*)$/.exec(line);
+
+            if (quoteMatch) {
+              closeList();
+
+              if (!blockquoteOpen) {
+                output.push("<blockquote>");
+
+                blockquoteOpen = true;
+              }
+
+              output.push(`<p>${parseInlineMarkdown(quoteMatch[1])}</p>`);
+
+              return;
+            }
+
+            closeBlockquote();
+
+            /*
+             * UNORDERED LIST
+             */
+
+            const unorderedMatch = /^[-*]\s+(.+)$/.exec(line);
+
+            if (unorderedMatch) {
+              if (listType !== "ul") {
+                closeList();
+
+                output.push("<ul>");
+
+                listType = "ul";
+              }
+
+              output.push(`<li>${parseInlineMarkdown(unorderedMatch[1])}</li>`);
+
+              return;
+            }
+
+            /*
+             * ORDERED LIST
+             */
+
+            const orderedMatch = /^\d+\.\s+(.+)$/.exec(line);
+
+            if (orderedMatch) {
+              if (listType !== "ol") {
+                closeList();
+
+                output.push("<ol>");
+
+                listType = "ol";
+              }
+
+              output.push(`<li>${parseInlineMarkdown(orderedMatch[1])}</li>`);
+
+              return;
+            }
+
+            /*
+             * PARAGRAPH
+             */
+
+            closeList();
+
+            output.push(`<p>${parseInlineMarkdown(line)}</p>`);
+          });
+
+          closeList();
+          closeBlockquote();
+
+          return output.join("");
+        }
+
+        /* =========================
+        RENDER SIDEBAR
+      ========================= */
+
+        function renderVersions() {
+          if (!versionsList) {
+            return;
+          }
+
+          versionsList.innerHTML = "";
+
+          const visible = releases.slice(0, MAX_VISIBLE_RELEASES);
+
+          if (versionsCount) {
+            versionsCount.textContent = String(visible.length);
+          }
+
+          if (visible.length === 0) {
+            const empty = document.createElement("div");
+
+            empty.className = "empty";
+
+            empty.textContent = "Brak dostępnych wersji.";
+
+            versionsList.appendChild(empty);
+
+            return;
+          }
+
+          visible.forEach((release) => {
+            const button = document.createElement("button");
+
+            button.type = "button";
+
+            button.className = "version-sidebar-item";
+
+            button.dataset.releaseId = String(release.id);
+
+            if (selectedRelease?.id === release.id) {
+              button.classList.add("active");
+            }
+
+            const main = document.createElement("div");
+
+            main.className = "version-sidebar-item-main";
+
+            const name = document.createElement("strong");
+
+            name.textContent = release.name;
+
+            const meta = document.createElement("span");
+
+            meta.textContent = `${
+              release.tag
+            } • ${window.MillionaireVersions.formatDate(release.publishedAt)}`;
+
+            main.append(name, meta);
+
+            const badge = document.createElement("span");
+
+            badge.className = "badge";
+
+            badge.textContent = release.typeName;
+
+            button.append(main, badge);
+
+            button.addEventListener("click", () => {
+              selectRelease(release);
+            });
+
+            versionsList.appendChild(button);
+          });
+
+          if (releases.length > MAX_VISIBLE_RELEASES) {
+            const info = document.createElement("div");
+
+            info.className = "version-sidebar-more";
+
+            info.textContent = `+${
+              releases.length - MAX_VISIBLE_RELEASES
+            } starszych wersji na GitHub`;
+
+            versionsList.appendChild(info);
+          }
+        }
+
+        /* =========================
+        SELECT RELEASE
+      ========================= */
+
+        function selectRelease(release) {
+          selectedRelease = release;
+
+          renderVersions();
+
+          renderRelease(release);
+        }
+
+        /* =========================
+        RELEASE
+      ========================= */
+
+        function renderRelease(release) {
+          if (!release) {
+            if (selectedVersionName) {
+              selectedVersionName.textContent = "Brak wersji";
+            }
+
+            if (selectedVersionSubtitle) {
+              selectedVersionSubtitle.textContent =
+                "Nie znaleziono żadnego wydania.";
+            }
+
+            if (openSelectedReleaseButton) {
+              openSelectedReleaseButton.disabled = true;
+            }
+
+            renderDescription("");
+
+            renderTechnical({});
+
+            return;
+          }
+
+          if (selectedVersionName) {
+            selectedVersionName.textContent = release.name;
+          }
+
+          if (selectedVersionSubtitle) {
+            selectedVersionSubtitle.textContent = `${release.typeName} ${release.versionText}`;
+          }
+
+          if (selectedVersionType) {
+            selectedVersionType.textContent = release.typeName;
+          }
+
+          if (selectedVersionTag) {
+            selectedVersionTag.textContent = release.tag;
+          }
+
+          if (selectedVersionDate) {
+            selectedVersionDate.textContent =
+              window.MillionaireVersions.formatDate(release.publishedAt);
+          }
+
+          if (selectedVersionStatus) {
+            selectedVersionStatus.textContent =
+              release.technical?.status ||
+              (release.prerelease ? "Testowa" : "Opublikowana");
+          }
+
+          if (selectedVersionAssets) {
+            selectedVersionAssets.textContent = String(
+              release.assets?.length || 0,
+            );
+          }
+
+          renderDescription(release.description);
+
+          renderTechnical(release.technical);
+
+          if (openSelectedReleaseButton) {
+            openSelectedReleaseButton.disabled = !release.url;
+          }
+        }
+
+        /* =========================
+        DESCRIPTION
+      ========================= */
+
+        function renderDescription(description) {
+          if (!selectedVersionDescription) {
+            return;
+          }
+
+          selectedVersionDescription.innerHTML = "";
+
+          const value = String(description || "").trim();
+
+          if (!value) {
+            const empty = document.createElement("div");
+
+            empty.className = "empty";
+
+            empty.textContent = "Brak opisu tej wersji.";
+
+            selectedVersionDescription.appendChild(empty);
+
+            return;
+          }
+
+          const content = document.createElement("div");
+
+          content.className = "release-markdown";
+
+          content.innerHTML = parseMarkdown(value);
+
+          selectedVersionDescription.appendChild(content);
+        }
+
+        /* =========================
+        TECHNICAL
+      ========================= */
+
+        function renderTechnical(technical = {}) {
+          const systems = Array.isArray(technical.systems)
+            ? technical.systems
+            : [];
+
+          if (technicalSystems) {
+            technicalSystems.textContent = systems.length
+              ? systems.join(", ")
+              : "Brak danych";
+          }
+
+          if (technicalNode) {
+            technicalNode.textContent = technical.node || "Brak danych";
+          }
+
+          if (technicalArchitecture) {
+            technicalArchitecture.textContent =
+              technical.architecture || "Brak danych";
+          }
+
+          if (technicalResolutionMin) {
+            technicalResolutionMin.textContent =
+              technical?.resolution?.minimum || "Brak danych";
+          }
+
+          if (technicalResolutionRecommended) {
+            technicalResolutionRecommended.textContent =
+              technical?.resolution?.recommended || "Brak danych";
+          }
+
+          const minimum = technical?.monitors?.minimum;
+
+          const recommended = technical?.monitors?.recommended;
+
+          if (technicalMonitors) {
+            if (minimum !== null && minimum !== undefined) {
+              technicalMonitors.textContent =
+                recommended !== null && recommended !== undefined
+                  ? `min. ${minimum}, zalecane ${recommended}`
+                  : `min. ${minimum}`;
+            } else {
+              technicalMonitors.textContent = "Brak danych";
+            }
+          }
+
+          if (technicalPortable) {
+            if (technical.portable === true) {
+              technicalPortable.textContent = "Tak";
+            } else if (technical.portable === false) {
+              technicalPortable.textContent = "Nie";
+            } else {
+              technicalPortable.textContent = "Brak danych";
+            }
+          }
+        }
+
+        /* =========================
+        OPEN RELEASE
+      ========================= */
+
+        openSelectedReleaseButton?.addEventListener("click", () => {
+          if (!selectedRelease?.url) {
+            return;
+          }
+
+          window.open(selectedRelease.url, "_blank", "noopener,noreferrer");
+        });
+
+        /* =========================
+        OPEN ALL
+      ========================= */
+
+        openAllVersionsButton?.addEventListener("click", () => {
+          window.open(RELEASES_URL, "_blank", "noopener,noreferrer");
+        });
+
+        /* =========================
+        LOAD
+      ========================= */
+
+        async function loadVersions() {
+          try {
+            releases = await window.MillionaireVersions.getAll();
+
+            if (releases.length === 0) {
+              renderVersions();
+
+              renderRelease(null);
+
+              return;
+            }
+
+            selectedRelease = releases[0];
+
+            renderVersions();
+
+            renderRelease(selectedRelease);
+          } catch (error) {
+            console.error("Błąd pobierania wersji:", error);
+
+            releases = [];
+
+            renderVersions();
+
+            renderRelease(null);
+
+            showStatus("Nie udało się pobrać wersji z GitHub.");
+          }
+        }
+
+        /* =========================
+        START
+      ========================= */
+
+        loadVersions();
+      })();
+    </script>
+
+    <script src="../public/js/shortcuts/help.js"></script>
+  </body>
+</html>

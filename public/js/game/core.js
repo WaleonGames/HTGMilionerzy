@@ -1,21 +1,3 @@
-const openControlsButton=
-  document.getElementById("openControlsButton");
-
-const closeControlsButton=
-  document.getElementById("closeControlsButton");
-
-const detachControlsButton=
-  document.getElementById("detachControlsButton");
-
-const controlsPanel=
-  document.getElementById("controlsPanel");
-
-const controlsBackdrop=
-  document.getElementById("controlsBackdrop");
-
-const exitGameButton=
-  document.getElementById("exitGameButton");
-
 const questionNumber=
   document.getElementById("questionNumber");
 
@@ -61,26 +43,13 @@ const showAnswersButton=
 const toggleSidebarButton=
   document.getElementById("toggleSidebarButton");
 
+const gameControlOffcanvas=
+  document.getElementById(
+    "controlsPanel"
+  );
+
 const nextQuestionButton=
   document.getElementById("nextQuestionButton");
-
-const lifeline5050Button=
-  document.getElementById("lifeline5050Button");
-
-const lifelineAudienceButton=
-  document.getElementById("lifelineAudienceButton");
-
-const lifelineHostButton=
-  document.getElementById("lifelineHostButton");
-
-const lifeline5050Image=
-  document.getElementById("lifeline5050Image");
-
-const lifelineAudienceImage=
-  document.getElementById("lifelineAudienceImage");
-
-const lifelineHostImage=
-  document.getElementById("lifelineHostImage");
 
 const gameSidebar=
   document.querySelector(".game-sidebar");
@@ -118,71 +87,34 @@ const gameEndScene=
 const gameEndAmount=
   document.getElementById("gameEndAmount");
 
+const lifeline5050Image=
+  document.getElementById("lifeline5050Image");
+
+const lifelineAudienceImage=
+  document.getElementById("lifelineAudienceImage");
+
+const lifelineHostImage=
+  document.getElementById("lifelineHostImage");
+
 /* =========================
-   LIFELINES
+   CONSTANTS
 ========================= */
 
 const LIFELINE_IMAGES={
   fiftyFifty:{
-    normal:
-      "../public/assets/lifelines/50-50.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystane 50-50.png",
-
-    blocked:
-      "../public/assets/lifelines/zablokowane 50-50.png"
+    normal:"../public/assets/lifelines/50-50.png",
+    used:"../public/assets/lifelines/wykorzystane 50-50.png",
+    blocked:"../public/assets/lifelines/zablokowane 50-50.png"
   },
 
   audience:{
-    normal:
-      "../public/assets/lifelines/publiczność.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystana publiczność.png"
+    normal:"../public/assets/lifelines/publiczność.png",
+    used:"../public/assets/lifelines/wykorzystana publiczność.png"
   },
 
   host:{
-    normal:
-      "../public/assets/lifelines/pytanie do prowadzącego.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystane pytanie do prowadzącego.png"
-  },
-
-  phone:{
-    normal:
-      "../public/assets/lifelines/telefon.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystany telefon.png"
-  },
-
-  joker:{
-    normal:
-      "../public/assets/lifelines/joker.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystany joker.png"
-  },
-
-  doubleShot:{
-    normal:
-      "../public/assets/lifelines/podwójny strzał.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystany podwójny strzał.png",
-
-    blocked:
-      "../public/assets/lifelines/zablokowany podwójny strzał.png"
-  },
-
-  switchQuestion:{
-    normal:
-      "../public/assets/lifelines/zamiana pytania.png",
-
-    used:
-      "../public/assets/lifelines/wykorzystana zamiana pytania.png"
+    normal:"../public/assets/lifelines/pytanie do prowadzącego.png",
+    used:"../public/assets/lifelines/wykorzystane pytanie do prowadzącego.png"
   }
 };
 
@@ -224,110 +156,6 @@ let finalPrize=0;
 let endSceneTimeout=null;
 
 /* =========================
-   OFFCANVAS
-========================= */
-
-openControlsButton?.addEventListener(
-  "click",
-  ()=>{
-    openControls();
-  }
-);
-
-closeControlsButton?.addEventListener(
-  "click",
-  ()=>{
-    closeControls();
-  }
-);
-
-controlsBackdrop?.addEventListener(
-  "click",
-  ()=>{
-    closeControls();
-  }
-);
-
-document.addEventListener(
-  "keydown",
-  event=>{
-    if(event.key==="Escape"){
-      closeControls();
-    }
-  }
-);
-
-function openControls(){
-  controlsPanel?.classList.add(
-    "open"
-  );
-
-  controlsPanel?.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  if(controlsBackdrop){
-    controlsBackdrop.hidden=false;
-  }
-}
-
-function closeControls(){
-  controlsPanel?.classList.remove(
-    "open"
-  );
-
-  controlsPanel?.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  if(controlsBackdrop){
-    controlsBackdrop.hidden=true;
-  }
-}
-
-/* =========================
-   DETACH CONTROLS
-========================= */
-
-detachControlsButton?.addEventListener(
-  "click",
-  async()=>{
-    if(
-      !window.millionaireAPI?.game
-        ?.openControlsWindow
-    ){
-      console.error(
-        "Brak API do otwierania osobnego okna sterowania."
-      );
-
-      return;
-    }
-
-    try{
-      detachControlsButton.disabled=true;
-
-      publishGameState();
-
-      await window
-        .millionaireAPI
-        .game
-        .openControlsWindow();
-
-      closeControls();
-    }catch(error){
-      console.error(
-        "Nie udało się otworzyć okna sterowania:",
-        error
-      );
-    }finally{
-      detachControlsButton.disabled=false;
-    }
-  }
-);
-
-/* =========================
    GAME STATE
 ========================= */
 
@@ -340,8 +168,7 @@ function getCurrentGameState(){
   const correctAnswer=
     answerChecked
       ? String(
-          currentQuestion
-            ?.correctAnswer||""
+          currentQuestion?.correctAnswer||""
         )
           .trim()
           .toUpperCase()
@@ -349,15 +176,13 @@ function getCurrentGameState(){
 
   return{
     currentQuestionIndex,
-
-    questionCount:
-      gameQuestions.length,
+    questionCount:gameQuestions.length,
 
     currentLevel:
       getQuestionLevel(
         currentQuestion
       ),
-    
+
     gameEnded,
     finalPrize,
 
@@ -367,7 +192,6 @@ function getCurrentGameState(){
     sidebarVisible,
 
     visibleAnswerCount,
-
     currentSelectedAnswer,
 
     answerChecked,
@@ -377,13 +201,11 @@ function getCurrentGameState(){
     answerConfirmReady,
 
     answerConfirmHint:
-      answerConfirmHint
-        ?.textContent||
+      answerConfirmHint?.textContent||
       "Wybierz odpowiedź.",
 
     answerResult:
-      answerResult
-        ?.textContent||
+      answerResult?.textContent||
       "Oczekiwanie",
 
     correctAnswer,
@@ -395,24 +217,15 @@ function getCurrentGameState(){
 }
 
 function publishGameState(){
-  if(
-    !window.millionaireAPI
-      ?.game
-      ?.updateState
-  ){
-    return;
-  }
-
-  window
-    .millionaireAPI
-    .game
-    .updateState(
+  window.millionaireAPI
+    ?.game
+    ?.updateState?.(
       getCurrentGameState()
     );
 }
 
 /* =========================
-   CONTROL ACTIONS
+   ACTION ROUTER
 ========================= */
 
 function executeControlAction(
@@ -429,6 +242,10 @@ function executeControlAction(
   switch(action){
     case "toggle-sidebar":
       toggleSidebar();
+      break;
+
+    case "toggle-offcanvas":
+      toggleControlOffcanvas();
       break;
 
     case "lifeline-5050":
@@ -477,32 +294,9 @@ function executeControlAction(
   }
 }
 
-window.millionaireAPI
-  ?.game
-  ?.onControlsAction?.(
-    (
-      action,
-      payload
-    )=>{
-      executeControlAction(
-        action,
-        payload
-      );
-    }
-  );
-
 /* =========================
    EXIT
 ========================= */
-
-exitGameButton?.addEventListener(
-  "click",
-  ()=>{
-    executeControlAction(
-      "exit-game"
-    );
-  }
-);
 
 function exitGame(){
   const confirmed=
@@ -529,15 +323,6 @@ function exitGame(){
 /* =========================
    SIDEBAR
 ========================= */
-
-toggleSidebarButton?.addEventListener(
-  "click",
-  ()=>{
-    executeControlAction(
-      "toggle-sidebar"
-    );
-  }
-);
 
 function toggleSidebar(){
   sidebarVisible=
@@ -568,43 +353,69 @@ function updateSidebar(){
 
 function initializeSidebar(){
   sidebarVisible=false;
-
   updateSidebar();
+}
+
+/* =========================
+   CONTROL OFFCANVAS
+========================= */
+
+function toggleControlOffcanvas(){
+  if(!gameControlOffcanvas){
+    console.warn(
+      "Nie znaleziono #controlsPanel"
+    );
+
+    return;
+  }
+
+  const isOpen=
+    gameControlOffcanvas
+      .classList
+      .contains("open");
+
+  if(isOpen){
+    closeControlOffcanvas();
+  }else{
+    openControlOffcanvas();
+  }
+}
+
+function openControlOffcanvas(){
+  if(!gameControlOffcanvas){
+    return;
+  }
+
+  gameControlOffcanvas
+    .classList
+    .add("open");
+
+  gameControlOffcanvas
+    .setAttribute(
+      "aria-hidden",
+      "false"
+    );
+}
+
+function closeControlOffcanvas(){
+  if(!gameControlOffcanvas){
+    return;
+  }
+
+  gameControlOffcanvas
+    .classList
+    .remove("open");
+
+  gameControlOffcanvas
+    .setAttribute(
+      "aria-hidden",
+      "true"
+    );
 }
 
 /* =========================
    LIFELINES
 ========================= */
-
-lifeline5050Button
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "lifeline-5050"
-      );
-    }
-  );
-
-lifelineAudienceButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "lifeline-audience"
-      );
-    }
-  );
-
-lifelineHostButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "lifeline-host"
-      );
-    }
-  );
 
 function trigger5050(){
   flashLifeline(
@@ -665,9 +476,7 @@ function flashLifeline(
   image.lifelineTimeout=
     setTimeout(()=>{
       image.src=normal;
-
-      image.lifelineTimeout=
-        null;
+      image.lifelineTimeout=null;
     },duration);
 }
 
@@ -694,27 +503,23 @@ function setLifelineState(
   );
 
   image.lifelineTimeout=null;
-
   image.src=source;
 }
 
 function resetLifelines(){
   setLifelineState(
     lifeline5050Image,
-    "fiftyFifty",
-    "normal"
+    "fiftyFifty"
   );
 
   setLifelineState(
     lifelineAudienceImage,
-    "audience",
-    "normal"
+    "audience"
   );
 
   setLifelineState(
     lifelineHostImage,
-    "host",
-    "normal"
+    "host"
   );
 }
 
@@ -731,6 +536,14 @@ async function loadSettings(){
         .get();
 
     applyTechnicalInfo();
+
+    window
+      .MillionaireGameDesign
+      ?.apply(
+        settings
+          ?.appearance
+          ?.game||{}
+      );
   }catch(error){
     console.error(
       "Błąd pobierania ustawień:",
@@ -740,6 +553,10 @@ async function loadSettings(){
     settings=null;
 
     applyTechnicalInfo();
+
+    window
+      .MillionaireGameDesign
+      ?.apply({});
   }
 }
 
@@ -749,11 +566,12 @@ function applyTechnicalInfo(){
       ?.screen
       ?.technicalInfo===true;
 
-  technicalInfoElements
-    .forEach(element=>{
+  technicalInfoElements.forEach(
+    element=>{
       element.hidden=
         !visible;
-    });
+    }
+  );
 }
 
 /* =========================
@@ -801,28 +619,22 @@ function renderPrizeTree(){
     return;
   }
 
-  const currentQuestion=
-    gameQuestions[
-      currentQuestionIndex
-    ];
-
   const currentLevel=
     getQuestionLevel(
-      currentQuestion
+      gameQuestions[
+        currentQuestionIndex
+      ]
     );
 
   levels
-    .sort((a,b)=>{
-      return (
+    .sort(
+      (a,b)=>
         Number(b.level)-
         Number(a.level)
-      );
-    })
+    )
     .forEach(prize=>{
       const levelNumber=
-        Number(
-          prize.level
-        )||0;
+        Number(prize.level)||0;
 
       const item=
         document.createElement(
@@ -833,9 +645,7 @@ function renderPrizeTree(){
         "game-prize-item";
 
       item.dataset.level=
-        String(
-          levelNumber
-        );
+        String(levelNumber);
 
       if(prize.guaranteed){
         item.classList.add(
@@ -861,9 +671,7 @@ function renderPrizeTree(){
         "game-prize-level";
 
       level.textContent=
-        String(
-          levelNumber
-        );
+        String(levelNumber);
 
       const amount=
         document.createElement(
@@ -884,22 +692,18 @@ function renderPrizeTree(){
         amount
       );
 
-      gamePrizeTree
-        .appendChild(
-          item
-        );
+      gamePrizeTree.appendChild(
+        item
+      );
     });
 }
 
 function updatePrizeTreeActive(){
-  const question=
-    gameQuestions[
-      currentQuestionIndex
-    ];
-
   const currentLevel=
     getQuestionLevel(
-      question
+      gameQuestions[
+        currentQuestionIndex
+      ]
     );
 
   gamePrizeTree
@@ -916,23 +720,15 @@ function updatePrizeTreeActive(){
     });
 }
 
-function formatPrize(
-  amount,
-  currency
-){
-  const value=
-    Number(amount)||0;
-
+function formatPrize(amount,currency){
   return `${
     new Intl.NumberFormat(
       "pl-PL"
-    ).format(value)
+    ).format(
+      Number(amount)||0
+    )
   } ${currency}`;
 }
-
-/* =========================
-   PRIZE HELPERS
-========================= */
 
 function getPrizeLevel(level){
   const levels=
@@ -942,24 +738,22 @@ function getPrizeLevel(level){
       ? settings.prizeTree.levels
       : [];
 
-  return levels.find(prize=>{
-    return (
+  return levels.find(
+    prize=>
       Number(prize.level)===
       Number(level)
-    );
-  })||null;
+  )||null;
 }
 
 function getPrizeAmount(level){
-  const prize=
-    getPrizeLevel(level);
-
   return Number(
-    prize?.amount
+    getPrizeLevel(level)?.amount
   )||0;
 }
 
-function getGuaranteedPrizeBeforeLevel(level){
+function getGuaranteedPrizeBeforeLevel(
+  level
+){
   const levels=
     Array.isArray(
       settings?.prizeTree?.levels
@@ -969,53 +763,37 @@ function getGuaranteedPrizeBeforeLevel(level){
 
   const guaranteed=
     levels
-      .filter(prize=>{
-        return (
+      .filter(
+        prize=>
           prize.guaranteed===true&&
           Number(prize.level)<
           Number(level)
-        );
-      })
-      .sort((a,b)=>{
-        return (
+      )
+      .sort(
+        (a,b)=>
           Number(b.level)-
           Number(a.level)
-        );
-      });
-
-  if(!guaranteed.length){
-    return 0;
-  }
+      );
 
   return Number(
-    guaranteed[0].amount
+    guaranteed[0]?.amount
   )||0;
 }
 
 /* =========================
-   QUESTION LEVEL
+   QUESTIONS
 ========================= */
 
 function getQuestionLevel(question){
   const level=
-    Number(
-      question?.level
-    );
+    Number(question?.level);
 
-  if(
-    Number.isInteger(level)&&
+  return Number.isInteger(level)&&
     level>=1&&
     level<=12
-  ){
-    return level;
-  }
-
-  return 1;
+      ? level
+      : 1;
 }
-
-/* =========================
-   PREPARE GAME QUESTIONS
-========================= */
 
 function prepareGameQuestions(){
   const randomQuestions=
@@ -1039,11 +817,10 @@ function prepareGameQuestions(){
     );
 
   const activeQuestions=
-    questions.filter(question=>{
-      return (
+    questions.filter(
+      question=>
         question.active!==false
-      );
-    });
+    );
 
   const prepared=[];
 
@@ -1053,14 +830,12 @@ function prepareGameQuestions(){
     level++
   ){
     const pool=
-      activeQuestions
-        .filter(question=>{
-          return (
-            getQuestionLevel(
-              question
-            )===level
-          );
-        });
+      activeQuestions.filter(
+        question=>
+          getQuestionLevel(
+            question
+          )===level
+      );
 
     if(!pool.length){
       console.warn(
@@ -1100,40 +875,19 @@ function prepareGameQuestions(){
     );
   }
 
-  prepared.sort((a,b)=>{
-    return (
+  prepared.sort(
+    (a,b)=>
       getQuestionLevel(a)-
       getQuestionLevel(b)
-    );
-  });
-
-  gameQuestions=
-    prepared;
-
-  currentQuestionIndex=0;
-
-  console.table(
-    gameQuestions.map(
-      (question,index)=>({
-        index,
-        level:
-          getQuestionLevel(
-            question
-          ),
-        active:
-          question.active!==false,
-        question:
-          question.question
-      })
-    )
   );
+
+  gameQuestions=prepared;
+  currentQuestionIndex=0;
 }
 
-/* =========================
-   SHUFFLE ANSWERS
-========================= */
-
-function shuffleQuestionAnswers(question){
+function shuffleQuestionAnswers(
+  question
+){
   const letters=[
     "A",
     "B",
@@ -1150,41 +904,48 @@ function shuffleQuestionAnswers(question){
 
   let result=null;
 
-  for(let attempt=0;attempt<20;attempt++){
+  for(
+    let attempt=0;
+    attempt<20;
+    attempt++
+  ){
     const entries=
-      letters.map(letter=>{
-        return{
-          originalLetter:letter,
-          text:question.answers?.[letter]||""
-        };
-      });
+      letters.map(letter=>({
+        originalLetter:letter,
+        text:
+          question.answers?.[letter]||
+          ""
+      }));
 
     shuffleArray(entries);
 
     const answers={};
     let correctAnswer="";
 
-    entries.forEach((entry,index)=>{
-      const newLetter=
-        letters[index];
+    entries.forEach(
+      (entry,index)=>{
+        const newLetter=
+          letters[index];
 
-      answers[newLetter]=
-        entry.text;
+        answers[newLetter]=
+          entry.text;
 
-      if(
-        entry.originalLetter===
-        originalCorrectAnswer
-      ){
-        correctAnswer=
-          newLetter;
+        if(
+          entry.originalLetter===
+          originalCorrectAnswer
+        ){
+          correctAnswer=
+            newLetter;
+        }
       }
-    });
+    );
 
-    const wouldRepeatTooMuch=
-      correctAnswer===previousCorrectAnswer&&
+    const repeated=
+      correctAnswer===
+        previousCorrectAnswer&&
       sameCorrectAnswerStreak>=2;
 
-    if(!wouldRepeatTooMuch){
+    if(!repeated){
       result={
         ...question,
         answers,
@@ -1218,8 +979,7 @@ function shuffleQuestionAnswers(question){
 
 function shuffleArray(array){
   for(
-    let i=
-      array.length-1;
+    let i=array.length-1;
     i>0;
     i--
   ){
@@ -1241,10 +1001,6 @@ function shuffleArray(array){
   return array;
 }
 
-/* =========================
-   QUESTIONS
-========================= */
-
 async function loadQuestions(){
   try{
     const data=
@@ -1265,8 +1021,6 @@ async function loadQuestions(){
       return;
     }
 
-    currentQuestionIndex=0;
-
     loadCurrentQuestion();
   }catch(error){
     console.error(
@@ -1277,15 +1031,9 @@ async function loadQuestions(){
     questions=[];
     gameQuestions=[];
 
-    currentQuestionIndex=0;
-
     showEmptyQuestion();
   }
 }
-
-/* =========================
-   LOAD CURRENT QUESTION
-========================= */
 
 function loadCurrentQuestion(){
   const question=
@@ -1301,21 +1049,17 @@ function loadCurrentQuestion(){
   resetQuestionContentState();
 
   const level=
-    getQuestionLevel(
-      question
-    );
+    getQuestionLevel(question);
 
-  if(questionNumber){
-    questionNumber.textContent=
-      `Pytanie ${level}`;
-  }
+  questionNumber.textContent=
+    `Pytanie ${level}`;
 
-  if(questionProgress){
-    questionProgress.textContent=
-      `${level} / ${
-        settings?.general?.questionsCount||12
-      }`;
-  }
+  questionProgress.textContent=
+    `${level} / ${
+      settings
+        ?.general
+        ?.questionsCount||12
+    }`;
 
   questionText.dataset.value=
     question.question||"";
@@ -1337,7 +1081,7 @@ function loadCurrentQuestion(){
 }
 
 /* =========================
-   RESET QUESTION
+   QUESTION STATE
 ========================= */
 
 function resetQuestionContentState(){
@@ -1361,13 +1105,10 @@ function resetQuestionContentState(){
   answerTextC.textContent="";
   answerTextD.textContent="";
 
-  selectedAnswer.textContent=
-    "Brak";
+  selectedAnswer.textContent="Brak";
 
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      "Wybierz odpowiedź.";
-  }
+  answerConfirmHint.textContent=
+    "Wybierz odpowiedź.";
 
   answerResult.textContent=
     "Oczekiwanie";
@@ -1380,11 +1121,8 @@ function resetQuestionContentState(){
   showQuestionButton.disabled=
     !mainPanelVisible;
 
-  showAnswersButton.disabled=
-    true;
-
-  nextQuestionButton.disabled=
-    true;
+  showAnswersButton.disabled=true;
+  nextQuestionButton.disabled=true;
 
   showQuestionButton.classList.remove(
     "active"
@@ -1429,18 +1167,8 @@ function resetQuestionContentState(){
 }
 
 /* =========================
-   SHOW MAIN PANEL
+   SHOW
 ========================= */
-
-showMainPanelButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "show-main-panel"
-      );
-    }
-  );
 
 function showMainPanel(){
   if(mainPanelVisible){
@@ -1452,51 +1180,24 @@ function showMainPanel(){
   questionText.hidden=false;
   answersGrid.hidden=false;
 
-  questionText.textContent="";
-
-  answerTextA.textContent="";
-  answerTextB.textContent="";
-  answerTextC.textContent="";
-  answerTextD.textContent="";
-
   showMainPanelButton.disabled=true;
 
-  showMainPanelButton
-    .classList
-    .remove(
-      "game-button-primary"
-    );
+  showMainPanelButton.classList.remove(
+    "game-button-primary"
+  );
 
-  showMainPanelButton
-    .classList
-    .add(
-      "active"
-    );
+  showMainPanelButton.classList.add(
+    "active"
+  );
 
   showQuestionButton.disabled=false;
 
-  showQuestionButton
-    .classList
-    .add(
-      "game-button-primary"
-    );
+  showQuestionButton.classList.add(
+    "game-button-primary"
+  );
 
   publishGameState();
 }
-
-/* =========================
-   SHOW QUESTION
-========================= */
-
-showQuestionButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "show-question"
-      );
-    }
-  );
 
 function showQuestion(){
   if(
@@ -1509,49 +1210,27 @@ function showQuestion(){
   questionVisible=true;
 
   questionText.textContent=
-    questionText
-      .dataset
-      .value||"";
+    questionText.dataset.value||"";
 
   showQuestionButton.disabled=true;
 
-  showQuestionButton
-    .classList
-    .remove(
-      "game-button-primary"
-    );
+  showQuestionButton.classList.remove(
+    "game-button-primary"
+  );
 
-  showQuestionButton
-    .classList
-    .add(
-      "active"
-    );
+  showQuestionButton.classList.add(
+    "active"
+  );
 
   showAnswersButton.disabled=false;
 
-  showAnswersButton
-    .classList
-    .add(
-      "game-button-primary"
-    );
+  showAnswersButton.classList.add(
+    "game-button-primary"
+  );
 
   updateShowAnswersButton();
   publishGameState();
 }
-
-/* =========================
-   SHOW ANSWERS
-========================= */
-
-showAnswersButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "show-answer"
-      );
-    }
-  );
 
 function showNextAnswer(){
   if(
@@ -1562,34 +1241,10 @@ function showNextAnswer(){
   }
 
   const answers=[
-    {
-      element:answerTextA,
-      value:
-        answerTextA
-          .dataset
-          .value
-    },
-    {
-      element:answerTextB,
-      value:
-        answerTextB
-          .dataset
-          .value
-    },
-    {
-      element:answerTextC,
-      value:
-        answerTextC
-          .dataset
-          .value
-    },
-    {
-      element:answerTextD,
-      value:
-        answerTextD
-          .dataset
-          .value
-    }
+    answerTextA,
+    answerTextB,
+    answerTextC,
+    answerTextD
   ];
 
   const current=
@@ -1597,31 +1252,29 @@ function showNextAnswer(){
       visibleAnswerCount
     ];
 
-  current.element.textContent=
-    current.value||"";
+  if(!current){
+    return;
+  }
+
+  current.textContent=
+    current.dataset.value||"";
 
   visibleAnswerCount++;
 
   updateShowAnswersButton();
 
-  if(
-    visibleAnswerCount===4
-  ){
+  if(visibleAnswerCount===4){
     answersVisible=true;
 
     showAnswersButton.disabled=true;
 
-    showAnswersButton
-      .classList
-      .remove(
-        "game-button-primary"
-      );
+    showAnswersButton.classList.remove(
+      "game-button-primary"
+    );
 
-    showAnswersButton
-      .classList
-      .add(
-        "active"
-      );
+    showAnswersButton.classList.add(
+      "active"
+    );
 
     enableHostAnswers();
   }
@@ -1637,102 +1290,16 @@ function updateShowAnswersButton(){
     "Pokaż D"
   ];
 
-  if(
-    visibleAnswerCount>=4
-  ){
-    showAnswersButton.textContent=
-      "Odpowiedzi";
-
-    return;
-  }
-
   showAnswersButton.textContent=
-    labels[
-      visibleAnswerCount
-    ];
+    visibleAnswerCount>=4
+      ? "Odpowiedzi"
+      : labels[
+          visibleAnswerCount
+        ];
 }
 
 /* =========================
-   END SCENE
-========================= */
-
-function showEndScene(amount){
-  clearTimeout(
-    endSceneTimeout
-  );
-
-  endSceneTimeout=null;
-
-  clearAnswerConfirmation();
-
-  gameEnded=true;
-
-  finalPrize=
-    Math.max(
-      0,
-      Number(amount)||0
-    );
-
-  mainPanelVisible=false;
-  questionVisible=false;
-  answersVisible=false;
-
-  visibleAnswerCount=0;
-
-  questionText.hidden=true;
-  answersGrid.hidden=true;
-
-  if(gameEndScene){
-    gameEndScene.hidden=false;
-  }
-
-  const currency=
-    String(
-      settings
-        ?.prizeTree
-        ?.currency||
-      "zł"
-    ).trim();
-
-  if(gameEndAmount){
-    gameEndAmount.textContent=
-      `${
-        new Intl.NumberFormat(
-          "pl-PL"
-        ).format(finalPrize)
-      } ${currency}`;
-  }
-
-  showMainPanelButton.disabled=true;
-  showQuestionButton.disabled=true;
-  showAnswersButton.disabled=true;
-  nextQuestionButton.disabled=true;
-
-  hostAnswerButtons.forEach(button=>{
-    button.disabled=true;
-  });
-
-  publishGameState();
-}
-
-function scheduleEndScene(
-  amount,
-  delay=1800
-){
-  clearTimeout(
-    endSceneTimeout
-  );
-
-  endSceneTimeout=
-    setTimeout(()=>{
-      showEndScene(
-        amount
-      );
-    },delay);
-}
-
-/* =========================
-   ENABLE HOST ANSWERS
+   ANSWER
 ========================= */
 
 function enableHostAnswers(){
@@ -1746,29 +1313,6 @@ function enableHostAnswers(){
     }
   );
 }
-
-/* =========================
-   HOST ANSWER
-========================= */
-
-hostAnswerButtons.forEach(
-  button=>{
-    button.addEventListener(
-      "click",
-      ()=>{
-        executeControlAction(
-          "select-answer",
-          {
-            answer:
-              button
-                .dataset
-                .hostAnswer
-          }
-        );
-      }
-    );
-  }
-);
 
 function handleHostAnswer(answer){
   if(
@@ -1792,23 +1336,17 @@ function handleHostAnswer(answer){
   }
 
   const button=
-    getHostAnswerButton(
-      answer
-    );
+    getHostAnswerButton(answer);
 
   if(!button){
     return;
   }
 
   if(
-    currentSelectedAnswer===
-      answer&&
+    currentSelectedAnswer===answer&&
     answerConfirmReady
   ){
-    checkAnswer(
-      answer
-    );
-
+    checkAnswer(answer);
     return;
   }
 
@@ -1828,16 +1366,12 @@ function selectHostAnswer(
 ){
   clearAnswerConfirmation();
 
-  currentSelectedAnswer=
-    answer;
+  currentSelectedAnswer=answer;
 
-  selectedAnswer.textContent=
-    answer;
+  selectedAnswer.textContent=answer;
 
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      "Przygotowanie do potwierdzenia...";
-  }
+  answerConfirmHint.textContent=
+    "Przygotowanie do potwierdzenia...";
 
   hostAnswerButtons.forEach(
     button=>{
@@ -1850,32 +1384,19 @@ function selectHostAnswer(
 
   answerElements.forEach(
     answerElement=>{
-      answerElement
-        .classList
-        .remove(
-          "selected"
-        );
+      answerElement.classList.remove(
+        "selected"
+      );
     }
   );
 
-  hostButton
-    .classList
-    .add(
-      "selected"
-    );
+  hostButton.classList.add(
+    "selected"
+  );
 
-  const screenAnswer=
-    getScreenAnswer(
-      answer
-    );
-
-  if(screenAnswer){
-    screenAnswer
-      .classList
-      .add(
-        "selected"
-      );
-  }
+  getScreenAnswer(answer)
+    ?.classList
+    .add("selected");
 }
 
 function startAnswerConfirmationDelay(){
@@ -1891,14 +1412,11 @@ function startAnswerConfirmationDelay(){
 
   let remaining=
     Math.ceil(
-      ANSWER_CONFIRM_DELAY/
-      1000
+      ANSWER_CONFIRM_DELAY/1000
     );
 
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      `Poczekaj ${remaining} s...`;
-  }
+  answerConfirmHint.textContent=
+    `Poczekaj ${remaining} s...`;
 
   publishGameState();
 
@@ -1906,10 +1424,7 @@ function startAnswerConfirmationDelay(){
     setInterval(()=>{
       remaining--;
 
-      if(
-        remaining>0&&
-        answerConfirmHint
-      ){
+      if(remaining>0){
         answerConfirmHint.textContent=
           `Poczekaj ${remaining} s...`;
 
@@ -1928,21 +1443,16 @@ function startAnswerConfirmationDelay(){
 
       answerConfirmReady=true;
 
-      if(answerConfirmHint){
-        answerConfirmHint.textContent=
-          "Kliknij ponownie tę samą odpowiedź, aby potwierdzić.";
-      }
+      answerConfirmHint.textContent=
+        "Kliknij ponownie tę samą odpowiedź, aby potwierdzić.";
 
-      const button=
-        getHostAnswerButton(
-          currentSelectedAnswer
-        );
-
-      if(button){
-        button.classList.add(
+      getHostAnswerButton(
+        currentSelectedAnswer
+      )
+        ?.classList
+        .add(
           "confirm-ready"
         );
-      }
 
       publishGameState();
     },ANSWER_CONFIRM_DELAY);
@@ -1970,16 +1480,11 @@ function clearAnswerConfirmation(){
   );
 }
 
-/* =========================
-   CHECK ANSWER
-========================= */
-
 function checkAnswer(selected){
   if(
     answerChecked||
     !answerConfirmReady||
-    selected!==
-      currentSelectedAnswer
+    selected!==currentSelectedAnswer
   ){
     return;
   }
@@ -1997,8 +1502,7 @@ function checkAnswer(selected){
 
   const correctAnswer=
     String(
-      question
-        .correctAnswer||""
+      question.correctAnswer||""
     )
       .trim()
       .toUpperCase();
@@ -2018,25 +1522,18 @@ function checkAnswer(selected){
     }
   );
 
-  answerElements.forEach(
-    answer=>{
-      answer.classList.remove(
-        "selected",
-        "correct",
-        "wrong"
-      );
-    }
-  );
+  answerElements.forEach(answer=>{
+    answer.classList.remove(
+      "selected",
+      "correct",
+      "wrong"
+    );
+  });
 
   const selectedHostButton=
-    getHostAnswerButton(
-      selected
-    );
+    getHostAnswerButton(selected);
 
-  if(
-    selected===
-    correctAnswer
-  ){
+  if(selected===correctAnswer){
     handleCorrectAnswer(
       correctAnswer,
       selectedHostButton
@@ -2052,10 +1549,6 @@ function checkAnswer(selected){
   );
 }
 
-/* =========================
-   CORRECT
-========================= */
-
 function handleCorrectAnswer(
   correctAnswer,
   hostButton
@@ -2063,27 +1556,16 @@ function handleCorrectAnswer(
   currentAnswerCorrect=true;
   gameFailed=false;
 
-  if(hostButton){
-    hostButton.classList.add(
-      "correct"
-    );
-  }
+  hostButton?.classList.add(
+    "correct"
+  );
 
-  const screenAnswer=
-    getScreenAnswer(
-      correctAnswer
-    );
+  getScreenAnswer(correctAnswer)
+    ?.classList
+    .add("correct");
 
-  if(screenAnswer){
-    screenAnswer.classList.add(
-      "correct"
-    );
-  }
-
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      "Odpowiedź została potwierdzona.";
-  }
+  answerConfirmHint.textContent=
+    "Odpowiedź została potwierdzona.";
 
   answerResult.textContent=
     "Poprawna odpowiedź";
@@ -2103,25 +1585,17 @@ function handleCorrectAnswer(
   if(isLastQuestion){
     nextQuestionButton.disabled=true;
 
-    const question=
-      gameQuestions[
-        currentQuestionIndex
-      ];
-
     const level=
       getQuestionLevel(
-        question
-      );
-
-    const amount=
-      getPrizeAmount(
-        level
+        gameQuestions[
+          currentQuestionIndex
+        ]
       );
 
     publishGameState();
 
     scheduleEndScene(
-      amount
+      getPrizeAmount(level)
     );
 
     return;
@@ -2132,10 +1606,6 @@ function handleCorrectAnswer(
   publishGameState();
 }
 
-/* =========================
-   WRONG
-========================= */
-
 function handleWrongAnswer(
   selected,
   correctAnswer,
@@ -2144,49 +1614,24 @@ function handleWrongAnswer(
   currentAnswerCorrect=false;
   gameFailed=true;
 
-  if(hostButton){
-    hostButton.classList.add(
-      "wrong"
-    );
-  }
+  hostButton?.classList.add(
+    "wrong"
+  );
 
-  const selectedScreen=
-    getScreenAnswer(
-      selected
-    );
+  getScreenAnswer(selected)
+    ?.classList
+    .add("wrong");
 
-  const correctScreen=
-    getScreenAnswer(
-      correctAnswer
-    );
+  getScreenAnswer(correctAnswer)
+    ?.classList
+    .add("correct");
 
-  if(selectedScreen){
-    selectedScreen.classList.add(
-      "wrong"
-    );
-  }
+  getHostAnswerButton(correctAnswer)
+    ?.classList
+    .add("correct");
 
-  if(correctScreen){
-    correctScreen.classList.add(
-      "correct"
-    );
-  }
-
-  const correctHostButton=
-    getHostAnswerButton(
-      correctAnswer
-    );
-
-  if(correctHostButton){
-    correctHostButton.classList.add(
-      "correct"
-    );
-  }
-
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      "Odpowiedź została potwierdzona.";
-  }
+  answerConfirmHint.textContent=
+    "Odpowiedź została potwierdzona.";
 
   answerResult.textContent=
     `Błędna odpowiedź. Poprawna: ${correctAnswer}`;
@@ -2201,57 +1646,102 @@ function handleWrongAnswer(
 
   nextQuestionButton.disabled=true;
 
-  const question=
-    gameQuestions[
-      currentQuestionIndex
-    ];
-
   const level=
     getQuestionLevel(
-      question
-    );
-
-  const guaranteedPrize=
-    getGuaranteedPrizeBeforeLevel(
-      level
+      gameQuestions[
+        currentQuestionIndex
+      ]
     );
 
   publishGameState();
 
   scheduleEndScene(
-    guaranteedPrize
+    getGuaranteedPrizeBeforeLevel(
+      level
+    )
   );
 }
 
 /* =========================
-   HELPERS
+   END
 ========================= */
 
-function getScreenAnswer(letter){
-  return document.querySelector(
-    `.game-answer[data-answer="${letter}"]`
+function showEndScene(amount){
+  clearTimeout(
+    endSceneTimeout
   );
-}
 
-function getHostAnswerButton(letter){
-  return document.querySelector(
-    `.game-host-answer[data-host-answer="${letter}"]`
+  endSceneTimeout=null;
+
+  clearAnswerConfirmation();
+
+  gameEnded=true;
+
+  finalPrize=Math.max(
+    0,
+    Number(amount)||0
   );
-}
 
-/* =========================
-   NEXT QUESTION
-========================= */
+  mainPanelVisible=false;
+  questionVisible=false;
+  answersVisible=false;
 
-nextQuestionButton
-  ?.addEventListener(
-    "click",
-    ()=>{
-      executeControlAction(
-        "next-question"
-      );
+  visibleAnswerCount=0;
+
+  questionText.hidden=true;
+  answersGrid.hidden=true;
+
+  gameEndScene.hidden=false;
+
+  const currency=
+    String(
+      settings
+        ?.prizeTree
+        ?.currency||
+      "zł"
+    ).trim();
+
+  gameEndAmount.textContent=
+    `${
+      new Intl.NumberFormat(
+        "pl-PL"
+      ).format(finalPrize)
+    } ${currency}`;
+
+  showMainPanelButton.disabled=true;
+  showQuestionButton.disabled=true;
+  showAnswersButton.disabled=true;
+  nextQuestionButton.disabled=true;
+
+  hostAnswerButtons.forEach(
+    button=>{
+      button.disabled=true;
     }
   );
+
+  publishGameState();
+}
+
+function scheduleEndScene(
+  amount,
+  delay=1800
+){
+  clearTimeout(
+    endSceneTimeout
+  );
+
+  endSceneTimeout=
+    setTimeout(
+      ()=>{
+        showEndScene(amount);
+      },
+      delay
+    );
+}
+
+/* =========================
+   NEXT
+========================= */
 
 function goToNextQuestion(){
   if(
@@ -2277,21 +1767,29 @@ function goToNextQuestion(){
 }
 
 /* =========================
-   EMPTY
+   HELPERS
 ========================= */
+
+function getScreenAnswer(letter){
+  return document.querySelector(
+    `.game-answer[data-answer="${letter}"]`
+  );
+}
+
+function getHostAnswerButton(letter){
+  return document.querySelector(
+    `.game-host-answer[data-host-answer="${letter}"]`
+  );
+}
 
 function showEmptyQuestion(){
   clearAnswerConfirmation();
 
-  if(questionNumber){
-    questionNumber.textContent=
-      "Brak pytań";
-  }
+  questionNumber.textContent=
+    "Brak pytań";
 
-  if(questionProgress){
-    questionProgress.textContent=
-      "0 / 0";
-  }
+  questionProgress.textContent=
+    "0 / 0";
 
   questionText.textContent="";
 
@@ -2306,10 +1804,8 @@ function showEmptyQuestion(){
   selectedAnswer.textContent=
     "Brak";
 
-  if(answerConfirmHint){
-    answerConfirmHint.textContent=
-      "Brak dostępnego pytania.";
-  }
+  answerConfirmHint.textContent=
+    "Brak dostępnego pytania.";
 
   answerResult.textContent=
     "Brak pytań";
@@ -2327,18 +1823,40 @@ function showEmptyQuestion(){
   hostAnswerButtons.forEach(
     button=>{
       button.disabled=true;
-
-      button.classList.remove(
-        "selected",
-        "confirm-ready",
-        "correct",
-        "wrong"
-      );
     }
   );
 
   publishGameState();
 }
+
+/* =========================
+   PUBLIC API
+========================= */
+
+window.MillionaireGame={
+  getState:getCurrentGameState,
+  publishState:publishGameState,
+
+  executeControlAction,
+
+  toggleSidebar,
+
+  toggleControlOffcanvas,
+  openControlOffcanvas,
+  closeControlOffcanvas,
+
+  trigger5050,
+  triggerAudience,
+  triggerHost,
+
+  showMainPanel,
+  showQuestion,
+  showNextAnswer,
+
+  handleHostAnswer,
+  goToNextQuestion,
+  exitGame
+};
 
 /* =========================
    INITIALIZE

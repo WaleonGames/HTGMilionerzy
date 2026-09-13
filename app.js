@@ -1,7 +1,6 @@
 const {
   app,
   BrowserWindow,
-  ipcMain,
   screen:electronScreen
 }=require("electron");
 
@@ -9,11 +8,34 @@ const path=require("path");
 const crypto=require("crypto");
 
 const {
+  createToolbar
+}=require("./toolbar");
+
+const {
+  registerIpc
+}=require("./ipc");
+
+const {
+  runBootloader
+}=require("./bootloader");
+
+const {
+  DEFAULT_SETTINGS
+}=require(
+  "./config/default-settings"
+);
+
+const {
   ensureDirectory,
   ensureFile,
   readJson,
   writeJson
 }=require("./utils/file");
+
+const {
+  getDisplays,
+  getPrimaryDisplay
+}=require("./utils/screen");
 
 const DATA_DIR=
   path.join(
@@ -33,115 +55,136 @@ const SETTINGS_FILE=
     "settings.json"
   );
 
-const DEFAULT_SETTINGS={
-  general:{
-    gameTitle:"Milionerzy",
-    questionsCount:12,
-    autoNextQuestion:false,
-    confirmAnswer:true,
-
-    randomQuestions:false,
-    randomAnswers:false
-  },
-
-  screen:{
-    fullscreen:false,
-    screenIndex:0,
-    width:1920,
-    height:1080,
-    technicalInfo:false
-  },
-
-  sound:{
-    masterVolume:100,
-    interfaceSounds:true,
-    gameSounds:true
-  },
-
-  prizeTree:{
-    currency:"zł",
-
-    levels:[
-      {
-        level:1,
-        amount:1000,
-        guaranteed:false
-      },
-      {
-        level:2,
-        amount:2000,
-        guaranteed:true
-      },
-      {
-        level:3,
-        amount:5000,
-        guaranteed:false
-      },
-      {
-        level:4,
-        amount:10000,
-        guaranteed:false
-      },
-      {
-        level:5,
-        amount:15000,
-        guaranteed:false
-      },
-      {
-        level:6,
-        amount:25000,
-        guaranteed:false
-      },
-      {
-        level:7,
-        amount:50000,
-        guaranteed:true
-      },
-      {
-        level:8,
-        amount:75000,
-        guaranteed:false
-      },
-      {
-        level:9,
-        amount:125000,
-        guaranteed:false
-      },
-      {
-        level:10,
-        amount:250000,
-        guaranteed:false
-      },
-      {
-        level:11,
-        amount:500000,
-        guaranteed:false
-      },
-      {
-        level:12,
-        amount:1000000,
-        guaranteed:false
-      }
-    ]
-  },
-
-  appearance:{
-    theme:"light",
-    accentColor:"#356df3",
-    animations:true
-  },
-
-  dataStorage:{
-    autoSave:true,
-    autoBackup:false,
-    backupInterval:30
-  }
-};
+/* =========================
+   STATE
+========================= */
 
 let mainWindow=null;
 let controlsWindow=null;
-
 let gameState=null;
+
+/* =========================
+   HELPERS
+========================= */
+
+function deepMerge(
+  target,
+  source
+){
+  if(
+    !source||
+    typeof source!=="object"
+  ){
+    return target;
+  }
+
+  Object.keys(source)
+    .forEach(key=>{
+      const value=
+        source[key];
+
+      if(
+        value&&
+        typeof value==="object"&&
+        !Array.isArray(value)
+      ){
+        if(
+          !target[key]||
+          typeof target[key]!=="object"||
+          Array.isArray(
+            target[key]
+          )
+        ){
+          target[key]={};
+        }
+
+        deepMerge(
+          target[key],
+          value
+        );
+      }else{
+        target[key]=value;
+      }
+    });
+
+  return target;
+}
+
+function normalizeAppearanceSettings(
+  appearance={}
+){
+  const normalized=
+    structuredClone(
+      DEFAULT_SETTINGS.appearance
+    );
+
+  /*
+   * Migracja starej struktury:
+   *
+   * appearance:{
+   *   theme,
+   *   accentColor,
+   *   primaryColor,
+   *   animations
+   * }
+   */
+
+  if(
+    appearance.theme!==undefined
+  ){
+    normalized.general.theme=
+      appearance.theme;
+  }
+
+  if(
+    appearance.accentColor!==undefined
+  ){
+    normalized.general.accentColor=
+      appearance.accentColor;
+  }
+
+  if(
+    appearance.primaryColor!==undefined
+  ){
+    normalized.general.accentColor=
+      appearance.primaryColor;
+  }
+
+  if(
+    appearance.animations!==undefined
+  ){
+    normalized.general.animations=
+      appearance.animations;
+  }
+
+  /*
+   * Nowa struktura.
+   */
+
+  if(
+    appearance.general&&
+    typeof appearance.general===
+      "object"
+  ){
+    deepMerge(
+      normalized.general,
+      appearance.general
+    );
+  }
+
+  if(
+    appearance.game&&
+    typeof appearance.game===
+      "object"
+  ){
+    deepMerge(
+      normalized.game,
+      appearance.game
+    );
+  }
+
+  return normalized;
+}
 
 /* =========================
    DATA
@@ -181,7 +224,9 @@ function readQuestions(){
     : [];
 }
 
-function saveQuestions(questions){
+function saveQuestions(
+  questions
+){
   ensureDataFiles();
 
   return writeJson(
@@ -190,7 +235,9 @@ function saveQuestions(questions){
   );
 }
 
-function normalizeQuestionData(question){
+function normalizeQuestionData(
+  question
+){
   const level=
     Number(
       question?.level
@@ -237,7 +284,9 @@ function normalizeQuestionData(question){
   };
 }
 
-function validateQuestion(question){
+function validateQuestion(
+  question
+){
   return Boolean(
     question.question&&
     question.answers.A&&
@@ -250,7 +299,9 @@ function validateQuestion(question){
   );
 }
 
-function addQuestion(question){
+function addQuestion(
+  question
+){
   const questions=
     readQuestions();
 
@@ -298,9 +349,8 @@ function editQuestion(
 
   const index=
     questions.findIndex(
-      item=>{
-        return item.id===id;
-      }
+      item=>
+        item.id===id
     );
 
   if(index===-1){
@@ -329,7 +379,6 @@ function editQuestion(
 
   const updatedQuestion={
     ...current,
-
     ...normalized,
 
     id:current.id,
@@ -352,15 +401,16 @@ function editQuestion(
   return updatedQuestion;
 }
 
-function deleteQuestion(id){
+function deleteQuestion(
+  id
+){
   const questions=
     readQuestions();
 
   const filtered=
     questions.filter(
-      question=>{
-        return question.id!==id;
-      }
+      question=>
+        question.id!==id
     );
 
   if(
@@ -390,73 +440,147 @@ function readSettings(){
       {}
     );
 
-  return{
-    general:{
-      ...DEFAULT_SETTINGS.general,
-      ...(settings?.general||{})
-    },
+  const normalized=
+    structuredClone(
+      DEFAULT_SETTINGS
+    );
 
-    screen:{
-      ...DEFAULT_SETTINGS.screen,
-      ...(settings?.screen||{})
-    },
+  /* GENERAL */
 
-    sound:{
-      ...DEFAULT_SETTINGS.sound,
-      ...(settings?.sound||{})
-    },
+  deepMerge(
+    normalized.general,
+    settings?.general||{}
+  );
 
-    prizeTree:{
-      ...DEFAULT_SETTINGS.prizeTree,
-      ...(settings?.prizeTree||{})
-    },
+  /* SCREEN */
 
-    appearance:{
-      ...DEFAULT_SETTINGS.appearance,
-      ...(settings?.appearance||{})
-    },
+  deepMerge(
+    normalized.screen,
+    settings?.screen||{}
+  );
 
-    dataStorage:{
-      ...DEFAULT_SETTINGS.dataStorage,
-      ...(settings?.dataStorage||{})
-    }
-  };
+  /* SOUND */
+
+  deepMerge(
+    normalized.sound,
+    settings?.sound||{}
+  );
+
+  /* PRIZE TREE */
+
+  if(
+    settings?.prizeTree&&
+    typeof settings.prizeTree===
+      "object"
+  ){
+    normalized.prizeTree={
+      ...normalized.prizeTree,
+      ...settings.prizeTree,
+
+      levels:
+        Array.isArray(
+          settings.prizeTree.levels
+        )
+          ? settings.prizeTree.levels
+          : normalized.prizeTree.levels
+    };
+  }
+
+  /* APPEARANCE */
+
+  normalized.appearance=
+    normalizeAppearanceSettings(
+      settings?.appearance||{}
+    );
+
+  /* SHORTCUTS */
+
+  deepMerge(
+    normalized.shortcuts,
+    settings?.shortcuts||{}
+  );
+
+  /* DATA STORAGE */
+
+  deepMerge(
+    normalized.dataStorage,
+    settings?.dataStorage||{}
+  );
+
+  return normalized;
 }
 
-function saveSettings(settings){
+function saveSettings(
+  settings
+){
   ensureDataFiles();
 
-  const normalized={
-    general:{
-      ...DEFAULT_SETTINGS.general,
-      ...(settings?.general||{})
-    },
+  const normalized=
+    structuredClone(
+      DEFAULT_SETTINGS
+    );
 
-    screen:{
-      ...DEFAULT_SETTINGS.screen,
-      ...(settings?.screen||{})
-    },
+  /* GENERAL */
 
-    sound:{
-      ...DEFAULT_SETTINGS.sound,
-      ...(settings?.sound||{})
-    },
+  deepMerge(
+    normalized.general,
+    settings?.general||{}
+  );
 
-    prizeTree:{
-      ...DEFAULT_SETTINGS.prizeTree,
-      ...(settings?.prizeTree||{})
-    },
+  /* SCREEN */
 
-    appearance:{
-      ...DEFAULT_SETTINGS.appearance,
-      ...(settings?.appearance||{})
-    },
+  deepMerge(
+    normalized.screen,
+    settings?.screen||{}
+  );
 
-    dataStorage:{
-      ...DEFAULT_SETTINGS.dataStorage,
-      ...(settings?.dataStorage||{})
-    }
-  };
+  /* SOUND */
+
+  deepMerge(
+    normalized.sound,
+    settings?.sound||{}
+  );
+
+  /* PRIZE TREE */
+
+  if(
+    settings?.prizeTree&&
+    typeof settings.prizeTree===
+      "object"
+  ){
+    normalized.prizeTree={
+      ...normalized.prizeTree,
+      ...settings.prizeTree,
+
+      levels:
+        Array.isArray(
+          settings.prizeTree.levels
+        )
+          ? settings.prizeTree.levels
+          : normalized.prizeTree.levels
+    };
+  }
+
+  /* APPEARANCE */
+
+  normalized.appearance=
+    normalizeAppearanceSettings(
+      settings?.appearance||{}
+    );
+
+  /* SHORTCUTS */
+
+  deepMerge(
+    normalized.shortcuts,
+    settings?.shortcuts||{}
+  );
+
+  /* DATA STORAGE */
+
+  deepMerge(
+    normalized.dataStorage,
+    settings?.dataStorage||{}
+  );
 
   writeJson(
     SETTINGS_FILE,
@@ -466,11 +590,26 @@ function saveSettings(settings){
   return normalized;
 }
 
+function resetSettings(){
+  ensureDataFiles();
+
+  writeJson(
+    SETTINGS_FILE,
+    structuredClone(
+      DEFAULT_SETTINGS
+    )
+  );
+
+  return readSettings();
+}
+
 /* =========================
    MAIN WINDOW PAGE
 ========================= */
 
-function isGamePage(url){
+function isGamePage(
+  url
+){
   if(!url){
     return false;
   }
@@ -497,19 +636,14 @@ function isGamePage(url){
   }
 }
 
-function handleMainWindowNavigation(url){
-  /*
-   * Jeżeli nadal jesteśmy
-   * w game.html, nic nie robimy.
-   */
-
-  if(isGamePage(url)){
+function handleMainWindowNavigation(
+  url
+){
+  if(
+    isGamePage(url)
+  ){
     return;
   }
-
-  /*
-   * Opuściliśmy game.html.
-   */
 
   gameState=null;
 
@@ -551,24 +685,115 @@ function createWindow(){
     screenIndex=0;
   }
 
-  const selectedDisplay=
-    displays[screenIndex]||
-    electronScreen.getPrimaryDisplay();
+  let selectedDisplay=
+    null;
 
-  const width=
+  /*
+   * NOWY TRYB:
+   * wybór monitora przez displayId.
+   */
+
+  if(
+    screenSettings.mode===
+      "select"&&
+    screenSettings.displayId!==null&&
+    screenSettings.displayId!==
+      undefined
+  ){
+    const displayId=
+      String(
+        screenSettings.displayId
+      );
+
+    selectedDisplay=
+      displays.find(
+        display=>
+          String(display.id)===
+          displayId
+      )||
+      null;
+  }
+
+  /*
+   * FALLBACK:
+   * stary screenIndex.
+   */
+
+  if(!selectedDisplay){
+    selectedDisplay=
+      displays[screenIndex]||
+      electronScreen
+        .getPrimaryDisplay();
+  }
+
+  let width=
     Number(
       screenSettings.width
     )||
     DEFAULT_SETTINGS.screen.width;
 
-  const height=
+  let height=
     Number(
       screenSettings.height
     )||
     DEFAULT_SETTINGS.screen.height;
 
+  /*
+   * NOWY TRYB ROZDZIELCZOŚCI.
+   */
+
+  if(
+    screenSettings.mode===
+    "select"
+  ){
+    const resolution=
+      String(
+        screenSettings.resolution||
+        "native"
+      );
+
+    if(
+      resolution==="native"
+    ){
+      const scaleFactor=
+        Number(
+          selectedDisplay.scaleFactor
+        )||1;
+
+      width=
+        Math.round(
+          selectedDisplay.size.width*
+          scaleFactor
+        );
+
+      height=
+        Math.round(
+          selectedDisplay.size.height*
+          scaleFactor
+        );
+    }else{
+      const match=
+        /^(\d+)x(\d+)$/i.exec(
+          resolution
+        );
+
+      if(match){
+        width=
+          Number(
+            match[1]
+          );
+
+        height=
+          Number(
+            match[2]
+          );
+      }
+    }
+  }
+
   const fullscreen=
-    screenSettings.fullscreen===true;
+    screenSettings.fullscreen===
+    true;
 
   mainWindow=
     new BrowserWindow({
@@ -611,9 +836,30 @@ function createWindow(){
   mainWindow.loadFile(
     path.join(
       __dirname,
-      "views",
-      "index.html"
+      "views/loader.html"
     )
+  );
+
+  mainWindow.webContents.once(
+    "did-finish-load",
+    ()=>{
+      setTimeout(
+        ()=>{
+          if(
+            mainWindow &&
+            !mainWindow.isDestroyed()
+          ){
+            mainWindow.loadFile(
+              path.join(
+                __dirname,
+                "views/index.html"
+              )
+            );
+          }
+        },
+        2000
+      );
+    }
   );
 
   mainWindow.once(
@@ -671,7 +917,10 @@ function createControlsWindow(){
 
       show:false,
 
-      title:"Milionerzy - Sterowanie",
+      title:
+        "Milionerzy - Sterowanie",
+
+      autoHideMenuBar:true,
 
       webPreferences:{
         preload:path.join(
@@ -684,6 +933,17 @@ function createControlsWindow(){
       }
     });
 
+  /*
+   * Okno sterowania nie korzysta
+   * z głównego toolbara.
+   */
+
+  controlsWindow.removeMenu();
+
+  controlsWindow.setMenuBarVisibility(
+    false
+  );
+
   controlsWindow.loadFile(
     path.join(
       __dirname,
@@ -695,7 +955,22 @@ function createControlsWindow(){
   controlsWindow.once(
     "ready-to-show",
     ()=>{
+      if(
+        !controlsWindow||
+        controlsWindow.isDestroyed()
+      ){
+        return;
+      }
+
+      controlsWindow.removeMenu();
+
+      controlsWindow
+        .setMenuBarVisibility(
+          false
+        );
+
       controlsWindow.show();
+      controlsWindow.focus();
 
       if(gameState){
         controlsWindow
@@ -729,6 +1004,10 @@ function createControlsWindow(){
   return controlsWindow;
 }
 
+/* =========================
+   CLOSE CONTROLS WINDOW
+========================= */
+
 function closeControlsWindow(){
   if(
     !controlsWindow||
@@ -743,285 +1022,132 @@ function closeControlsWindow(){
 }
 
 /* =========================
-   QUESTIONS IPC
+   REGISTER IPC
 ========================= */
 
-ipcMain.handle(
-  "questions:get",
-  ()=>{
-    return readQuestions();
-  }
-);
+function registerApplicationIpc(){
+  registerIpc({
+    readQuestions,
+    addQuestion,
+    editQuestion,
+    deleteQuestion,
 
-ipcMain.handle(
-  "questions:add",
-  (event,question)=>{
-    return addQuestion(
-      question
-    );
-  }
-);
+    readSettings,
+    saveSettings,
+    resetSettings,
 
-ipcMain.handle(
-  "questions:edit",
-  (
-    event,
-    id,
-    question
-  )=>{
-    return editQuestion(
-      id,
-      question
-    );
-  }
-);
-
-ipcMain.handle(
-  "questions:delete",
-  (event,id)=>{
-    return deleteQuestion(
-      id
-    );
-  }
-);
-
-/* =========================
-   SETTINGS IPC
-========================= */
-
-ipcMain.handle(
-  "settings:get",
-  ()=>{
-    return readSettings();
-  }
-);
-
-ipcMain.handle(
-  "settings:save",
-  (event,settings)=>{
-    return saveSettings(
-      settings
-    );
-  }
-);
-
-ipcMain.handle(
-  "settings:reset",
-  ()=>{
-    writeJson(
-      SETTINGS_FILE,
-      structuredClone(
+    getDefaultSettings:()=>{
+      return structuredClone(
         DEFAULT_SETTINGS
-      )
-    );
-
-    return readSettings();
-  }
-);
-
-/* =========================
-   GAME IPC
-========================= */
-
-ipcMain.handle(
-  "game:open-controls-window",
-  ()=>{
-    if(!gameState){
-      return false;
-    }
-
-    createControlsWindow();
-
-    return true;
-  }
-);
-
-ipcMain.handle(
-  "game:close-controls-window",
-  ()=>{
-    return closeControlsWindow();
-  }
-);
-
-ipcMain.on(
-  "game:closed",
-  event=>{
-    if(
-      !mainWindow||
-      mainWindow.isDestroyed()||
-      event.sender.id!==
-        mainWindow.webContents.id
-    ){
-      return;
-    }
-
-    gameState=null;
-
-    if(
-      controlsWindow&&
-      !controlsWindow.isDestroyed()
-    ){
-      controlsWindow.close();
-    }
-  }
-);
-
-ipcMain.handle(
-  "game:is-controls-window-open",
-  ()=>{
-    return Boolean(
-      controlsWindow&&
-      !controlsWindow.isDestroyed()
-    );
-  }
-);
-
-/* =========================
-   ATTACH CONTROLS
-========================= */
-
-ipcMain.handle(
-  "game:attach-controls",
-  ()=>{
-    if(
-      controlsWindow&&
-      !controlsWindow.isDestroyed()
-    ){
-      controlsWindow.close();
-    }
-
-    return true;
-  }
-);
-
-/* =========================
-   CONTROLS -> GAME
-========================= */
-
-ipcMain.handle(
-  "game:controls-action",
-  (
-    event,
-    action,
-    payload
-  )=>{
-    if(
-      !mainWindow||
-      mainWindow.isDestroyed()
-    ){
-      return false;
-    }
-
-    mainWindow.webContents.send(
-      "game:controls-action",
-      action,
-      payload||{}
-    );
-
-    return true;
-  }
-);
-
-/* =========================
-   GAME -> STATE
-========================= */
-
-ipcMain.on(
-  "game:update-state",
-  (
-    event,
-    state
-  )=>{
-    /*
-     * Stan może aktualizować wyłącznie
-     * główne okno gry.
-     */
-
-    if(
-      !mainWindow||
-      mainWindow.isDestroyed()||
-      event.sender.id!==
-        mainWindow.webContents.id
-    ){
-      return;
-    }
-
-    gameState=
-      state||null;
-
-    /*
-     * Aktualizacja osobnego
-     * panelu sterowania.
-     */
-
-    if(
-      controlsWindow&&
-      !controlsWindow.isDestroyed()
-    ){
-      controlsWindow.webContents.send(
-        "game:state-changed",
-        gameState
       );
-    }
-  }
-);
+    },
 
-/* =========================
-   GET STATE
-========================= */
+    createControlsWindow,
+    closeControlsWindow,
 
-ipcMain.handle(
-  "game:get-state",
-  ()=>{
-    return gameState;
-  }
-);
+    getMainWindow:()=>{
+      return mainWindow;
+    },
 
-/* =========================
-   REQUEST STATE
-========================= */
+    getControlsWindow:()=>{
+      return controlsWindow;
+    },
 
-ipcMain.handle(
-  "game:request-state",
-  ()=>{
-    if(
-      !gameState||
-      !mainWindow||
-      mainWindow.isDestroyed()
-    ){
-      return false;
-    }
+    getGameState:()=>{
+      return gameState;
+    },
 
-    mainWindow.webContents.send(
-      "game:request-state"
-    );
+    setGameState:state=>{
+      gameState=
+        state;
+    },
 
-    return true;
-  }
-);
+    getDisplays,
+    getPrimaryDisplay
+  });
+}
 
 /* =========================
    APP
 ========================= */
 
-app.whenReady().then(()=>{
-  ensureDataFiles();
+app.whenReady().then(
+  async()=>{
+    ensureDataFiles();
 
-  createWindow();
+    registerApplicationIpc();
 
-  app.on(
-    "activate",
-    ()=>{
-      if(
-        BrowserWindow
-          .getAllWindows()
-          .length===0
-      ){
-        createWindow();
+    createWindow();
+
+    createToolbar({
+      mainWindow,
+      readSettings
+    });
+
+    mainWindow.webContents.once(
+      "did-finish-load",
+      async()=>{
+        if(
+          mainWindow.webContents
+            .getURL()
+            .endsWith("loader.html")
+        ){
+          const bootResult=
+            await runBootloader(
+              mainWindow
+            );
+
+          if(
+            !bootResult.success
+          ){
+            console.error(
+              "Bootloader:",
+              bootResult
+            );
+
+            return;
+          }
+
+          setTimeout(
+            ()=>{
+              if(
+                mainWindow&&
+                !mainWindow.isDestroyed()
+              ){
+                mainWindow.loadFile(
+                  path.join(
+                    __dirname,
+                    "views",
+                    "index.html"
+                  )
+                );
+              }
+            },
+            2000
+          );
+        }
       }
-    }
-  );
-});
+    );
+
+    app.on(
+      "activate",
+      ()=>{
+        if(
+          BrowserWindow
+            .getAllWindows()
+            .length===0
+        ){
+          createWindow();
+
+          createToolbar({
+            mainWindow,
+            readSettings
+          });
+        }
+      }
+    );
+  }
+);
 
 app.on(
   "window-all-closed",

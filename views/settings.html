@@ -1,576 +1,1278 @@
 <!doctype html>
 <html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <title>Milionerzy - Ustawienia</title>
+    <title>Milionerzy - Ustawienia</title>
 
-  <link rel="stylesheet" href="../public/css/style.css">
-  <link rel="stylesheet" href="../public/css/design.css">
-  <link rel="stylesheet" href="../public/css/blocked.css">
-</head>
-<body>
-  <div class="app">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button
-          id="backButton"
-          class="button button-icon"
-          type="button"
-          aria-label="Powrót"
-        >
-          ←
-        </button>
+    <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="../public/css/design.css" />
+    <link rel="stylesheet" href="../public/css/additional/badge.css" />
+    <link rel="stylesheet" href="../public/css/additional/blocked.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button
+            id="backButton"
+            class="button button-icon"
+            type="button"
+            aria-label="Powrót"
+          >
+            ←
+          </button>
 
-        <div>
-          <h1>
-            Ustawienia
-          </h1>
+          <div>
+            <h1>Ustawienia</h1>
 
-          <p>
-            Konfiguracja programu Milionerzy
-          </p>
+            <p>Konfiguracja programu Milionerzy</p>
+          </div>
         </div>
-      </div>
 
-      <div class="topbar-actions">
-        <button
-          id="resetButton"
-          class="button button-secondary"
-          type="button"
-        >
-          Przywróć domyślne
-        </button>
-
-        <button
-          id="saveButton"
-          class="button button-primary"
-          type="button"
-        >
-          Zapisz
-        </button>
-      </div>
-    </header>
-
-    <main class="app-layout">
-      <aside class="sidebar">
-        <nav class="nav">
+        <div class="topbar-actions">
           <button
-            class="nav-item active"
-            data-tab="general"
+            id="resetButton"
+            class="button button-secondary"
             type="button"
           >
-            Ogólne
+            Przywróć domyślne
           </button>
 
-          <button
-            class="nav-item"
-            data-tab="screen"
-            type="button"
-          >
-            Ekran
+          <button id="saveButton" class="button button-primary" type="button">
+            Zapisz
           </button>
+        </div>
+      </header>
 
-          <button
-            class="nav-item"
-            data-tab="sound"
-            type="button"
-          >
-            Dźwięk
-          </button>
+      <main class="app-layout">
+        <aside class="sidebar">
+          <nav class="nav">
+            <button class="nav-item active" data-tab="general" type="button">
+              Ogólne
+            </button>
 
-          <button
-            class="nav-item"
-            data-tab="prizeTree"
-            type="button"
-          >
-            Drzewko nagród
-          </button>
+            <button class="nav-item" data-tab="screen" type="button">
+              Ekran
 
-          <button
-            class="nav-item"
-            data-tab="appearance"
-            type="button"
-          >
-            Wygląd
-          </button>
+              <span class="badge badge-neutral badge-sm"> Nowe </span>
+            </button>
 
-          <button
-            class="nav-item"
-            data-tab="dataStorage"
-            type="button"
-          >
-            Zapisy danych
-          </button>
-        </nav>
-      </aside>
+            <button class="nav-item" data-tab="sound" type="button">
+              Dźwięk
+            </button>
 
-      <section class="content">
-        <!-- =========================
+            <button class="nav-item" data-tab="prizeTree" type="button">
+              Drzewko nagród
+            </button>
+
+            <button class="nav-item" data-tab="appearance" type="button">
+              <span> Wygląd </span>
+
+              <span class="badge badge-neutral badge-sm"> Nowe </span>
+            </button>
+
+            <button class="nav-item" data-tab="dataStorage" type="button">
+              Zapisy danych
+            </button>
+
+            <button class="nav-item" data-tab="shortcuts" type="button">
+              <span> Skróty </span>
+
+              <span class="badge badge-neutral badge-sm"> Nowe </span>
+            </button>
+          </nav>
+        </aside>
+
+        <section class="content">
+          <!-- =========================
              OGÓLNE
         ========================= -->
 
-        <section
-          class="tab-panel active"
-          data-panel="general"
-        >
-          <div class="section-header">
-            <h2>
-              Ogólne
-            </h2>
+          <section class="tab-panel active" data-panel="general">
+            <div class="section-header">
+              <h2>Ogólne</h2>
 
-            <p>
-              Podstawowe ustawienia rozgrywki.
-            </p>
-          </div>
-
-          <div class="card form">
-            <div class="form-field">
-              <label for="gameTitle">
-                Nazwa turnieju
-              </label>
-
-              <input
-                id="gameTitle"
-                type="text"
-                placeholder="Milionerzy"
-              >
+              <p>Podstawowe ustawienia rozgrywki.</p>
             </div>
 
-            <div class="form-field">
-              <label for="questionsCount">
-                Liczba pytań
+            <div class="card form">
+              <div class="form-field">
+                <label for="gameTitle"> Nazwa turnieju </label>
+
+                <input id="gameTitle" type="text" placeholder="Milionerzy" />
+              </div>
+
+              <div class="form-field">
+                <label for="questionsCount"> Liczba pytań </label>
+
+                <input id="questionsCount" type="number" min="1" max="50" />
+              </div>
+
+              <label class="setting-row">
+                <div>
+                  <strong> Losowe pytania </strong>
+
+                  <span>
+                    Dla każdego poziomu wybieraj losowe aktywne pytanie
+                    przypisane do tego poziomu.
+                  </span>
+                </div>
+
+                <input id="randomQuestions" type="checkbox" />
               </label>
 
-              <input
-                id="questionsCount"
-                type="number"
-                min="1"
-                max="50"
-              >
+              <label class="setting-row">
+                <div>
+                  <strong> Losowa kolejność odpowiedzi </strong>
+
+                  <span>
+                    Mieszaj odpowiedzi A, B, C i D przed rozpoczęciem pytania.
+                  </span>
+                </div>
+
+                <input id="randomAnswers" type="checkbox" />
+              </label>
+
+              <label class="setting-row">
+                <div>
+                  <strong>
+                    Automatyczne przejście do następnego pytania
+                  </strong>
+
+                  <span>
+                    Po zakończeniu pytania program przygotuje kolejne.
+                  </span>
+                </div>
+
+                <input id="autoNextQuestion" type="checkbox" />
+              </label>
+
+              <label class="setting-row">
+                <div>
+                  <strong> Potwierdzanie odpowiedzi </strong>
+
+                  <span>
+                    Wybrana odpowiedź wymaga potwierdzenia przed sprawdzeniem.
+                  </span>
+                </div>
+
+                <input id="confirmAnswer" type="checkbox" />
+              </label>
             </div>
+          </section>
 
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Losowe pytania
-                </strong>
-
-                <span>
-                  Dla każdego poziomu wybieraj losowe aktywne pytanie przypisane do tego poziomu.
-                </span>
-              </div>
-
-              <input
-                id="randomQuestions"
-                type="checkbox"
-              >
-            </label>
-
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Losowa kolejność odpowiedzi
-                </strong>
-
-                <span>
-                  Mieszaj odpowiedzi A, B, C i D przed rozpoczęciem pytania.
-                </span>
-              </div>
-
-              <input
-                id="randomAnswers"
-                type="checkbox"
-              >
-            </label>
-
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Automatyczne przejście do następnego pytania
-                </strong>
-
-                <span>
-                  Po zakończeniu pytania program przygotuje kolejne.
-                </span>
-              </div>
-
-              <input
-                id="autoNextQuestion"
-                type="checkbox"
-              >
-            </label>
-
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Potwierdzanie odpowiedzi
-                </strong>
-
-                <span>
-                  Wybrana odpowiedź wymaga potwierdzenia przed sprawdzeniem.
-                </span>
-              </div>
-
-              <input
-                id="confirmAnswer"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </section>
-
-        <!-- =========================
+          <!-- =========================
              EKRAN
         ========================= -->
 
-        <section
-          class="tab-panel"
-          data-panel="screen"
-        >
-          <div class="section-header">
-            <h2>
-              Ekran
-            </h2>
+          <section class="tab-panel" data-panel="screen">
+            <div class="section-header">
+              <h2>Ekran</h2>
 
-            <p>
-              Ustawienia okna gry i ekranów zewnętrznych.
-            </p>
-          </div>
+              <p>Ustawienia okna gry i ekranów zewnętrznych.</p>
+            </div>
 
-          <div class="card form">
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Pełny ekran
-                </strong>
+            <div class="card form">
+              <!-- =========================
+                PODSTAWOWE
+            ========================= -->
 
-                <span>
-                  Uruchamiaj ekran turnieju w trybie pełnoekranowym.
-                </span>
-              </div>
+              <label class="setting-row">
+                <div>
+                  <strong> Pełny ekran </strong>
 
-              <input
-                id="fullscreen"
-                type="checkbox"
-              >
-            </label>
+                  <span>
+                    Uruchamiaj ekran turnieju w trybie pełnoekranowym.
+                  </span>
+                </div>
 
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Informacje techniczne
-                </strong>
-
-                <span>
-                  Wyświetlaj informacje techniczne na ekranie rozgrywki.
-                </span>
-              </div>
-
-              <input
-                id="technicalInfo"
-                type="checkbox"
-              >
-            </label>
-
-            <div class="form-field">
-              <label for="screenIndex">
-                Numer monitora
+                <input id="fullscreen" type="checkbox" />
               </label>
 
-              <input
-                id="screenIndex"
-                type="number"
-                min="0"
-              >
+              <label class="setting-row">
+                <div>
+                  <strong> Informacje techniczne </strong>
 
-              <span class="form-help">
-                Monitory są numerowane od 0. Jeśli chcesz uruchomić grę na monitorze 0, wpisz 0; na monitorze 1 wpisz 1 itd.
-              </span>
-            </div>
+                  <span>
+                    Wyświetlaj informacje techniczne na ekranie rozgrywki.
+                  </span>
+                </div>
 
-            <div class="form-grid">
-              <div class="form-field">
-                <label for="screenWidth">
-                  Szerokość
-                </label>
+                <input id="technicalInfo" type="checkbox" />
+              </label>
 
-                <input
-                  id="screenWidth"
-                  type="number"
-                  min="640"
-                >
-              </div>
+              <!-- =========================
+                MONITOR
+            ========================= -->
 
               <div class="form-field">
-                <label for="screenHeight">
-                  Wysokość
-                </label>
+                <label for="screenDisplay"> Monitor </label>
 
-                <input
-                  id="screenHeight"
-                  type="number"
-                  min="480"
-                >
+                <select id="screenDisplay">
+                  <option value="0">Monitor 1</option>
+                </select>
+
+                <span class="form-help">
+                  Wybierz monitor, na którym ma zostać uruchomiony ekran
+                  turnieju.
+                </span>
+              </div>
+
+              <!-- =========================
+                RESOLUTION
+            ========================= -->
+
+              <div class="form-field">
+                <label for="screenResolution"> Rozdzielczość </label>
+
+                <select id="screenResolution">
+                  <option value="native">Natywna / zalecana</option>
+
+                  <option value="1280x720">HD (720p) — 1280 × 720</option>
+
+                  <option value="1366x768">HD / WXGA — 1366 × 768</option>
+
+                  <option value="1600x900">HD+ (900p) — 1600 × 900</option>
+
+                  <option value="1920x1080">
+                    Full HD (1080p) — 1920 × 1080
+                  </option>
+
+                  <option value="2560x1440">QHD (1440p) — 2560 × 1440</option>
+
+                  <option value="3440x1440">UWQHD — 3440 × 1440</option>
+
+                  <option value="3840x2160">
+                    4K UHD (2160p) — 3840 × 2160
+                  </option>
+
+                  <option value="5120x2880">5K — 5120 × 2880</option>
+
+                  <option value="7680x4320">
+                    8K UHD (4320p) — 7680 × 4320
+                  </option>
+                </select>
+
+                <span class="form-help">
+                  Zalecane jest użycie natywnej rozdzielczości wybranego
+                  monitora.
+                </span>
+              </div>
+
+              <!-- =========================
+                MANUAL MODE
+            ========================= -->
+
+              <label class="setting-row">
+                <div>
+                  <strong> Ustawienia ręczne </strong>
+
+                  <span>
+                    Włącz dotychczasowy sposób ręcznego ustawiania numeru
+                    monitora i rozdzielczości.
+                  </span>
+                </div>
+
+                <input id="manualScreenSettings" type="checkbox" />
+              </label>
+
+              <!-- =========================
+                MANUAL SETTINGS
+            ========================= -->
+
+              <div id="manualScreenSettingsContent" class="form" hidden>
+                <div class="form-field">
+                  <label for="screenIndex"> Numer monitora </label>
+
+                  <input id="screenIndex" type="number" min="0" />
+
+                  <span class="form-help">
+                    Monitory są numerowane od 0. Monitor 0 to pierwszy monitor,
+                    monitor 1 to drugi itd.
+                  </span>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="screenWidth"> Szerokość </label>
+
+                    <input id="screenWidth" type="number" min="640" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="screenHeight"> Wysokość </label>
+
+                    <input id="screenHeight" type="number" min="480" />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <!-- =========================
+          <!-- =========================
             DŹWIĘK
         ========================= -->
 
-        <section
-          class="tab-panel"
-          data-panel="sound"
-        >
-          <div class="section-header">
-            <h2>
-              Dźwięk
-            </h2>
+          <section class="tab-panel" data-panel="sound">
+            <div class="section-header">
+              <h2>Dźwięk</h2>
 
-            <p>
-              Głośność i odtwarzanie efektów.
-            </p>
-          </div>
-
-          <div class="card form is-coming-soon">
-            <div class="form-field">
-              <label for="masterVolume">
-                Głośność główna
-
-                <span id="masterVolumeValue">
-                  100%
-                </span>
-              </label>
-
-              <input
-                id="masterVolume"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-              >
+              <p>Głośność i odtwarzanie efektów.</p>
             </div>
 
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Dźwięki interfejsu
-                </strong>
+            <div class="card form is-coming-soon">
+              <div class="form-field">
+                <label for="masterVolume">
+                  Głośność główna
 
-                <span>
-                  Odtwarzaj dźwięki przy działaniach w panelu.
-                </span>
+                  <span id="masterVolumeValue"> 100% </span>
+                </label>
+
+                <input
+                  id="masterVolume"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                />
               </div>
 
-              <input
-                id="interfaceSounds"
-                type="checkbox"
-              >
-            </label>
+              <label class="setting-row">
+                <div>
+                  <strong> Dźwięki interfejsu </strong>
 
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Dźwięki gry
-                </strong>
+                  <span> Odtwarzaj dźwięki przy działaniach w panelu. </span>
+                </div>
 
-                <span>
-                  Odtwarzaj muzykę i efekty podczas rozgrywki.
-                </span>
-              </div>
+                <input id="interfaceSounds" type="checkbox" />
+              </label>
 
-              <input
-                id="gameSounds"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </section>
+              <label class="setting-row">
+                <div>
+                  <strong> Dźwięki gry </strong>
 
-        <!-- =========================
+                  <span> Odtwarzaj muzykę i efekty podczas rozgrywki. </span>
+                </div>
+
+                <input id="gameSounds" type="checkbox" />
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================
              DRZEWKO NAGRÓD
         ========================= -->
 
-        <section
-          class="tab-panel"
-          data-panel="prizeTree"
-        >
-          <div class="section-header">
-            <h2>
-              Drzewko nagród
-            </h2>
+          <section class="tab-panel" data-panel="prizeTree">
+            <div class="section-header">
+              <h2>Drzewko nagród</h2>
 
-            <p>
-              Kwoty i progi gwarantowane.
-            </p>
-          </div>
-
-          <div class="card form">
-            <div class="form-field">
-              <label for="currency">
-                Waluta
-              </label>
-
-              <input
-                id="currency"
-                type="text"
-                placeholder="zł"
-              >
+              <p>Kwoty i progi gwarantowane.</p>
             </div>
 
-            <div
-              id="prizeLevels"
-              class="prize-list"
-            ></div>
-          </div>
-        </section>
+            <div class="card form">
+              <div class="form-field">
+                <label for="currency"> Waluta </label>
 
-        <!-- =========================
+                <input id="currency" type="text" placeholder="zł" />
+              </div>
+
+              <div id="prizeLevels" class="prize-list"></div>
+            </div>
+          </section>
+
+          <!-- =========================
              WYGLĄD
         ========================= -->
 
-        <section
-          class="tab-panel"
-          data-panel="appearance"
-        >
-          <div class="section-header">
-            <h2>
-              Wygląd
-            </h2>
+          <section class="tab-panel" data-panel="appearance">
+            <div class="section-header">
+              <h2>Wygląd</h2>
 
-            <p>
-              Kolory i ustawienia interfejsu.
-            </p>
-          </div>
-
-          <div class="card form">
-            <div class="form-field">
-              <label for="theme">
-                Motyw
-              </label>
-
-              <select id="theme">
-                <option value="dark">
-                  Ciemny
-                </option>
-
-                <option value="light">
-                  Jasny
-                </option>
-              </select>
+              <p>Konfiguracja wyglądu programu i ekranu gry.</p>
             </div>
 
-            <div class="form-field">
-              <label for="accentColor">
-                Kolor główny
-              </label>
+            <!-- =========================
+              PODZAKŁADKI
+          ========================= -->
 
-              <input
-                id="accentColor"
-                type="color"
+            <div class="appearance-tabs">
+              <button
+                class="appearance-tab active"
+                data-appearance-tab="general"
+                type="button"
               >
+                Ogólne
+              </button>
+
+              <button
+                class="appearance-tab"
+                data-appearance-tab="game"
+                type="button"
+              >
+                Gra
+              </button>
             </div>
 
-            <label class="setting-row is-coming-soon">
-              <div>
-                <strong>
-                  Animacje
-                </strong>
+            <!-- =========================
+              WYGLĄD - OGÓLNE
+          ========================= -->
 
-                <span>
-                  Włącz animacje przejść i odpowiedzi.
-                </span>
+            <section
+              class="appearance-panel active"
+              data-appearance-panel="general"
+            >
+              <div class="card form">
+                <div class="form-field">
+                  <label for="theme"> Motyw </label>
+
+                  <select id="theme">
+                    <option value="dark">Ciemny</option>
+
+                    <option value="light">Jasny</option>
+                  </select>
+                  <div class="form-help">
+                    Zmiany w tym panelu nie wpłyną na wygląd menu gry. Wyjątkiem są pasek sterowania oraz pasek pomocniczy skrótów w zakładce „Gra”.
+                  </div>
+                  <div class="form-help">
+                    Jeżeli chcesz korzystać z jasnego motywu, przejdź do zakładki „Gra” i zmień ustawienia wyglądu na jasne.
+                  </div>
+                  <div class="form-help">
+                    Zalecany jest ciemny motyw, ponieważ obrazek znajdujący się w menu gry jest dostosowany do ciemnego motywu. Obecnie nie jest możliwa jego zmiana, ponieważ funkcja wyboru zewnętrznego obrazka nie została jeszcze zaimplementowana.
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="accentColor"> Kolor główny </label>
+
+                  <input id="accentColor" type="color" />
+                </div>
+
+                <label class="setting-row is-coming-soon">
+                  <div>
+                    <strong> Animacje interfejsu </strong>
+
+                    <span>
+                      Włącz animacje przejść w interfejsie programu.
+                    </span>
+                  </div>
+
+                  <input id="animations" type="checkbox" />
+                </label>
+              </div>
+            </section>
+
+            <!-- =========================
+              WYGLĄD - GRA
+          ========================= -->
+
+            <section class="appearance-panel" data-appearance-panel="game">
+              <!-- =========================
+                PRESET
+            ========================= -->
+
+              <div class="card form">
+                <div class="section-header section-header-small">
+                  <h3>Preset wyglądu</h3>
+
+                  <p>Wybierz bazowy wygląd ekranu gry.</p>
+                </div>
+
+                <div class="form-field">
+                  <label for="gameAppearancePreset"> Preset </label>
+
+                  <select id="gameAppearancePreset">
+                    <option value="default">Domyślny</option>
+
+                    <option value="purple">Fioletowy</option>
+
+                    <option value="blue">Niebieski</option>
+
+                    <option value="dark">Ciemny</option>
+
+                    <option value="custom">Własny</option>
+                  </select>
+                </div>
+
+                <button
+                  id="resetGameAppearanceButton"
+                  class="button button-secondary"
+                  type="button"
+                >
+                  Przywróć wygląd gry
+                </button>
               </div>
 
-              <input
-                id="animations"
-                type="checkbox"
-              >
-            </label>
-          </div>
-        </section>
+              <!-- =========================
+                TŁO
+            ========================= -->
 
-        <!-- =========================
+              <div class="card form">
+                <div class="section-header section-header-small">
+                  <h3>Tło</h3>
+
+                  <p>Konfiguracja głównego tła ekranu gry.</p>
+                </div>
+
+                <div class="form-field is-blocked">
+                  <label for="gameBackgroundImage"> Tło główne </label>
+
+                  <input
+                    id="gameBackgroundImage"
+                    type="text"
+                    placeholder="../public/assets/background/glowne.png"
+                    disabled
+                  />
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="gameBackgroundSize"> Dopasowanie </label>
+
+                    <select id="gameBackgroundSize">
+                      <option value="cover">Wypełnij</option>
+
+                      <option value="contain">Dopasuj</option>
+
+                      <option value="100% 100%">Rozciągnij</option>
+
+                      <option value="auto">Oryginalny rozmiar</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameBackgroundPosition"> Pozycja </label>
+
+                    <select id="gameBackgroundPosition">
+                      <option value="center">Środek</option>
+
+                      <option value="top">Góra</option>
+
+                      <option value="bottom">Dół</option>
+
+                      <option value="left">Lewo</option>
+
+                      <option value="right">Prawo</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="gameBackgroundBrightness">
+                    Jasność tła
+
+                    <span id="gameBackgroundBrightnessValue"> 100% </span>
+                  </label>
+
+                  <input
+                    id="gameBackgroundBrightness"
+                    type="range"
+                    min="25"
+                    max="150"
+                    step="1"
+                  />
+                </div>
+
+                <label class="setting-row">
+                  <div>
+                    <strong> Nakładka na tło </strong>
+
+                    <span> Dodaj warstwę koloru nad tłem gry. </span>
+                  </div>
+
+                  <input id="gameBackgroundOverlayEnabled" type="checkbox" />
+                </label>
+
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="gameBackgroundOverlayColor">
+                      Kolor nakładki
+                    </label>
+
+                    <input id="gameBackgroundOverlayColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameBackgroundOverlayOpacity">
+                      Przezroczystość
+
+                      <span id="gameBackgroundOverlayOpacityValue"> 0% </span>
+                    </label>
+
+                    <input
+                      id="gameBackgroundOverlayOpacity"
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- =========================
+                KOLORY GŁÓWNE
+            ========================= -->
+
+              <div class="card form">
+                <div class="section-header section-header-small">
+                  <h3>Kolory główne</h3>
+
+                  <p>Podstawowa kolorystyka ekranu gry.</p>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="gamePrimaryColor"> Kolor główny </label>
+
+                    <input id="gamePrimaryColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gamePrimaryHoverColor">
+                      Kolor główny po najechaniu
+                    </label>
+
+                    <input id="gamePrimaryHoverColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameSecondaryColor"> Kolor dodatkowy </label>
+
+                    <input id="gameSecondaryColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameAccentColor"> Akcent </label>
+
+                    <input id="gameAccentColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameTextColor"> Tekst </label>
+
+                    <input id="gameTextColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameMutedColor"> Tekst pomocniczy </label>
+
+                    <input id="gameMutedColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameSuccessColor"> Poprawna odpowiedź </label>
+
+                    <input id="gameSuccessColor" type="color" />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameDangerColor"> Błędna odpowiedź </label>
+
+                    <input id="gameDangerColor" type="color" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- =========================
+                USTAWIENIA ROZSZERZONE
+            ========================= -->
+
+              <div class="card form">
+                <div class="section-header section-header-small">
+                  <h3>Konfiguracja rozszerzona</h3>
+
+                  <p>
+                    Dokładne ustawienia poszczególnych elementów ekranu gry.
+                  </p>
+                </div>
+
+                <label class="setting-row">
+                  <div>
+                    <strong> Pokaż ustawienia zaawansowane </strong>
+
+                    <span>
+                      Umożliwia osobne ustawianie panelu bocznego, pytania,
+                      odpowiedzi i stanów przycisków.
+                    </span>
+                  </div>
+
+                  <input id="gameAdvancedAppearance" type="checkbox" />
+                </label>
+
+                <div
+                  id="gameAdvancedAppearanceContent"
+                  class="appearance-advanced"
+                  hidden
+                >
+                  <!-- PANEL BOCZNY -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Panel boczny</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameSidebarBackground"> Tło </label>
+
+                        <input
+                          id="gameSidebarBackground"
+                          type="text"
+                          placeholder="rgba(7,8,32,0.94)"
+                        />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameSidebarSurface"> Powierzchnia </label>
+
+                        <input
+                          id="gameSidebarSurface"
+                          type="text"
+                          placeholder="rgba(24,20,65,0.88)"
+                        />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameSidebarSurfaceHover">
+                          Powierzchnia hover
+                        </label>
+
+                        <input id="gameSidebarSurfaceHover" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameSidebarBorder"> Obramowanie </label>
+
+                        <input id="gameSidebarBorder" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameSidebarBorderStrong">
+                          Mocne obramowanie
+                        </label>
+
+                        <input id="gameSidebarBorderStrong" type="text" />
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- PYTANIE -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Pytanie</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameQuestionBackground"> Tło </label>
+
+                        <input id="gameQuestionBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameQuestionBorder"> Obramowanie </label>
+
+                        <input id="gameQuestionBorder" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameQuestionText"> Kolor tekstu </label>
+
+                        <input id="gameQuestionText" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameQuestionBlur"> Rozmycie </label>
+
+                        <input
+                          id="gameQuestionBlur"
+                          type="number"
+                          min="0"
+                          max="30"
+                        />
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- ODPOWIEDZI -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Odpowiedzi</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameAnswerBackground"> Tło </label>
+
+                        <input id="gameAnswerBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameAnswerHover"> Tło hover </label>
+
+                        <input id="gameAnswerHover" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameAnswerBorder"> Obramowanie </label>
+
+                        <input id="gameAnswerBorder" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameAnswerText"> Tekst </label>
+
+                        <input id="gameAnswerText" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameAnswerLetterBackground">
+                          Tło oznaczenia A/B/C/D
+                        </label>
+
+                        <input id="gameAnswerLetterBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameAnswerLetterText">
+                          Kolor oznaczenia A/B/C/D
+                        </label>
+
+                        <input id="gameAnswerLetterText" type="color" />
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- STANY ODPOWIEDZI -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Stany odpowiedzi</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameSelectedBackground">
+                          Zaznaczona - tło
+                        </label>
+
+                        <input id="gameSelectedBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameSelectedBorder">
+                          Zaznaczona - obramowanie
+                        </label>
+
+                        <input id="gameSelectedBorder" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameCorrectBackground">
+                          Poprawna - tło
+                        </label>
+
+                        <input id="gameCorrectBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameCorrectText"> Poprawna - tekst </label>
+
+                        <input id="gameCorrectText" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameWrongBackground"> Błędna - tło </label>
+
+                        <input id="gameWrongBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameWrongText"> Błędna - tekst </label>
+
+                        <input id="gameWrongText" type="color" />
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- PRZYCISKI -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Przyciski</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameButtonActive"> Aktywny </label>
+
+                        <input id="gameButtonActive" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameButtonActiveHover">
+                          Aktywny hover
+                        </label>
+
+                        <input id="gameButtonActiveHover" type="color" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameButtonInactive"> Nieaktywny </label>
+
+                        <input id="gameButtonInactive" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameButtonInactiveHover">
+                          Nieaktywny hover
+                        </label>
+
+                        <input id="gameButtonInactiveHover" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameButtonDisabledOpacity">
+                          Przezroczystość disabled
+                        </label>
+
+                        <input
+                          id="gameButtonDisabledOpacity"
+                          type="number"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                        />
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- KONIEC GRY -->
+
+                  <section class="appearance-group">
+                    <div class="section-header section-header-small">
+                      <h4>Koniec gry</h4>
+                    </div>
+
+                    <div class="form-grid">
+                      <div class="form-field">
+                        <label for="gameEndBackground"> Tło sceny </label>
+
+                        <input id="gameEndBackground" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameEndSurface"> Tło karty </label>
+
+                        <input id="gameEndSurface" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameEndBorder"> Obramowanie </label>
+
+                        <input id="gameEndBorder" type="text" />
+                      </div>
+
+                      <div class="form-field">
+                        <label for="gameEndAmountColor"> Kolor kwoty </label>
+
+                        <input id="gameEndAmountColor" type="color" />
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <!-- =========================
+                ANIMACJE GRY
+            ========================= -->
+
+              <div class="card form">
+                <div class="section-header section-header-small">
+                  <h3>Animacje gry</h3>
+
+                  <p>Ustawienia przejść i animacji podczas rozgrywki.</p>
+                </div>
+
+                <label class="setting-row">
+                  <div>
+                    <strong> Włącz animacje </strong>
+
+                    <span>
+                      Animuj panel boczny, pytania, odpowiedzi i ekran końcowy.
+                    </span>
+                  </div>
+
+                  <input id="gameAnimationsEnabled" type="checkbox" />
+                </label>
+
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="gameSidebarAnimationDuration">
+                      Panel boczny
+                    </label>
+
+                    <input
+                      id="gameSidebarAnimationDuration"
+                      type="number"
+                      min="0"
+                      step="50"
+                    />
+
+                    <span class="form-help"> Czas w milisekundach. </span>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameQuestionAnimationDuration"> Pytanie </label>
+
+                    <input
+                      id="gameQuestionAnimationDuration"
+                      type="number"
+                      min="0"
+                      step="50"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameAnswerAnimationDuration">
+                      Odpowiedzi
+                    </label>
+
+                    <input
+                      id="gameAnswerAnimationDuration"
+                      type="number"
+                      min="0"
+                      step="50"
+                    />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="gameEndAnimationDuration"> Koniec gry </label>
+
+                    <input
+                      id="gameEndAnimationDuration"
+                      type="number"
+                      min="0"
+                      step="50"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <!-- =========================
             ZAPISY DANYCH
         ========================= -->
 
-        <section
-          class="tab-panel"
-          data-panel="dataStorage"
-        >
-          <div class="section-header">
-            <h2>
-              Zapisy danych
-            </h2>
+          <section class="tab-panel" data-panel="dataStorage">
+            <div class="section-header">
+              <h2>Zapisy danych</h2>
 
-            <p>
-              Ustawienia lokalnego zapisu danych programu.
-            </p>
-          </div>
+              <p>Ustawienia lokalnego zapisu danych programu.</p>
+            </div>
 
-          <div class="card form is-coming-soon">
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Automatyczny zapis
-                </strong>
+            <div class="card form is-coming-soon">
+              <label class="setting-row">
+                <div>
+                  <strong> Automatyczny zapis </strong>
 
-                <span>
-                  Zapisuj dane automatycznie po zmianach.
-                </span>
-              </div>
+                  <span> Zapisuj dane automatycznie po zmianach. </span>
+                </div>
 
-              <input
-                id="autoSave"
-                type="checkbox"
-              >
-            </label>
-
-            <label class="setting-row">
-              <div>
-                <strong>
-                  Automatyczne kopie zapasowe
-                </strong>
-
-                <span>
-                  Twórz kopię danych programu.
-                </span>
-              </div>
-
-              <input
-                id="autoBackup"
-                type="checkbox"
-              >
-            </label>
-
-            <div class="form-field">
-              <label for="backupInterval">
-                Interwał kopii zapasowej w minutach
+                <input id="autoSave" type="checkbox" />
               </label>
 
-              <input
-                id="backupInterval"
-                type="number"
-                min="1"
-              >
+              <label class="setting-row">
+                <div>
+                  <strong> Automatyczne kopie zapasowe </strong>
+
+                  <span> Twórz kopię danych programu. </span>
+                </div>
+
+                <input id="autoBackup" type="checkbox" />
+              </label>
+
+              <div class="form-field">
+                <label for="backupInterval">
+                  Interwał kopii zapasowej w minutach
+                </label>
+
+                <input id="backupInterval" type="number" min="1" />
+              </div>
             </div>
-          </div>
+          </section>
+
+          <!-- =========================
+              SKRÓTY
+          ========================= -->
+
+          <section
+            class="tab-panel"
+            data-panel="shortcuts"
+          >
+            <div class="section-header">
+              <h2>
+                Skróty
+              </h2>
+
+              <p>
+                Konfiguracja skrótów klawiszowych programu.
+              </p>
+            </div>
+
+            <!-- =========================
+                ENABLED
+            ========================= -->
+
+            <div class="card form">
+              <label class="setting-row">
+                <div>
+                  <strong>
+                    Skróty klawiszowe
+                  </strong>
+
+                  <span>
+                    Włącz lub wyłącz obsługę skrótów klawiszowych programu.
+                  </span>
+                </div>
+
+                <input
+                  id="shortcutsEnabled"
+                  type="checkbox"
+                >
+              </label>
+            </div>
+
+            <!-- =========================
+                SHORTCUT LIST
+            ========================= -->
+
+            <div class="card form">
+              <div class="section-header section-header-small">
+                <h3>
+                  Konfiguracja skrótów
+                </h3>
+
+                <p>
+                  Kliknij wybrane pole, a następnie naciśnij nowy skrót klawiszowy.
+                </p>
+              </div>
+
+              <div
+                id="shortcutsSettingsList"
+                class="shortcuts-settings"
+              ></div>
+            </div>
+
+            <!-- =========================
+                TIMING
+            ========================= -->
+
+            <div class="card form">
+              <div class="section-header section-header-small">
+                <h3>
+                  Czas sekwencji
+                </h3>
+
+                <p>
+                  Określ czas oczekiwania na kolejne klawisze sekwencji.
+                </p>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="shortcutBaseTimeout">
+                    Czas podstawowy
+                  </label>
+
+                  <input
+                    id="shortcutBaseTimeout"
+                    type="number"
+                    min="250"
+                    step="50"
+                  >
+
+                  <span class="form-help">
+                    Czas dla pierwszego klawisza w milisekundach.
+                  </span>
+                </div>
+
+                <div class="form-field">
+                  <label for="shortcutAdditionalTimeout">
+                    Dodatkowy czas
+                  </label>
+
+                  <input
+                    id="shortcutAdditionalTimeout"
+                    type="number"
+                    min="0"
+                    step="50"
+                  >
+
+                  <span class="form-help">
+                    Dodatkowy czas dla każdego następnego klawisza.
+                  </span>
+                </div>
+
+                <div class="form-field">
+                  <label for="shortcutMaxKeys">
+                    Maksymalna liczba klawiszy
+                  </label>
+
+                  <input
+                    id="shortcutMaxKeys"
+                    type="number"
+                    min="1"
+                    max="8"
+                  >
+
+                  <span class="form-help">
+                    Maksymalna długość jednej sekwencji skrótu.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- =========================
+                RESET
+            ========================= -->
+
+            <div class="card form">
+              <div class="section-header section-header-small">
+                <h3>
+                  Przywracanie skrótów
+                </h3>
+
+                <p>
+                  Przywróć wyłącznie domyślne skróty klawiszowe.
+                </p>
+              </div>
+
+              <button
+                id="resetShortcutsButton"
+                class="button button-secondary"
+                type="button"
+              >
+                Przywróć domyślne skróty
+              </button>
+            </div>
+          </section>
         </section>
-      </section>
-    </main>
+      </main>
 
-    <div
-      id="statusMessage"
-      class="status-message"
-      hidden
-    ></div>
-  </div>
+      <div id="statusMessage" class="status-message" hidden></div>
+    </div>
 
-  <script src="../public/js/design.js"></script>
-  <script src="../public/js/settings.js"></script>
-</body>
+    <script src="../public/js/design.js"></script>
+    <script src="../public/js/settings.js"></script>
+    <script src="../public/js/shortcuts/core.js"></script>
+    <script src="../public/js/shortcuts/help.js"></script>
+    <script src="../public/js/shortcuts/settings.js"></script>
+  </body>
 </html>

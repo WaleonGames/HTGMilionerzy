@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="../public/css/style.css">
   <link rel="stylesheet" href="../public/css/design.css">
+  <link rel="stylesheet" href="../public/css/additional/badge.css">
 </head>
 <body>
   <main class="page">
@@ -26,6 +27,10 @@
         </p>
       </div>
     </header>
+
+    <!-- =========================
+         MAIN ACTIONS
+    ========================= -->
 
     <section class="grid grid-2">
       <button
@@ -84,9 +89,179 @@
         </span>
       </button>
     </section>
+
+    <!-- =========================
+         INFORMATION
+    ========================= -->
+
+    <section class="page-section">
+      <div class="section-header">
+        <h2>
+          Informacje
+        </h2>
+
+        <p>
+          Dokumenty, informacje o projekcie oraz przydatne odnośniki.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <button
+          id="termsButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            Regulamin aplikacji
+          </span>
+
+          <span class="action-card-description">
+            Zasady korzystania z programu.
+          </span>
+        </button>
+
+        <button
+          id="privacyButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            Polityka aplikacji
+          </span>
+
+          <span class="action-card-description">
+            Informacje dotyczące działania i danych aplikacji.
+          </span>
+        </button>
+
+        <button
+          id="feedbackButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            Formularz zgłoszeniowy
+          </span>
+
+          <span class="action-card-description">
+            Zgłoś błąd lub zaproponuj zmianę.
+          </span>
+        </button>
+
+        <button
+          id="githubButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            GitHub projektu
+          </span>
+
+          <span class="action-card-description">
+            Otwórz repozytorium projektu.
+          </span>
+        </button>
+
+        <button
+          id="authorsButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            Twórcy
+          </span>
+
+          <span class="action-card-description">
+            Informacje o autorach i osobach zaangażowanych w projekt.
+          </span>
+        </button>
+
+        <button
+          id="versionButton"
+          class="card action-card"
+          type="button"
+        >
+          <span class="action-card-title">
+            Wersja programu
+          </span>
+
+          <span class="action-card-description">
+            Informacje o aktualnej wersji i wydaniu programu.
+          </span>
+        </button>
+      </div>
+    </section>
   </main>
+
+  <!-- =========================
+       GAME BLOCKED MODAL
+  ========================= -->
+
+  <div
+    id="gameBlockedModal"
+    class="modal-backdrop"
+    hidden
+  >
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gameBlockedModalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">
+            NIE MOŻNA ROZPOCZĄĆ GRY
+          </span>
+
+          <h2 id="gameBlockedModalTitle">
+            Brak pytania poziomu 1
+          </h2>
+        </div>
+
+        <button
+          id="closeGameBlockedModalButton"
+          class="button button-icon"
+          type="button"
+          aria-label="Zamknij"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="form">
+        <p>
+          Aby rozpocząć rozgrywkę, musisz najpierw dodać
+          przynajmniej jedno aktywne pytanie dla poziomu 1.
+        </p>
+
+        <div class="warning">
+          Gra zawsze rozpoczyna się od pytania pierwszego poziomu.
+        </div>
+
+        <div class="modal-actions">
+          <button
+            id="cancelGameBlockedModalButton"
+            class="button button-secondary"
+            type="button"
+          >
+            Zamknij
+          </button>
+
+          <button
+            id="goToQuestionsButton"
+            class="button button-primary"
+            type="button"
+          >
+            Przejdź do pytań
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="../public/js/design.js"></script>
   <script src="../public/js/main.js"></script>
+  <script src="../public/js/shortcuts/help.js"></script>
 </body>
 </html>

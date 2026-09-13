@@ -6,6 +6,39 @@ const {
 contextBridge.exposeInMainWorld(
   "millionaireAPI",
   {
+    /* =========================
+       LOADER
+    ========================= */
+
+    loader:{
+      onStep:callback=>{
+        const listener=(
+          event,
+          step
+        )=>{
+          callback(
+            step
+          );
+        };
+
+        ipcRenderer.on(
+          "bootloader:step",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "bootloader:step",
+            listener
+          );
+        };
+      }
+    },
+
+    /* =========================
+       QUESTIONS
+    ========================= */
+
     questions:{
       get:()=>{
         return ipcRenderer.invoke(
@@ -36,10 +69,20 @@ contextBridge.exposeInMainWorld(
       }
     },
 
+    /* =========================
+       SETTINGS
+    ========================= */
+
     settings:{
       get:()=>{
         return ipcRenderer.invoke(
           "settings:get"
+        );
+      },
+
+      getDefaults:()=>{
+        return ipcRenderer.invoke(
+          "settings:get-defaults"
         );
       },
 
@@ -56,6 +99,106 @@ contextBridge.exposeInMainWorld(
         );
       }
     },
+
+    /* =========================
+       EXTERNAL LINKS
+    ========================= */
+
+    links:{
+      openGitHub:()=>{
+        return ipcRenderer.invoke(
+          "links:open-github"
+        );
+      },
+
+      openFeedback:()=>{
+        return ipcRenderer.invoke(
+          "links:open-feedback"
+        );
+      }
+    },
+
+    /* =========================
+       SCREEN
+    ========================= */
+
+    screen:{
+      getDisplays:()=>{
+        return ipcRenderer.invoke(
+          "screen:get-displays"
+        );
+      },
+
+      getPrimaryDisplay:()=>{
+        return ipcRenderer.invoke(
+          "screen:get-primary-display"
+        );
+      }
+    },
+
+    /* =========================
+       SHORTCUTS HELP
+    ========================= */
+
+    shortcutsHelp:{
+      onOpen:callback=>{
+        const listener=()=>{
+          callback();
+        };
+
+        ipcRenderer.on(
+          "shortcuts-help:open",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "shortcuts-help:open",
+            listener
+          );
+        };
+      },
+
+      onClose:callback=>{
+        const listener=()=>{
+          callback();
+        };
+
+        ipcRenderer.on(
+          "shortcuts-help:close",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "shortcuts-help:close",
+            listener
+          );
+        };
+      },
+
+      onToggle:callback=>{
+        const listener=()=>{
+          callback();
+        };
+
+        ipcRenderer.on(
+          "shortcuts-help:toggle",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "shortcuts-help:toggle",
+            listener
+          );
+        };
+      }
+    },
+
+    /* =========================
+       GAME
+    ========================= */
 
     game:{
       openControlsWindow:()=>{
@@ -88,7 +231,10 @@ contextBridge.exposeInMainWorld(
         );
       },
 
-      sendControlsAction:(action,payload={})=>{
+      sendControlsAction:(
+        action,
+        payload={}
+      )=>{
         return ipcRenderer.invoke(
           "game:controls-action",
           action,
@@ -123,7 +269,7 @@ contextBridge.exposeInMainWorld(
         )=>{
           callback(
             action,
-            payload
+            payload||{}
           );
         };
 
@@ -145,7 +291,9 @@ contextBridge.exposeInMainWorld(
           event,
           state
         )=>{
-          callback(state);
+          callback(
+            state
+          );
         };
 
         ipcRenderer.on(
@@ -174,6 +322,42 @@ contextBridge.exposeInMainWorld(
         return()=>{
           ipcRenderer.removeListener(
             "game:request-state",
+            listener
+          );
+        };
+      },
+
+      onRequestState:callback=>{
+        const listener=()=>{
+          callback();
+        };
+
+        ipcRenderer.on(
+          "game:request-state",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "game:request-state",
+            listener
+          );
+        };
+      },
+
+      onControlsAttached:callback=>{
+        const listener=()=>{
+          callback();
+        };
+
+        ipcRenderer.on(
+          "game:controls-attached",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "game:controls-attached",
             listener
           );
         };

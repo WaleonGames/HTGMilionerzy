@@ -55,56 +55,143 @@ const questionsCount=
 const questionsList=
   document.getElementById("questionsList");
 
+/* =========================
+   QUESTION SELECT MODAL
+========================= */
+
+const questionSelectModal=
+  document.getElementById(
+    "questionSelectModal"
+  );
+
+const questionSelectList=
+  document.getElementById(
+    "questionSelectList"
+  );
+
+const questionSelectEmpty=
+  document.getElementById(
+    "questionSelectEmpty"
+  );
+
+const questionSelectModalTitle=
+  document.getElementById(
+    "questionSelectModalTitle"
+  );
+
+const questionSelectModalDescription=
+  document.getElementById(
+    "questionSelectModalDescription"
+  );
+
 let questionsCache=[];
+
+let questionSelectMode=null;
 
 /* =========================
    NAVIGATION
 ========================= */
 
-backButton.addEventListener("click",()=>{
-  window.location.href="index.html";
-});
+backButton?.addEventListener(
+  "click",
+  ()=>{
+    window.location.href="index.html";
+  }
+);
 
 /* =========================
    OPEN ADD
 ========================= */
 
-addQuestionButton.addEventListener("click",()=>{
-  openAddModal();
-});
+addQuestionButton?.addEventListener(
+  "click",
+  ()=>{
+    openAddModal();
+  }
+);
 
 /* =========================
    CLOSE MODAL
 ========================= */
 
-closeModalButton.addEventListener("click",()=>{
-  closeModal();
-});
-
-cancelModalButton.addEventListener("click",()=>{
-  closeModal();
-});
-
-questionModal.addEventListener("click",event=>{
-  if(event.target===questionModal){
+closeModalButton?.addEventListener(
+  "click",
+  ()=>{
     closeModal();
   }
-});
+);
 
-document.addEventListener("keydown",event=>{
-  if(
-    event.key==="Escape"&&
-    !questionModal.hidden
-  ){
+cancelModalButton?.addEventListener(
+  "click",
+  ()=>{
     closeModal();
   }
-});
+);
+
+questionModal?.addEventListener(
+  "click",
+  event=>{
+    if(
+      event.target===
+      questionModal
+    ){
+      closeModal();
+    }
+  }
+);
+
+/* =========================
+   QUESTION SELECT MODAL
+========================= */
+
+questionSelectModal?.addEventListener(
+  "click",
+  event=>{
+    if(
+      event.target===
+      questionSelectModal||
+      event.target.hasAttribute(
+        "data-modal-close"
+      )
+    ){
+      closeQuestionSelectModal();
+    }
+  }
+);
+
+/* =========================
+   ESCAPE
+========================= */
+
+document.addEventListener(
+  "keydown",
+  event=>{
+    if(event.key!=="Escape"){
+      return;
+    }
+
+    if(
+      questionSelectModal&&
+      !questionSelectModal.hidden
+    ){
+      closeQuestionSelectModal();
+      return;
+    }
+
+    if(
+      questionModal&&
+      !questionModal.hidden
+    ){
+      closeModal();
+    }
+  }
+);
 
 /* =========================
    SUBMIT
 ========================= */
 
-questionForm.addEventListener(
+questionForm?.addEventListener(
   "submit",
   async event=>{
     event.preventDefault();
@@ -213,9 +300,12 @@ function openAddModal(){
 
   questionModal.hidden=false;
 
-  setTimeout(()=>{
-    questionInput.focus();
-  },0);
+  setTimeout(
+    ()=>{
+      questionInput.focus();
+    },
+    0
+  );
 }
 
 /* =========================
@@ -223,6 +313,10 @@ function openAddModal(){
 ========================= */
 
 function openEditModal(question){
+  if(!question){
+    return;
+  }
+
   questionForm.reset();
 
   questionId.value=
@@ -262,9 +356,12 @@ function openEditModal(question){
 
   questionModal.hidden=false;
 
-  setTimeout(()=>{
-    questionInput.focus();
-  },0);
+  setTimeout(
+    ()=>{
+      questionInput.focus();
+    },
+    0
+  );
 }
 
 /* =========================
@@ -272,6 +369,10 @@ function openEditModal(question){
 ========================= */
 
 function closeModal(){
+  if(!questionModal){
+    return;
+  }
+
   questionModal.hidden=true;
 
   questionForm.reset();
@@ -286,6 +387,257 @@ function closeModal(){
 
   submitQuestionButton.textContent=
     "Dodaj pytanie";
+}
+
+/* =========================
+   OPEN QUESTION SELECT MODAL
+========================= */
+
+function openQuestionSelectModal(
+  mode
+){
+  if(!questionSelectModal){
+    return;
+  }
+
+  if(
+    mode!=="edit"&&
+    mode!=="remove"
+  ){
+    return;
+  }
+
+  questionSelectMode=
+    mode;
+
+  if(mode==="edit"){
+    questionSelectModalTitle.textContent=
+      "Wybierz pytanie do edycji";
+
+    questionSelectModalDescription.textContent=
+      "Wybierz pytanie, które chcesz edytować.";
+  }
+
+  if(mode==="remove"){
+    questionSelectModalTitle.textContent=
+      "Wybierz pytanie do usunięcia";
+
+    questionSelectModalDescription.textContent=
+      "Wybierz pytanie, które chcesz usunąć.";
+  }
+
+  renderQuestionSelectList(
+    questionsCache
+  );
+
+  questionSelectModal.hidden=false;
+}
+
+/* =========================
+   CLOSE QUESTION SELECT MODAL
+========================= */
+
+function closeQuestionSelectModal(){
+  if(!questionSelectModal){
+    return;
+  }
+
+  questionSelectModal.hidden=true;
+
+  questionSelectMode=null;
+
+  if(questionSelectList){
+    questionSelectList.innerHTML="";
+  }
+}
+
+/* =========================
+   RENDER QUESTION SELECT
+========================= */
+
+function renderQuestionSelectList(
+  questions
+){
+  if(!questionSelectList){
+    return;
+  }
+
+  questionSelectList.innerHTML="";
+
+  if(
+    !Array.isArray(questions)||
+    !questions.length
+  ){
+    if(questionSelectEmpty){
+      questionSelectEmpty.hidden=false;
+    }
+
+    return;
+  }
+
+  if(questionSelectEmpty){
+    questionSelectEmpty.hidden=true;
+  }
+
+  questions.forEach(
+    (question,index)=>{
+      const button=
+        document.createElement(
+          "button"
+        );
+
+      button.type="button";
+
+      button.className=
+        "question-select-item";
+
+      const number=
+        document.createElement(
+          "span"
+        );
+
+      number.className=
+        "question-select-number";
+
+      number.textContent=
+        String(index+1);
+
+      const content=
+        document.createElement(
+          "span"
+        );
+
+      content.className=
+        "question-select-content";
+
+      const title=
+        document.createElement(
+          "strong"
+        );
+
+      title.className=
+        "question-select-title";
+
+      title.textContent=
+        question.question||
+        "Bez treści";
+
+      const meta=
+        document.createElement(
+          "span"
+        );
+
+      meta.className=
+        "question-select-meta";
+
+      meta.textContent=
+        `Poziom ${getQuestionLevel(
+          question
+        )}`;
+
+      if(
+        question.active===false
+      ){
+        meta.textContent+=
+          " • Nieaktywne";
+      }
+
+      content.append(
+        title,
+        meta
+      );
+
+      button.append(
+        number,
+        content
+      );
+
+      button.addEventListener(
+        "click",
+        ()=>{
+          handleQuestionSelection(
+            question
+          );
+        }
+      );
+
+      questionSelectList.appendChild(
+        button
+      );
+    }
+  );
+}
+
+/* =========================
+   QUESTION SELECTION
+========================= */
+
+async function handleQuestionSelection(
+  question
+){
+  const mode=
+    questionSelectMode;
+
+  closeQuestionSelectModal();
+
+  if(!question){
+    return;
+  }
+
+  if(mode==="edit"){
+    openEditModal(
+      question
+    );
+
+    return;
+  }
+
+  if(mode==="remove"){
+    await deleteQuestion(
+      question
+    );
+  }
+}
+
+/* =========================
+   DELETE QUESTION
+========================= */
+
+async function deleteQuestion(
+  question
+){
+  if(!question?.id){
+    return;
+  }
+
+  const confirmed=
+    confirm(
+      "Czy na pewno chcesz usunąć to pytanie?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+  try{
+    await window
+      .millionaireAPI
+      .questions
+      .delete(
+        question.id
+      );
+
+    await loadQuestions();
+  }catch(error){
+    console.error(
+      "Błąd usuwania pytania:",
+      error
+    );
+
+    alert(
+      "Nie udało się usunąć pytania."
+    );
+  }
 }
 
 /* =========================
@@ -324,7 +676,13 @@ async function loadQuestions(){
    RENDER QUESTIONS
 ========================= */
 
-function renderQuestions(questions){
+function renderQuestions(
+  questions
+){
+  if(!questionsCount||!questionsList){
+    return;
+  }
+
   questionsCount.textContent=
     getQuestionsLabel(
       questions.length
@@ -334,7 +692,9 @@ function renderQuestions(questions){
 
   if(!questions.length){
     const empty=
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     empty.className=
       "empty";
@@ -359,7 +719,9 @@ function renderQuestions(questions){
       card.className=
         "card list-item";
 
-      if(question.active===false){
+      if(
+        question.active===false
+      ){
         card.classList.add(
           "question-inactive"
         );
@@ -457,40 +819,15 @@ function renderQuestions(questions){
       deleteButton.addEventListener(
         "click",
         async()=>{
-          const confirmed=
-            confirm(
-              "Czy na pewno chcesz usunąć to pytanie?"
-            );
-
-          if(!confirmed){
-            return;
-          }
-
           deleteButton.disabled=true;
           editButton.disabled=true;
 
-          try{
-            await window
-              .millionaireAPI
-              .questions
-              .delete(
-                question.id
-              );
+          await deleteQuestion(
+            question
+          );
 
-            await loadQuestions();
-          }catch(error){
-            console.error(
-              "Błąd usuwania pytania:",
-              error
-            );
-
-            alert(
-              "Nie udało się usunąć pytania."
-            );
-
-            deleteButton.disabled=false;
-            editButton.disabled=false;
-          }
+          deleteButton.disabled=false;
+          editButton.disabled=false;
         }
       );
 
@@ -517,50 +854,52 @@ function renderQuestions(questions){
         "grid grid-2";
 
       ["A","B","C","D"]
-        .forEach(letter=>{
-          const answer=
-            document.createElement(
-              "div"
+        .forEach(
+          letter=>{
+            const answer=
+              document.createElement(
+                "div"
+              );
+
+            answer.className=
+              "answer";
+
+            if(
+              letter===
+              question.correctAnswer
+            ){
+              answer.classList.add(
+                "answer-correct"
+              );
+            }
+
+            const strong=
+              document.createElement(
+                "strong"
+              );
+
+            strong.textContent=
+              `${letter}:`;
+
+            const text=
+              document.createTextNode(
+                ` ${
+                  question.answers?.[
+                    letter
+                  ]||""
+                }`
+              );
+
+            answer.append(
+              strong,
+              text
             );
 
-          answer.className=
-            "answer";
-
-          if(
-            letter===
-            question.correctAnswer
-          ){
-            answer.classList.add(
-              "answer-correct"
+            answers.appendChild(
+              answer
             );
           }
-
-          const strong=
-            document.createElement(
-              "strong"
-            );
-
-          strong.textContent=
-            `${letter}:`;
-
-          const text=
-            document.createTextNode(
-              ` ${
-                question.answers?.[
-                  letter
-                ]||""
-              }`
-            );
-
-          answer.append(
-            strong,
-            text
-          );
-
-          answers.appendChild(
-            answer
-          );
-        });
+        );
 
       card.append(
         header,
@@ -578,7 +917,9 @@ function renderQuestions(questions){
    QUESTION META
 ========================= */
 
-function createQuestionMeta(question){
+function createQuestionMeta(
+  question
+){
   const meta=
     document.createElement(
       "div"
@@ -611,7 +952,9 @@ function createQuestionMeta(question){
   activeBadge.className=
     "question-badge";
 
-  if(question.active===false){
+  if(
+    question.active===false
+  ){
     activeBadge.classList.add(
       "question-badge-disabled"
     );
@@ -639,7 +982,9 @@ function createQuestionMeta(question){
    QUESTION LEVEL
 ========================= */
 
-function getQuestionLevel(question){
+function getQuestionLevel(
+  question
+){
   const level=
     Number(
       question?.level
@@ -657,10 +1002,106 @@ function getQuestionLevel(question){
 }
 
 /* =========================
+   SET CORRECT ANSWER
+========================= */
+
+function setCorrectAnswer(
+  answer
+){
+  const value=
+    String(
+      answer||""
+    ).toUpperCase();
+
+  if(
+    !["A","B","C","D"].includes(
+      value
+    )
+  ){
+    return;
+  }
+
+  if(!correctAnswer){
+    return;
+  }
+
+  correctAnswer.value=
+    value;
+
+  correctAnswer.dispatchEvent(
+    new Event(
+      "change",
+      {
+        bubbles:true
+      }
+    )
+  );
+}
+
+/* =========================
+   SET LEVEL
+========================= */
+
+function setQuestionLevel(
+  level
+){
+  const value=
+    Number(level);
+
+  if(
+    !Number.isInteger(value)||
+    value<1||
+    value>12
+  ){
+    return;
+  }
+
+  if(!questionLevel){
+    return;
+  }
+
+  questionLevel.value=
+    String(value);
+
+  questionLevel.dispatchEvent(
+    new Event(
+      "change",
+      {
+        bubbles:true
+      }
+    )
+  );
+}
+
+/* =========================
+   TOGGLE ACTIVE
+========================= */
+
+function toggleCurrentActive(){
+  if(!questionActive){
+    return;
+  }
+
+  questionActive.checked=
+    !questionActive.checked;
+
+  questionActive.dispatchEvent(
+    new Event(
+      "change",
+      {
+        bubbles:true
+      }
+    )
+  );
+}
+
+/* =========================
    LABEL
 ========================= */
 
-function getQuestionsLabel(count){
+function getQuestionsLabel(
+  count
+){
   if(count===1){
     return "1 pytanie";
   }
@@ -678,6 +1119,20 @@ function getQuestionsLabel(count){
 
   return `${count} pytań`;
 }
+
+/* =========================
+   PUBLIC API
+========================= */
+
+window.MillionaireQuestions={
+  openAddModal,
+  openQuestionPicker:
+    openQuestionSelectModal,
+  setCorrectAnswer,
+  setLevel:setQuestionLevel,
+  toggleCurrentActive,
+  toggleActive:toggleCurrentActive
+};
 
 /* =========================
    INITIALIZE

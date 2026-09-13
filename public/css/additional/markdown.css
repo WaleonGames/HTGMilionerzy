@@ -1,0 +1,266 @@
+/* =========================
+   MARKDOWN
+========================= */
+
+.release-markdown{
+  min-width:0;
+
+  font-size:14px;
+  line-height:1.55;
+}
+
+/* =========================
+   HEADINGS
+========================= */
+
+.release-markdown h1,
+.release-markdown h2,
+.release-markdown h3,
+.release-markdown h4,
+.release-markdown h5,
+.release-markdown h6{
+  margin:
+    18px
+    0
+    8px;
+
+  line-height:1.25;
+}
+
+.release-markdown h1:first-child,
+.release-markdown h2:first-child,
+.release-markdown h3:first-child{
+  margin-top:0;
+}
+
+.release-markdown h1{
+  font-size:24px;
+}
+
+.release-markdown h2{
+  font-size:20px;
+}
+
+.release-markdown h3{
+  font-size:17px;
+}
+
+.release-markdown h4{
+  font-size:15px;
+}
+
+.release-markdown h5{
+  font-size:14px;
+}
+
+.release-markdown h6{
+  font-size:13px;
+}
+
+/* =========================
+   PARAGRAPH
+========================= */
+
+.release-markdown p{
+  margin:
+    6px
+    0;
+}
+
+/* =========================
+   LIST
+========================= */
+
+.release-markdown ul,
+.release-markdown ol{
+  margin:
+    8px
+    0
+    12px;
+
+  padding-left:22px;
+}
+
+.release-markdown li{
+  margin:
+    3px
+    0;
+
+  line-height:1.5;
+}
+
+.release-markdown li>ul,
+.release-markdown li>ol{
+  margin:
+    4px
+    0;
+
+  padding-left:20px;
+}
+
+/* =========================
+   BLOCKQUOTE
+========================= */
+
+.release-markdown blockquote{
+  margin:
+    8px
+    0;
+
+  padding:
+    8px
+    12px;
+
+  border-left:3px solid;
+  border-radius:
+    0
+    8px
+    8px
+    0;
+}
+
+.release-markdown blockquote p{
+  margin:
+    3px
+    0;
+}
+
+/* =========================
+   STRONG / EMPHASIS
+========================= */
+
+.release-markdown strong{
+  font-weight:800;
+}
+
+.release-markdown em{
+  font-style:italic;
+}
+
+/* =========================
+   INLINE CODE
+========================= */
+
+.release-markdown code{
+  padding:
+    2px
+    5px;
+
+  border:1px solid;
+  border-radius:5px;
+
+  font-family:
+    monospace;
+
+  font-size:
+    .92em;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+.release-markdown a{
+  text-decoration:
+    underline;
+
+  text-underline-offset:
+    2px;
+}
+
+/* =========================
+   HORIZONTAL RULE
+========================= */
+
+.release-markdown hr{
+  margin:
+    18px
+    0;
+
+  border:0;
+  border-top:1px solid;
+}
+
+/* =========================
+   PRE
+========================= */
+
+.release-markdown pre{
+  max-width:100%;
+
+  margin:
+    10px
+    0;
+
+  padding:12px;
+
+  overflow:auto;
+
+  border:1px solid;
+  border-radius:8px;
+
+  font-family:
+    monospace;
+
+  font-size:12px;
+  line-height:1.5;
+
+  white-space:pre-wrap;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.release-markdown table{
+  width:100%;
+
+  margin:
+    10px
+    0;
+
+  border-collapse:
+    collapse;
+}
+
+.release-markdown th,
+.release-markdown td{
+  padding:
+    8px
+    10px;
+
+  border:1px solid;
+
+  text-align:left;
+}
+
+.release-markdown th{
+  font-weight:800;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:600px){
+  .release-markdown{
+    font-size:13px;
+  }
+
+  .release-markdown h1{
+    font-size:21px;
+  }
+
+  .release-markdown h2{
+    font-size:18px;
+  }
+
+  .release-markdown h3{
+    font-size:16px;
+  }
+
+  .release-markdown ul,
+  .release-markdown ol{
+    padding-left:18px;
+  }
+}

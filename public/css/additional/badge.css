@@ -1,0 +1,312 @@
+/* =========================
+   BADGE BASE
+========================= */
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+
+  min-height:26px;
+  padding:0 9px;
+
+  border:1px solid var(--design-border);
+  border-radius:999px;
+
+  background:var(--design-surface-soft);
+
+  color:var(--design-text-soft);
+
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+
+  vertical-align:middle;
+}
+
+/* =========================
+   BADGE SIZES
+========================= */
+
+.badge-sm{
+  min-height:22px;
+  padding:0 7px;
+
+  font-size:10px;
+}
+
+.badge-lg{
+  min-height:30px;
+  padding:0 11px;
+
+  font-size:12px;
+}
+
+/* =========================
+   PRIMARY
+========================= */
+
+.badge-primary{
+  background:var(--design-primary-light);
+
+  color:var(--design-primary);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--design-primary) 24%,
+      var(--design-border) 76%
+    );
+}
+
+/* =========================
+   SUCCESS
+========================= */
+
+.badge-success{
+  background:var(--design-success-light);
+
+  color:var(--design-success);
+
+  border-color:var(--design-success-border);
+}
+
+/* =========================
+   DANGER
+========================= */
+
+.badge-danger{
+  background:var(--design-danger-light);
+
+  color:var(--design-danger);
+
+  border-color:var(--design-danger-border);
+}
+
+/* =========================
+   WARNING
+========================= */
+
+.badge-warning{
+  background:var(--design-warning-light);
+
+  color:var(--design-warning);
+
+  border-color:var(--design-warning-border);
+}
+
+/* =========================
+   NEUTRAL
+========================= */
+
+.badge-neutral{
+  background:var(--design-surface-soft);
+
+  color:var(--design-muted);
+
+  border-color:var(--design-border);
+}
+
+/* =========================
+   OUTLINE
+========================= */
+
+.badge-outline{
+  background:transparent;
+
+  color:var(--design-text-soft);
+
+  border-color:var(--design-border-strong);
+}
+
+.badge-outline-primary{
+  background:transparent;
+
+  color:var(--design-primary);
+
+  border-color:var(--design-primary);
+}
+
+.badge-outline-success{
+  background:transparent;
+
+  color:var(--design-success);
+
+  border-color:var(--design-success);
+}
+
+.badge-outline-danger{
+  background:transparent;
+
+  color:var(--design-danger);
+
+  border-color:var(--design-danger);
+}
+
+/* =========================
+   SOLID
+========================= */
+
+.badge-solid-primary{
+  background:var(--design-primary);
+
+  color:#fff;
+
+  border-color:var(--design-primary);
+}
+
+.badge-solid-success{
+  background:var(--design-success);
+
+  color:#fff;
+
+  border-color:var(--design-success);
+}
+
+.badge-solid-danger{
+  background:var(--design-danger);
+
+  color:#fff;
+
+  border-color:var(--design-danger);
+}
+
+/* =========================
+   DOT
+========================= */
+
+.badge-dot::before{
+  content:"";
+
+  width:6px;
+  height:6px;
+  flex:0 0 6px;
+
+  border-radius:50%;
+
+  background:currentColor;
+}
+
+/* =========================
+   SQUARE
+========================= */
+
+.badge-square{
+  border-radius:7px;
+}
+
+/* =========================
+   INTERACTIVE
+========================= */
+
+button.badge{
+  cursor:pointer;
+
+  transition:
+    background .15s ease,
+    color .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
+}
+
+button.badge:hover{
+  background:var(--design-surface-hover);
+  border-color:var(--design-border-strong);
+}
+
+button.badge:active{
+  transform:scale(.97);
+}
+
+button.badge:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+/* =========================
+   GAME BADGES
+========================= */
+
+.game-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+
+  min-height:26px;
+  padding:0 9px;
+
+  border:1px solid var(--game-sidebar-border);
+  border-radius:999px;
+
+  background:var(--game-sidebar-surface);
+
+  color:var(--game-sidebar-text);
+
+  font-size:11px;
+  font-weight:700;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.game-badge-primary{
+  background:
+    color-mix(
+      in srgb,
+      var(--game-sidebar-primary) 22%,
+      var(--game-sidebar-surface) 78%
+    );
+
+  color:var(--game-sidebar-primary-hover);
+
+  border-color:var(--game-sidebar-border-strong);
+}
+
+.game-badge-success{
+  background:
+    color-mix(
+      in srgb,
+      var(--game-sidebar-success) 18%,
+      var(--game-sidebar-surface) 82%
+    );
+
+  color:var(--game-sidebar-success);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--game-sidebar-success) 45%,
+      var(--game-sidebar-border) 55%
+    );
+}
+
+.game-badge-danger{
+  background:
+    color-mix(
+      in srgb,
+      var(--game-sidebar-danger) 18%,
+      var(--game-sidebar-surface) 82%
+    );
+
+  color:var(--game-sidebar-danger);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--game-sidebar-danger) 45%,
+      var(--game-sidebar-border) 55%
+    );
+}
+
+/* =========================
+   BADGE GROUP
+========================= */
+
+.badge-group{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+}

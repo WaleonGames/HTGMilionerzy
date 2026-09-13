@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Twórcy - Milionerzy</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="../public/css/design.css">
+  <link rel="stylesheet" href="../public/css/additional/badge.css">
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <div class="page-header-main">
+        <span class="eyebrow">MILIONERZY</span>
+        <h1 class="page-title">Twórcy</h1>
+        <p class="page-description">
+          Informacje o osobach zaangażowanych w projekt HTGMilionerzy.
+        </p>
+      </div>
+
+      <div class="page-header-actions">
+        <button
+          id="backButton"
+          class="button button-secondary"
+          type="button"
+        >
+          Wróć
+        </button>
+      </div>
+    </header>
+
+    <section class="grid grid-2">
+      <article class="card form">
+        <span class="eyebrow">GŁÓWNY TWÓRCA</span>
+        <h2>WaleonGames</h2>
+        <p>Autor oraz główny twórca projektu HTGMilionerzy.</p>
+
+        <div class="setting-row">
+          <div>
+            <strong>Projekt</strong>
+            <span>HTGMilionerzy</span>
+          </div>
+          <span class="badge">Główny twórca</span>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Zakres prac</strong>
+            <span>Tworzenie, projektowanie oraz rozwój aplikacji.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card form">
+        <span class="eyebrow">WSPÓŁTWÓRCY</span>
+        <h2>Osoby zaangażowane</h2>
+        <p>
+          Osoby uczestniczące w rozwoju, testowaniu lub przygotowywaniu projektu.
+        </p>
+
+        <div class="empty">
+          Obecnie nie dodano dodatkowych współtwórców.
+        </div>
+      </article>
+
+      <article class="card form">
+        <span class="eyebrow">PROJEKT</span>
+        <h2>HTGMilionerzy</h2>
+        <p>
+          Niezależny projekt inspirowany rozwiązaniami znanymi z programu
+          Milionerzy oraz projektu TheMillionaireGame.
+        </p>
+
+        <div class="setting-row">
+          <div>
+            <strong>Status projektu</strong>
+            <span>Projekt jest aktywnie rozwijany.</span>
+          </div>
+          <span class="badge">W trakcie rozwoju</span>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <strong>Charakter projektu</strong>
+            <span>
+              Projekt użytkowy, edukacyjny i eksperymentalny.
+            </span>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="../public/js/design.js"></script>
+  <script>
+    document
+      .getElementById("backButton")
+      ?.addEventListener("click",()=>{
+        window.location.href="index.html";
+      });
+  </script>
+  <script src="../public/js/shortcuts/help.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Ładowanie - Milionerzy</title>
+    <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="../public/css/design.css" />
+  </head>
+  <body>
+    <main class="page loader-page">
+      <section class="loader">
+        <span class="eyebrow">MILIONERZY</span>
+
+        <h1 class="page-title">Ładowanie</h1>
+
+        <p class="page-description" id="loader-status">
+          Przygotowywanie aplikacji...
+        </p>
+
+        <div class="loader-spinner" id="loader-spinner" aria-hidden="true"></div>
+
+        <div class="loader-checks" id="loader-checks">
+          <div class="loader-check" data-check="executable">
+            <span class="loader-check-icon">○</span>
+            <span class="loader-check-text">Sprawdzanie pliku wykonywalnego</span>
+          </div>
+
+          <div class="loader-check" data-check="application">
+            <span class="loader-check-icon">○</span>
+            <span class="loader-check-text">Sprawdzanie aplikacji</span>
+          </div>
+
+          <div class="loader-check" data-check="data">
+            <span class="loader-check-icon">○</span>
+            <span class="loader-check-text">Sprawdzanie danych</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../public/js/design.js"></script>
+    <script src="../public/js/loader.js"></script>
+  </body>
+</html>

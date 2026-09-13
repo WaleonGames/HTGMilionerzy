@@ -67,7 +67,7 @@
   </main>
 
   <!-- =========================
-       MODAL
+      MODAL — PYTANIE
   ========================= -->
 
   <div
@@ -112,7 +112,7 @@
         >
 
         <!-- =========================
-             TREŚĆ PYTANIA
+            TREŚĆ PYTANIA
         ========================= -->
 
         <div class="form-field">
@@ -129,7 +129,7 @@
         </div>
 
         <!-- =========================
-             ODPOWIEDZI
+            ODPOWIEDZI
         ========================= -->
 
         <div class="form-grid">
@@ -187,7 +187,7 @@
         </div>
 
         <!-- =========================
-             POPRAWNA ODPOWIEDŹ
+            POPRAWNA ODPOWIEDŹ
         ========================= -->
 
         <div class="form-field">
@@ -222,7 +222,7 @@
         </div>
 
         <!-- =========================
-             USTAWIENIA PYTANIA
+            USTAWIENIA PYTANIA
         ========================= -->
 
         <div class="form-grid">
@@ -278,7 +278,7 @@
         </div>
 
         <!-- =========================
-             ACTIONS
+            ACTIONS
         ========================= -->
 
         <div class="form-actions">
@@ -302,7 +302,83 @@
     </div>
   </div>
 
+  <!-- =========================
+      MODAL — WYBÓR PYTANIA
+  ========================= -->
+
+  <div
+    id="questionSelectModal"
+    class="modal-backdrop"
+    hidden
+  >
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="questionSelectModalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">
+            PYTANIA
+          </span>
+
+          <h2 id="questionSelectModalTitle">
+            Wybierz pytanie
+          </h2>
+        </div>
+
+        <button
+          id="closeQuestionSelectModalButton"
+          class="button button-icon"
+          type="button"
+          aria-label="Zamknij"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="form">
+        <div class="form-field">
+          <label>
+            Wybór pytania
+          </label>
+
+          <small id="questionSelectModalDescription">
+            Wybierz pytanie, które chcesz edytować lub usunąć.
+          </small>
+        </div>
+
+        <div
+          id="questionSelectList"
+          class="question-select-list"
+        ></div>
+
+        <div
+          id="questionSelectEmpty"
+          class="empty"
+          hidden
+        >
+          Brak pytań w bazie.
+        </div>
+
+        <div class="form-actions">
+          <button
+            id="cancelQuestionSelectModalButton"
+            class="button button-secondary"
+            type="button"
+          >
+            Anuluj
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../public/js/design.js"></script>
   <script src="../public/js/questions.js"></script>
+  <script src="../public/js/shortcuts/core.js"></script>
+  <script src="../public/js/shortcuts/help.js"></script>
+  <script src="../public/js/shortcuts/quest.js"></script>
 </body>
 </html>

@@ -6,9 +6,10 @@
 
   <title>Milionerzy - Gra</title>
 
+  <link rel="stylesheet" href="../public/css/style.css">
   <link rel="stylesheet" href="../public/css/design.css">
   <link rel="stylesheet" href="../public/css/game.css">
-  <link rel="stylesheet" href="../public/css/blocked.css">
+  <link rel="stylesheet" href="../public/css/additional/blocked.css">
 </head>
 <body>
   <div class="game-app sidebar-hidden">
@@ -21,6 +22,7 @@
       <section class="game-question-area">
 
         <!-- INFORMACJE TECHNICZNE -->
+
         <div
           id="gameQuestionMeta"
           class="game-question-meta technical-info"
@@ -36,6 +38,7 @@
         </div>
 
         <!-- PYTANIE -->
+
         <div
           id="questionText"
           class="game-question"
@@ -43,6 +46,7 @@
         ></div>
 
         <!-- ODPOWIEDZI -->
+
         <div
           id="answersGrid"
           class="game-answers"
@@ -105,7 +109,10 @@
           </div>
         </div>
 
-        <!-- KONIEC GRY -->
+        <!-- =========================
+             KONIEC GRY
+        ========================= -->
+
         <section
           id="gameEndScene"
           class="game-end-scene"
@@ -124,6 +131,7 @@
             </strong>
           </div>
         </section>
+
       </section>
     </main>
 
@@ -132,7 +140,9 @@
     ========================= -->
 
     <aside class="game-sidebar hidden">
+
       <!-- KOŁA RATUNKOWE -->
+
       <section class="game-sidebar-section">
 
         <div
@@ -143,6 +153,7 @@
         </div>
 
         <div class="game-lifelines is-coming-soon">
+
           <div
             class="game-lifeline"
             title="50:50"
@@ -175,10 +186,12 @@
               alt="Pytanie do prowadzącego"
             >
           </div>
+
         </div>
       </section>
 
       <!-- DRZEWO NAGRÓD -->
+
       <section
         class="game-sidebar-section game-sidebar-section-grow"
       >
@@ -194,6 +207,7 @@
           class="game-prize-tree"
         ></div>
       </section>
+
     </aside>
 
     <!-- =========================
@@ -230,17 +244,18 @@
 
     <aside
       id="controlsPanel"
-      class="game-offcanvas"
+      class="offcanvas"
       aria-hidden="true"
     >
 
       <!-- =========================
-           HEADER
+          HEADER
       ========================= -->
 
-      <div class="game-offcanvas-header">
+      <div class="offcanvas-header">
+
         <div>
-          <span class="game-eyebrow">
+          <span class="eyebrow">
             HOST
           </span>
 
@@ -249,10 +264,11 @@
           </h2>
         </div>
 
-        <div class="game-offcanvas-header-actions">
+        <div class="offcanvas-header-actions">
+
           <button
             id="detachControlsButton"
-            class="game-icon-button"
+            class="icon-button"
             type="button"
             aria-label="Wyciągnij sterowanie"
             title="Wyciągnij sterowanie"
@@ -262,49 +278,51 @@
 
           <button
             id="closeControlsButton"
-            class="game-icon-button"
+            class="icon-button"
             type="button"
             aria-label="Zamknij"
           >
             ×
           </button>
+
         </div>
       </div>
 
       <!-- =========================
-           CONTENT
+          CONTENT
       ========================= -->
 
-      <div class="game-offcanvas-content">
+      <div class="offcanvas-content">
 
         <!-- =========================
-             PANEL BOCZNY
+            PANEL BOCZNY
         ========================= -->
 
-        <section class="game-control-section">
+        <section class="control-section">
           <h3>
             Panel boczny
           </h3>
 
           <button
             id="toggleSidebarButton"
-            class="game-button"
+            class="button"
             type="button"
           >
             Panel boczny
           </button>
-          
-          <div class="game-control-subsection is-coming-soon">
-            <span class="game-control-label">
+
+          <div class="control-subsection is-coming-soon">
+
+            <span class="control-label">
               Koła ratunkowe
             </span>
 
             <div
-              class="game-display-controls game-display-controls-3"
+              class="control-grid control-grid-3"
             >
               <button
                 id="lifeline5050Button"
-                class="game-button"
+                class="button"
                 type="button"
               >
                 50:50
@@ -312,7 +330,7 @@
 
               <button
                 id="lifelineAudienceButton"
-                class="game-button"
+                class="button"
                 type="button"
               >
                 Publiczność
@@ -320,43 +338,45 @@
 
               <button
                 id="lifelineHostButton"
-                class="game-button"
+                class="button"
                 type="button"
               >
                 Pytanie do prowadzącego
               </button>
             </div>
+
           </div>
         </section>
 
         <!-- =========================
-             PANEL GŁÓWNY
+            PANEL GŁÓWNY
         ========================= -->
 
-        <section class="game-control-section">
+        <section class="control-section">
           <h3>
             Panel główny
           </h3>
 
           <button
             id="showMainPanelButton"
-            class="game-button game-button-primary"
+            class="button button-primary"
             type="button"
           >
             Pokaż menu główne
           </button>
 
-          <div class="game-control-subsection">
-            <span class="game-control-label">
+          <div class="control-subsection">
+
+            <span class="control-label">
               Pytanie
             </span>
 
             <div
-              class="game-display-controls game-display-controls-2"
+              class="control-grid control-grid-2"
             >
               <button
                 id="showQuestionButton"
-                class="game-button"
+                class="button"
                 type="button"
                 disabled
               >
@@ -365,13 +385,14 @@
 
               <button
                 id="showAnswersButton"
-                class="game-button"
+                class="button"
                 type="button"
                 disabled
               >
                 Odpowiedzi
               </button>
             </div>
+
           </div>
         </section>
 
@@ -379,7 +400,7 @@
             ODPOWIEDŹ GRACZA
         ========================= -->
 
-        <section class="game-control-section">
+        <section class="control-section">
           <h3>
             Odpowiedź gracza
           </h3>
@@ -389,7 +410,7 @@
             class="game-host-answers"
           >
             <button
-              class="game-button game-host-answer"
+              class="button game-host-answer"
               data-host-answer="A"
               type="button"
               disabled
@@ -398,7 +419,7 @@
             </button>
 
             <button
-              class="game-button game-host-answer"
+              class="button game-host-answer"
               data-host-answer="B"
               type="button"
               disabled
@@ -407,7 +428,7 @@
             </button>
 
             <button
-              class="game-button game-host-answer"
+              class="button game-host-answer"
               data-host-answer="C"
               type="button"
               disabled
@@ -416,7 +437,7 @@
             </button>
 
             <button
-              class="game-button game-host-answer"
+              class="button game-host-answer"
               data-host-answer="D"
               type="button"
               disabled
@@ -426,6 +447,7 @@
           </div>
 
           <div class="game-selected-answer">
+
             <span>
               Wybrana odpowiedź
             </span>
@@ -440,14 +462,15 @@
             >
               Wybierz odpowiedź.
             </small>
+
           </div>
         </section>
 
         <!-- =========================
-             WYNIK
+            WYNIK
         ========================= -->
 
-        <section class="game-control-section">
+        <section class="control-section">
           <h3>
             Wynik
           </h3>
@@ -464,42 +487,49 @@
         </section>
 
         <!-- =========================
-             ROZGRYWKA
+            ROZGRYWKA
         ========================= -->
 
-        <section class="game-control-section">
+        <section class="control-section">
           <h3>
             Rozgrywka
           </h3>
 
           <button
             id="nextQuestionButton"
-            class="game-button game-button-primary"
+            class="button button-primary"
             type="button"
             disabled
           >
             Następne pytanie
           </button>
         </section>
+
       </div>
 
       <!-- =========================
-           FOOTER
+          FOOTER
       ========================= -->
 
-      <div class="game-offcanvas-footer">
+      <div class="offcanvas-footer">
         <button
           id="exitGameButton"
-          class="game-button game-button-danger"
+          class="button button-danger"
           type="button"
         >
           Zakończ grę
         </button>
       </div>
+
     </aside>
   </div>
 
   <script src="../public/js/design.js"></script>
-  <script src="../public/js/game.js"></script>
+  <script src="../public/js/game/design.js"></script>
+  <script src="../public/js/game/core.js"></script>
+  <script src="../public/js/game/control.js"></script>
+  <script src="../public/js/shortcuts/core.js"></script>
+  <script src="../public/js/shortcuts/help.js"></script>
+  <script src="../public/js/shortcuts/game.js"></script>
 </body>
 </html>
