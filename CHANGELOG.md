@@ -124,6 +124,9 @@
 
 ## Przebudowane
 - Zostało przebudowane pliki który potrzebowały rzeczyście zmiany w celu dodania system plików
+- Udało się zmiejsz wage programu o połowe mniej i teraz tak wygląda
+> Na Linuksa 692 MB ale teraz jest 124 MB
+> Na Windowsie 473 MB ale teraz jest 382 MB
 
 ## Usunięto:
 - Usunięto zawartość zakładki zapisy danych
