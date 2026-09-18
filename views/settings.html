@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="../public/css/style.css" />
     <link rel="stylesheet" href="../public/css/design.css" />
+    <link rel="stylesheet" href="../public/css/palette.css" />
     <link rel="stylesheet" href="../public/css/additional/badge.css" />
     <link rel="stylesheet" href="../public/css/additional/blocked.css" />
   </head>
@@ -55,8 +56,6 @@
 
             <button class="nav-item" data-tab="screen" type="button">
               Ekran
-
-              <span class="badge badge-neutral badge-sm"> Nowe </span>
             </button>
 
             <button class="nav-item" data-tab="sound" type="button">
@@ -69,18 +68,16 @@
 
             <button class="nav-item" data-tab="appearance" type="button">
               <span> Wygląd </span>
-
-              <span class="badge badge-neutral badge-sm"> Nowe </span>
             </button>
 
             <button class="nav-item" data-tab="dataStorage" type="button">
               Zapisy danych
+
+              <span class="badge badge-warning badge-sm"> Usunięte </span>
             </button>
 
             <button class="nav-item" data-tab="shortcuts" type="button">
               <span> Skróty </span>
-
-              <span class="badge badge-neutral badge-sm"> Nowe </span>
             </button>
           </nav>
         </aside>
@@ -1074,37 +1071,9 @@
             <div class="section-header">
               <h2>Zapisy danych</h2>
 
-              <p>Ustawienia lokalnego zapisu danych programu.</p>
-            </div>
-
-            <div class="card form is-coming-soon">
-              <label class="setting-row">
-                <div>
-                  <strong> Automatyczny zapis </strong>
-
-                  <span> Zapisuj dane automatycznie po zmianach. </span>
-                </div>
-
-                <input id="autoSave" type="checkbox" />
-              </label>
-
-              <label class="setting-row">
-                <div>
-                  <strong> Automatyczne kopie zapasowe </strong>
-
-                  <span> Twórz kopię danych programu. </span>
-                </div>
-
-                <input id="autoBackup" type="checkbox" />
-              </label>
-
-              <div class="form-field">
-                <label for="backupInterval">
-                  Interwał kopii zapasowej w minutach
-                </label>
-
-                <input id="backupInterval" type="number" min="1" />
-              </div>
+              <p>
+                Zarządzanie miejscem przechowywania danych programu.
+              </p>
             </div>
           </section>
 
@@ -1269,7 +1238,79 @@
       <div id="statusMessage" class="status-message" hidden></div>
     </div>
 
+    <!-- =========================
+       PALETA KOLORÓW
+    ========================= -->
+
+    <div
+      id="colorPaletteModal"
+      class="modal-backdrop"
+      hidden
+    >
+      <section
+        class="modal palette-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="colorPaletteTitle"
+      >
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">
+              WYGLĄD
+            </span>
+
+            <h2 id="colorPaletteTitle">
+              Paleta kolorów
+            </h2>
+          </div>
+        </div>
+
+        <div
+          id="colorPalette"
+          class="color-palette"
+          aria-label="Paleta kolorów"
+        >
+          <!--
+            Kolory głównej palety są tworzone
+            dynamicznie przez palette.js.
+          -->
+        </div>
+
+        <div
+          id="colorShadePalette"
+          class="color-shade-palette"
+          hidden
+          aria-label="Odcienie wybranego koloru"
+        >
+          <!--
+            Podobne kolory z wybranej grupy
+            są tworzone dynamicznie przez palette.js.
+          -->
+        </div>
+
+        <div class="palette-actions">
+          <button
+            id="customColorButton"
+            class="button button-secondary"
+            type="button"
+          >
+            Niestandardowy kolor
+          </button>
+
+          <input
+            id="customColorInput"
+            class="palette-custom-input"
+            type="color"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+        </div>
+      </section>
+    </div>
+
     <script src="../public/js/design.js"></script>
+    <script src="../public/js/system/exit-menu.js"></script>
+    <script src="../public/js/palette.js"></script>
     <script src="../public/js/settings.js"></script>
     <script src="../public/js/shortcuts/core.js"></script>
     <script src="../public/js/shortcuts/help.js"></script>

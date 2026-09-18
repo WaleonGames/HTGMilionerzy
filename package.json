@@ -1,16 +1,16 @@
 {
   "name": "HTGMilionerzy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Gra Milionerzy inspirowana telewizyjnym formatem quizu wiedzy.",
   "main": "app.js",
   "productName": "HTGMilionerzy",
-  "homepage": "https://github.com/ToJaWG/Milionerzy",
+  "homepage": "https://github.com/WaleonGames/HTGMilionerzy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ToJaWG/Milionerzy.git"
+    "url": "https://github.com/WaleonGames/HTGMilionerzy.git"
   },
   "bugs": {
-    "url": "https://github.com/ToJaWG/Milionerzy/issues"
+    "url": "https://github.com/WaleonGames/HTGMilionerzy/issues"
   },
   "keywords": [
     "htgmilionerzy",
@@ -36,9 +36,21 @@
     "productName": "HTG Milionerzy",
     "copyright": "Copyright © 2026 HTGMC",
     "asar": true,
+    "compression": "store",
     "files": [
-      "**/*",
-      "!node_modules/.cache/**/*"
+      "app.js",
+      "bootloader.js",
+      "preload.js",
+      "toolbar.js",
+      "package.json",
+      "config/**/*",
+      "ipc/**/*",
+      "utils/**/*",
+      "public/**/*",
+      "views/**/*",
+      "LICENSE",
+      "README.md",
+      "UPDATE.md"
     ],
     "directories": {
       "output": "dist"

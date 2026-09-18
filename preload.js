@@ -3,19 +3,164 @@ const {
   ipcRenderer
 }=require("electron");
 
+/* =========================
+   LOGS
+========================= */
+
+function log(
+  message,
+  data
+){
+  if(data===undefined){
+    console.log(
+      `[Preload] ${message}`
+    );
+
+    return;
+  }
+
+  console.log(
+    `[Preload] ${message}`,
+    data
+  );
+}
+
+function logWarn(
+  message,
+  data
+){
+  if(data===undefined){
+    console.warn(
+      `[Preload] ${message}`
+    );
+
+    return;
+  }
+
+  console.warn(
+    `[Preload] ${message}`,
+    data
+  );
+}
+
+function logError(
+  message,
+  error
+){
+  console.error(
+    `[Preload] ${message}`,
+    error
+  );
+}
+
+log(
+  "Uruchamianie preload.js"
+);
+
 contextBridge.exposeInMainWorld(
   "millionaireAPI",
   {
+    /* =========================
+      APP
+    ========================= */
+
+    app:{
+      quit:()=>{
+        log(
+          "Potwierdzanie zamknięcia programu"
+        );
+
+        return ipcRenderer.invoke(
+          "app:quit"
+        );
+      },
+
+      cleanupAndQuit:()=>{
+        log(
+          "Wysyłanie żądania usunięcia lokalnych danych i zamknięcia programu"
+        );
+
+        return ipcRenderer.invoke(
+          "app:cleanup-and-quit"
+        );
+      },
+
+      onExitRequested:callback=>{
+        if(
+          typeof callback!=="function"
+        ){
+          logWarn(
+            "app.onExitRequested otrzymał nieprawidłowy callback"
+          );
+
+          return()=>{
+          };
+        }
+
+        const listener=()=>{
+          log(
+            "Odebrano żądanie pokazania menu wyjścia"
+          );
+
+          callback();
+        };
+
+        ipcRenderer.on(
+          "app:exit-requested",
+          listener
+        );
+
+        return()=>{
+          ipcRenderer.removeListener(
+            "app:exit-requested",
+            listener
+          );
+        };
+      }
+    },
+
     /* =========================
        LOADER
     ========================= */
 
     loader:{
       onStep:callback=>{
+        if(
+          typeof callback!=="function"
+        ){
+          logWarn(
+            "loader.onStep otrzymał nieprawidłowy callback"
+          );
+
+          return()=>{
+          };
+        }
+
+        log(
+          "Rejestracja nasłuchiwania bootloader:step"
+        );
+
         const listener=(
           event,
           step
         )=>{
+          log(
+            "Odebrano bootloader:step",
+            {
+              type:
+                step?.type||
+                "step",
+
+              name:
+                step?.name||
+                null,
+
+              state:
+                step?.state||
+                null
+            }
+          );
+
           callback(
             step
           );
@@ -27,11 +172,43 @@ contextBridge.exposeInMainWorld(
         );
 
         return()=>{
+          log(
+            "Usuwanie nasłuchiwania bootloader:step"
+          );
+
           ipcRenderer.removeListener(
             "bootloader:step",
             listener
           );
         };
+      },
+
+      action:async actionId=>{
+        log(
+          `Wysyłanie akcji loadera "${actionId}"`
+        );
+
+        try{
+          const result=
+            await ipcRenderer.invoke(
+              "loader:action",
+              actionId
+            );
+
+          log(
+            `Odebrano wynik akcji loadera "${actionId}"`,
+            result
+          );
+
+          return result;
+        }catch(error){
+          logError(
+            `Błąd akcji loadera "${actionId}"`,
+            error
+          );
+
+          throw error;
+        }
       }
     },
 
@@ -364,4 +541,8 @@ contextBridge.exposeInMainWorld(
       }
     }
   }
+);
+
+log(
+  "millionaireAPI udostępnione do rendererów"
 );

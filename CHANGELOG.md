@@ -104,10 +104,30 @@
 
 **ZABLOKOWANE SĄ KOŁA RATUNKOWE**
 
-~~## Wymagania:~~
-~~1. Wejdz na strone https://nodejs.org/en/download~~
-~~2. Następnie pobierz i zainstaluj na komputerze~~
-~~3. Nastepnie jak nie uda się uruchomić program to zrób komende npm install i następne npm run w celu uruchomienu programu~~
+#############################################################################################################################################################
 
-~~## Komendy Podstawowe:~~
-~~- npm run w celu uruchomieniu programu~~
+# Wersja Eksprementalna 3 - Prototyp wersji Drugiej.
+## Dodano:
+**System plików programu**
+- Dodano możliwość wybrania gdzie ma być zapisywane dane według użytkownika albo według programu uznania dla programu to będzie domyślnie folder Dokumenty
+- Zostało zapewnione przy ponowej uruchomienie programu zlokalizowanie po pierwszym uruchomieniu wskazanie miejsca zapisu danych
+- Dodanie opcji usunięcia z systemu informacje oraz danych o lokalizacji folderu i informacjach o programie po wyłączeniu programu w przypadku że to jest nie własny sprzęt np. sprzęt szkolny, stanowisko pracy czy laptop wynajęty i zostanie pokażany ekran czy ma program usunoć folder z AppData czy w przypadku Linuksa .config
+- Dodano ekranu wyjścia gry można zdecydować czy zamknoć aplikacje czy usunoć i zamknoć aplikacje
+- **[DOTYCZY TYLKO WINDOWSA]** Dodano mechanizm usuwania lokalnych plików utworzonych przez program. System może wykonać do 15 prób usunięcia danych. Jeżeli operacja się nie powiedzie, zostanie wygenerowany raport błędu. Obecnie podczas działania mechanizmu może być widoczne okno terminala. W przyszłości mechanizm zostanie dopracowany tak, aby podczas prawidłowego działania pracował całkowicie w tle.
+-# AI Doprecował tą informacje dotyczący o Windowsa
+
+**Paleta kolorów**
+- Dodano palete kolorów i będzie nie mal zawsze działać przy edycjach związane z kolorami
+- Dodano grupowanie kolorów
+- Dodano obsługie custom kolorów
+- Po wybraniu kolor to i wyjście z menu wyboru koloru (domyślnego nie zrobiony przez program to) przypisuje do tego inputa kolorów wybranego **"Nie zapisuje się automatycznie trzeba manualnie albo skrótem do zapiszu ustawień (U+U)"**
+
+## Przebudowane
+- Zostało przebudowane pliki który potrzebowały rzeczyście zmiany w celu dodania system plików
+
+## Usunięto:
+- Usunięto zawartość zakładki zapisy danych
+
+## Inne Informacje
+
+**ZABLOKOWANE SĄ KOŁA RATUNKOWE**

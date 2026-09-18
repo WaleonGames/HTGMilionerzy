@@ -1,52 +1,101 @@
 const {
-  app
-}=require("electron");
-
-const fs=require("fs");
-const path=require("path");
+  DEFAULT_SETTINGS
+}=require("./config/default-settings");
 
 const {
-  parseVersionTag,
-  getLatestRelease
-}=require("./utils/version");
-
-const {
-  readJson
+  fileExists,
+  readJsonStrict
 }=require("./utils/file");
 
-const PACKAGE_FILE=
-  path.join(
-    __dirname,
-    "package.json"
-  );
-
-const DATA_DIR=
-  path.join(
-    __dirname,
-    "data"
-  );
-
-const QUESTIONS_FILE=
-  path.join(
-    DATA_DIR,
-    "quests.json"
-  );
-
-const SETTINGS_FILE=
-  path.join(
-    DATA_DIR,
-    "settings.json"
-  );
+const storage=
+  require("./utils/storage");
 
 /* =========================
-   LOADER
+   HELPERS
 ========================= */
+
+function isObject(value){
+  return Boolean(
+    value&&
+    typeof value==="object"&&
+    !Array.isArray(value)
+  );
+}
+
+function getMissingSettings(
+  defaults,
+  current,
+  prefix=""
+){
+  const missing=[];
+
+  if(!isObject(defaults)){
+    return missing;
+  }
+
+  Object.keys(defaults)
+    .forEach(key=>{
+      const fullKey=
+        prefix
+          ? `${prefix}.${key}`
+          : key;
+
+      if(
+        !current||
+        !Object.prototype.hasOwnProperty.call(
+          current,
+          key
+        )
+      ){
+        missing.push(
+          fullKey
+        );
+
+        return;
+      }
+
+      if(
+        isObject(
+          defaults[key]
+        )
+      ){
+        if(
+          !isObject(
+            current[key]
+          )
+        ){
+          missing.push(
+            fullKey
+          );
+
+          return;
+        }
+
+        missing.push(
+          ...getMissingSettings(
+            defaults[key],
+            current[key],
+            fullKey
+          )
+        );
+      }
+    });
+
+  return missing;
+}
 
 function sendStep(
   mainWindow,
-  name,
-  state,
-  text
+  {
+    type="step",
+    name=null,
+    state=null,
+    text=null,
+    title=null,
+    status=null,
+    description=null,
+    actions=null
+  }={}
 ){
   if(
     !mainWindow||
@@ -58,399 +107,176 @@ function sendStep(
   mainWindow.webContents.send(
     "bootloader:step",
     {
+      type,
       name,
       state,
-      text
+      text,
+      title,
+      status,
+      description,
+      actions
     }
   );
 }
 
 /* =========================
-   EXECUTABLE
+   STORAGE INITIALIZATION
 ========================= */
 
-function getExecutableInfo(){
-  const executablePath=
-    app.getPath("exe");
-
-  return{
-    path:
-      executablePath,
-
-    name:
-      path.basename(
-        executablePath
-      ),
-
-    exists:
-      fs.existsSync(
-        executablePath
-      ),
-
-    isExe:
-      path.extname(
-        executablePath
-      ).toLowerCase()===".exe",
-
-    isPackaged:
-      app.isPackaged,
-
-    platform:
-      process.platform
-  };
-}
-
-function checkExecutable(){
-  const executable=
-    getExecutableInfo();
-
+function initializeDataStorage(){
   if(
-    !executable.exists
+    storage.hasDataDirectory()
   ){
     return{
-      valid:false,
-      reason:
-        "Nie znaleziono uruchomionego pliku wykonywalnego.",
-      executable
+      source:"current",
+      path:
+        storage.getDataDirectory(),
+      exists:
+        storage.storageExists(),
+      accessible:
+        storage.storageAccessible()
     };
   }
 
-  if(
-    process.platform==="win32"&&
-    !executable.isExe
-  ){
-    return{
-      valid:false,
-      reason:
-        "Uruchomiony plik nie jest plikiem EXE.",
-      executable
-    };
-  }
-
-  return{
-    valid:true,
-    reason:null,
-    executable
-  };
+  return storage.initializeStorage();
 }
 
 /* =========================
-   APPLICATION VERSION
+   STORAGE
 ========================= */
 
-function getCurrentVersion(){
-  if(
-    !fs.existsSync(
-      PACKAGE_FILE
-    )
-  ){
-    return null;
-  }
-
-  const packageData=
-    readJson(
-      PACKAGE_FILE,
-      {}
-    );
-
-  const version=
-    String(
-      packageData?.version||
-      ""
-    )
-      .trim()
-      .toLowerCase();
-
-  if(!version){
-    return null;
-  }
-
-  return{
-    raw:version,
-    parsed:
-      parseVersionTag(
-        version
-      )
-  };
-}
-
-/* =========================
-   VERSION CHECK
-========================= */
-
-async function checkVersion(){
+function checkStorage(){
   const current=
-    getCurrentVersion();
+    storage.getDataDirectory();
 
   if(!current){
     return{
       valid:false,
-      updateAvailable:false,
-      current:null,
-      latest:null,
-      reason:
-        "Nie znaleziono wersji aplikacji."
-    };
-  }
-
-  if(!current.parsed){
-    return{
-      valid:false,
-      updateAvailable:false,
-      current,
-      latest:null,
-      reason:
-        `Nieprawidłowy format wersji: ${current.raw}`
-    };
-  }
-
-  try{
-    const latest=
-      await getLatestRelease();
-
-    if(!latest){
-      return{
-        valid:true,
-        updateAvailable:false,
-        current,
-        latest:null,
-        reason:
-          "Nie znaleziono żadnego wydania."
-      };
-    }
-
-    const currentVersion=
-      current.parsed;
-
-    const latestVersion=
-      parseVersionTag(
-        latest.tag
-      );
-
-    if(!latestVersion){
-      return{
-        valid:true,
-        updateAvailable:false,
-        current,
-        latest:null,
-        reason:
-          "Najnowsze wydanie ma nieprawidłową wersję."
-      };
-    }
-
-    const currentOrder=
-      currentVersion.order;
-
-    const latestOrder=
-      latestVersion.order;
-
-    let comparison=0;
-
-    if(
-      currentOrder<
-      latestOrder
-    ){
-      comparison=-1;
-    }else if(
-      currentOrder>
-      latestOrder
-    ){
-      comparison=1;
-    }else if(
-      currentVersion.type===
-      "prototype"
-    ){
-      if(
-        currentVersion.version<
-        latestVersion.version
-      ){
-        comparison=-1;
-      }else if(
-        currentVersion.version>
-        latestVersion.version
-      ){
-        comparison=1;
-      }
-    }else{
-      const currentSemver=
-        currentVersion.version;
-
-      const latestSemver=
-        latestVersion.version;
-
-      if(
-        currentSemver.major<
-        latestSemver.major
-      ){
-        comparison=-1;
-      }else if(
-        currentSemver.major>
-        latestSemver.major
-      ){
-        comparison=1;
-      }else if(
-        currentSemver.minor<
-        latestSemver.minor
-      ){
-        comparison=-1;
-      }else if(
-        currentSemver.minor>
-        latestSemver.minor
-      ){
-        comparison=1;
-      }else if(
-        currentSemver.patch<
-        latestSemver.patch
-      ){
-        comparison=-1;
-      }else if(
-        currentSemver.patch>
-        latestSemver.patch
-      ){
-        comparison=1;
-      }
-    }
-
-    return{
-      valid:true,
-
-      updateAvailable:
-        comparison<0,
-
-      current,
-
-      latest,
-
-      comparison,
-
-      reason:null
-    };
-  }catch(error){
-    return{
-      valid:true,
-      updateAvailable:false,
-      current,
-      latest:null,
-      comparison:0,
-      reason:
-        `Nie udało się sprawdzić aktualizacji: ${error.message}`
-    };
-  }
-}
-
-/* =========================
-   APPLICATION
-========================= */
-
-function checkApplication(){
-  const packageExists=
-    fs.existsSync(
-      PACKAGE_FILE
-    );
-
-  if(!packageExists){
-    return{
-      valid:false,
-      reason:
-        "Nie znaleziono pliku package.json."
-    };
-  }
-
-  let packageData;
-
-  try{
-    packageData=
-      readJson(
-        PACKAGE_FILE,
-        null
-      );
-  }catch(error){
-    return{
-      valid:false,
-      reason:
-        "Nie udało się odczytać package.json."
+      missing:true,
+      unavailable:false
     };
   }
 
   if(
-    !packageData||
-    typeof packageData!=="object"
+    !storage.storageExists(
+      current
+    )
   ){
     return{
       valid:false,
-      reason:
-        "Nieprawidłowa zawartość package.json."
+      missing:true,
+      unavailable:false
     };
   }
 
   if(
-    !packageData.name
+    !storage.storageAccessible(
+      current
+    )
   ){
     return{
       valid:false,
-      reason:
-        "Brak nazwy aplikacji w package.json."
-    };
-  }
-
-  if(
-    !packageData.version
-  ){
-    return{
-      valid:false,
-      reason:
-        "Brak wersji aplikacji w package.json."
+      missing:false,
+      unavailable:true
     };
   }
 
   return{
     valid:true,
-    reason:null,
-    name:
-      packageData.name,
-    version:
-      packageData.version
+    missing:false,
+    unavailable:false
   };
 }
 
 /* =========================
-   DATA
+   SETTINGS
 ========================= */
 
-function checkData(){
+function checkConfiguration(){
+  const settingsFile=
+    storage.getSettingsFile();
+
   if(
-    !fs.existsSync(
-      DATA_DIR
+    !settingsFile||
+    !fileExists(
+      settingsFile
     )
   ){
     return{
       valid:false,
-      reason:
-        "Nie znaleziono katalogu danych."
+      missingFile:true,
+      damaged:false,
+      missingSettings:[]
+    };
+  }
+
+  let settings;
+
+  try{
+    settings=
+      readJsonStrict(
+        settingsFile
+      );
+  }catch(error){
+    console.error(
+      "[Bootloader] Nie udało się odczytać konfiguracji:",
+      error
+    );
+
+    return{
+      valid:false,
+      missingFile:false,
+      damaged:true,
+      missingSettings:[]
     };
   }
 
   if(
-    !fs.existsSync(
-      QUESTIONS_FILE
+    !isObject(
+      settings
     )
   ){
     return{
       valid:false,
-      reason:
-        "Nie znaleziono pliku quests.json."
+      missingFile:false,
+      damaged:true,
+      missingSettings:[]
     };
   }
 
+  const missingSettings=
+    getMissingSettings(
+      DEFAULT_SETTINGS,
+      settings
+    );
+
+  return{
+    valid:
+      missingSettings.length===0,
+    missingFile:false,
+    damaged:false,
+    missingSettings
+  };
+}
+
+/* =========================
+   QUESTIONS
+========================= */
+
+function checkQuestions(){
+  const questionsFile=
+    storage.getQuestionsFile();
+
   if(
-    !fs.existsSync(
-      SETTINGS_FILE
+    !questionsFile||
+    !fileExists(
+      questionsFile
     )
   ){
     return{
       valid:false,
-      reason:
-        "Nie znaleziono pliku settings.json."
+      missingFile:true,
+      damaged:false
     };
   }
 
@@ -458,15 +284,19 @@ function checkData(){
 
   try{
     questions=
-      readJson(
-        QUESTIONS_FILE,
-        null
+      readJsonStrict(
+        questionsFile
       );
   }catch(error){
+    console.error(
+      "[Bootloader] Nie udało się odczytać bazy pytań:",
+      error
+    );
+
     return{
       valid:false,
-      reason:
-        "Nie udało się odczytać quests.json."
+      missingFile:false,
+      damaged:true
     };
   }
 
@@ -477,43 +307,16 @@ function checkData(){
   ){
     return{
       valid:false,
-      reason:
-        "quests.json nie zawiera prawidłowej tablicy."
-    };
-  }
-
-  let settings;
-
-  try{
-    settings=
-      readJson(
-        SETTINGS_FILE,
-        null
-      );
-  }catch(error){
-    return{
-      valid:false,
-      reason:
-        "Nie udało się odczytać settings.json."
-    };
-  }
-
-  if(
-    !settings||
-    typeof settings!=="object"||
-    Array.isArray(settings)
-  ){
-    return{
-      valid:false,
-      reason:
-        "settings.json zawiera nieprawidłowe dane."
+      missingFile:false,
+      damaged:true
     };
   }
 
   return{
     valid:true,
-    reason:null,
-    questions:
+    missingFile:false,
+    damaged:false,
+    count:
       questions.length
   };
 }
@@ -525,35 +328,109 @@ function checkData(){
 async function runBootloader(
   mainWindow
 ){
+  console.log(
+    "[Bootloader] Rozpoczynanie sprawdzania programu"
+  );
+
   const result={
     success:false,
-
-    executable:null,
-    version:null,
-    application:null,
-    data:null
+    storage:null,
+    configuration:null,
+    questions:null
   };
 
-  /* EXECUTABLE */
-
   sendStep(
     mainWindow,
-    "executable",
-    "loading",
-    "Sprawdzanie pliku wykonywalnego"
+    {
+      name:"storage",
+      state:"loading",
+      text:
+        "Sprawdzanie miejsca przechowywania danych",
+      status:
+        "Sprawdzanie danych programu..."
+    }
   );
 
-  result.executable=
-    checkExecutable();
+  const initialized=
+    initializeDataStorage();
+
+  console.log(
+    "[Bootloader] Inicjalizacja magazynu:",
+    initialized
+  );
+
+  result.storage={
+    initialization:
+      initialized,
+    ...checkStorage()
+  };
 
   if(
-    !result.executable.valid
+    !result.storage.valid
   ){
+    const remembered=
+      storage.getRememberedStorage();
+
+    const unavailable=
+      Boolean(
+        remembered&&
+        (
+          !storage.storageExists(
+            remembered
+          )||
+          !storage.storageAccessible(
+            remembered
+          )
+        )
+      );
+
     sendStep(
       mainWindow,
-      "executable",
-      "error",
-      result.executable.reason
+      {
+        type:"action",
+        name:"storage",
+        state:"error",
+        title:
+          unavailable
+            ? "Nie znaleziono danych programu"
+            : "Wybierz miejsce przechowywania danych",
+        status:
+          unavailable
+            ? "Wcześniej używane miejsce przechowywania danych jest niedostępne."
+            : "Program wymaga miejsca do przechowywania danych.",
+        description:
+          unavailable
+            ? "Podłącz ponownie nośnik z danymi lub wybierz inne miejsce przechowywania."
+            : "Nie znaleziono miejsca przechowywania danych programu. Możesz utworzyć je w domyślnej lokalizacji lub wskazać inne miejsce.",
+        actions:
+          unavailable
+            ? [
+                {
+                  id:"storage:retry",
+                  label:"Spróbuj ponownie",
+                  primary:true
+                },
+                {
+                  id:"storage:select",
+                  label:"Wybierz inne miejsce"
+                },
+                {
+                  id:"storage:create-default",
+                  label:"Utwórz nowe w Dokumentach"
+                }
+              ]
+            : [
+                {
+                  id:"storage:create-default",
+                  label:"Utwórz w Dokumentach",
+                  primary:true
+                },
+                {
+                  id:"storage:select",
+                  label:"Wybierz inne miejsce"
+                }
+              ]
+      }
     );
 
     return result;
@@ -561,31 +438,71 @@ async function runBootloader(
 
   sendStep(
     mainWindow,
-    "executable",
-    "success",
-    "Plik wykonywalny poprawny"
+    {
+      name:"storage",
+      state:"success",
+      text:
+        "Miejsce przechowywania danych jest dostępne",
+      status:
+        "Sprawdzanie konfiguracji..."
+    }
   );
-
-  /* APPLICATION */
 
   sendStep(
     mainWindow,
-    "application",
-    "loading",
-    "Sprawdzanie aplikacji"
+    {
+      name:"configuration",
+      state:"loading",
+      text:
+        "Sprawdzanie konfiguracji"
+    }
   );
 
-  result.application=
-    checkApplication();
+  result.configuration=
+    checkConfiguration();
+
+  console.log(
+    "[Bootloader] Stan konfiguracji:",
+    result.configuration
+  );
 
   if(
-    !result.application.valid
+    !result.configuration.valid
   ){
     sendStep(
       mainWindow,
-      "application",
-      "error",
-      result.application.reason
+      {
+        type:"action",
+        name:"configuration",
+        state:"error",
+        title:
+          "Wymagane uzupełnienie danych",
+        status:
+          "Konfiguracja programu wymaga uzupełnienia.",
+        description:
+          result.configuration.damaged
+            ? "Nie udało się poprawnie odczytać konfiguracji programu. Aby kontynuować, należy ją naprawić."
+            : result.configuration.missingFile
+              ? "Nie znaleziono wymaganej konfiguracji programu. Aby kontynuować, należy ją utworzyć."
+              : "Program wykrył brakujące elementy konfiguracji. Aby kontynuować, należy je uzupełnić.",
+        actions:[
+          {
+            id:
+              result.configuration.damaged
+                ? "configuration:repair"
+                : result.configuration.missingFile
+                  ? "configuration:create"
+                  : "configuration:complete",
+            label:
+              result.configuration.damaged
+                ? "Napraw konfigurację"
+                : result.configuration.missingFile
+                  ? "Utwórz konfigurację"
+                  : "Uzupełnij",
+            primary:true
+          }
+        ]
+      }
     );
 
     return result;
@@ -593,31 +510,65 @@ async function runBootloader(
 
   sendStep(
     mainWindow,
-    "application",
-    "success",
-    "Aplikacja poprawna"
+    {
+      name:"configuration",
+      state:"success",
+      text:
+        "Konfiguracja jest gotowa",
+      status:
+        "Sprawdzanie bazy pytań..."
+    }
   );
-
-  /* DATA */
 
   sendStep(
     mainWindow,
-    "data",
-    "loading",
-    "Sprawdzanie danych"
+    {
+      name:"questions",
+      state:"loading",
+      text:
+        "Sprawdzanie bazy pytań"
+    }
   );
 
-  result.data=
-    checkData();
+  result.questions=
+    checkQuestions();
+
+  console.log(
+    "[Bootloader] Stan bazy pytań:",
+    result.questions
+  );
 
   if(
-    !result.data.valid
+    !result.questions.valid
   ){
     sendStep(
       mainWindow,
-      "data",
-      "error",
-      result.data.reason
+      {
+        type:"action",
+        name:"questions",
+        state:"error",
+        title:
+          "Wymagane uzupełnienie danych",
+        status:
+          "Baza pytań wymaga przygotowania.",
+        description:
+          result.questions.damaged
+            ? "Nie udało się poprawnie odczytać bazy pytań. Aby kontynuować, należy ją naprawić."
+            : "Nie znaleziono wymaganej bazy pytań. Program może utworzyć brakujący plik.",
+        actions:[
+          {
+            id:
+              result.questions.damaged
+                ? "questions:repair"
+                : "questions:create",
+            label:
+              result.questions.damaged
+                ? "Napraw bazę pytań"
+                : "Utwórz bazę pytań",
+            primary:true
+          }
+        ]
+      }
     );
 
     return result;
@@ -625,37 +576,60 @@ async function runBootloader(
 
   sendStep(
     mainWindow,
-    "data",
-    "success",
-    "Dane aplikacji poprawne"
+    {
+      name:"questions",
+      state:"success",
+      text:
+        "Baza pytań jest gotowa",
+      status:
+        "Przygotowywanie programu..."
+    }
   );
 
-  /* VERSION */
-
-  result.version=
-    await checkVersion();
-
-  if(
-    !result.version.valid
-  ){
-    return result;
-  }
+  sendStep(
+    mainWindow,
+    {
+      name:"ready",
+      state:"loading",
+      text:
+        "Przygotowywanie programu"
+    }
+  );
 
   result.success=true;
+
+  sendStep(
+    mainWindow,
+    {
+      name:"ready",
+      state:"success",
+      text:
+        "Program jest gotowy",
+      title:
+        "Gotowe",
+      status:
+        "Program jest gotowy do uruchomienia."
+    }
+  );
+
+  console.log(
+    "[Bootloader] Sprawdzanie zakończone pomyślnie"
+  );
 
   return result;
 }
 
 /* =========================
-   PUBLIC API
+   EXPORTS
 ========================= */
 
 module.exports={
-  getExecutableInfo,
-  checkExecutable,
-  getCurrentVersion,
-  checkVersion,
-  checkApplication,
-  checkData,
+  isObject,
+  getMissingSettings,
+  sendStep,
+  initializeDataStorage,
+  checkStorage,
+  checkConfiguration,
+  checkQuestions,
   runBootloader
 };

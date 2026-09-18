@@ -1,45 +1,106 @@
 <!doctype html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Ładowanie - Milionerzy</title>
-    <link rel="stylesheet" href="../public/css/style.css" />
-    <link rel="stylesheet" href="../public/css/design.css" />
-  </head>
-  <body>
-    <main class="page loader-page">
-      <section class="loader">
-        <span class="eyebrow">MILIONERZY</span>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-        <h1 class="page-title">Ładowanie</h1>
+  <title>Ładowanie - Milionerzy</title>
 
-        <p class="page-description" id="loader-status">
-          Przygotowywanie aplikacji...
-        </p>
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="../public/css/design.css">
+</head>
 
-        <div class="loader-spinner" id="loader-spinner" aria-hidden="true"></div>
+<body>
+  <main class="page loader-page">
+    <section class="loader">
+      <span class="eyebrow">
+        MILIONERZY
+      </span>
 
-        <div class="loader-checks" id="loader-checks">
-          <div class="loader-check" data-check="executable">
-            <span class="loader-check-icon">○</span>
-            <span class="loader-check-text">Sprawdzanie pliku wykonywalnego</span>
-          </div>
+      <h1 id="loaderTitle" class="page-title">
+        Ładowanie
+      </h1>
 
-          <div class="loader-check" data-check="application">
-            <span class="loader-check-icon">○</span>
-            <span class="loader-check-text">Sprawdzanie aplikacji</span>
-          </div>
+      <p id="loaderStatus" class="page-description">
+        Przygotowywanie aplikacji...
+      </p>
 
-          <div class="loader-check" data-check="data">
-            <span class="loader-check-icon">○</span>
-            <span class="loader-check-text">Sprawdzanie danych</span>
-          </div>
+      <div
+        id="loaderSpinner"
+        class="loader-spinner"
+        aria-hidden="true"
+      ></div>
+
+      <div id="loaderChecks" class="loader-checks">
+        <div class="loader-check" data-check="storage">
+          <span class="loader-check-icon">○</span>
+          <span class="loader-check-text">
+            Sprawdzanie miejsca przechowywania danych
+          </span>
         </div>
-      </section>
-    </main>
 
-    <script src="../public/js/design.js"></script>
-    <script src="../public/js/loader.js"></script>
-  </body>
+        <div class="loader-check" data-check="configuration">
+          <span class="loader-check-icon">○</span>
+          <span class="loader-check-text">
+            Sprawdzanie konfiguracji
+          </span>
+        </div>
+
+        <div class="loader-check" data-check="questions">
+          <span class="loader-check-icon">○</span>
+          <span class="loader-check-text">
+            Sprawdzanie bazy pytań
+          </span>
+        </div>
+
+        <div class="loader-check" data-check="ready">
+          <span class="loader-check-icon">○</span>
+          <span class="loader-check-text">
+            Przygotowywanie programu
+          </span>
+        </div>
+      </div>
+
+      <div
+        id="loaderAction"
+        class="modal-backdrop"
+        hidden
+      >
+        <section
+          class="modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="loaderActionTitle"
+          aria-describedby="loaderActionDescription"
+        >
+          <div class="modal-header">
+            <div>
+              <span class="eyebrow">
+                MILIONERZY
+              </span>
+
+              <h2 id="loaderActionTitle">
+                Wymagane działanie
+              </h2>
+            </div>
+          </div>
+
+          <p
+            id="loaderActionDescription"
+            class="page-description"
+          ></p>
+
+          <div
+            id="loaderActionButtons"
+            class="modal-actions"
+          ></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="../public/js/design.js"></script>
+  <script src="../public/js/loader.js"></script>
+  <script src="../public/js/system/exit-menu.js"></script>
+</body>
 </html>

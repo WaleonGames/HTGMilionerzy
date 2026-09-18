@@ -1,11 +1,17 @@
 const {
   app,
   BrowserWindow,
+  dialog,
   screen:electronScreen
 }=require("electron");
 
+const fs=require("fs");
 const path=require("path");
 const crypto=require("crypto");
+
+const {
+  spawn
+}=require("child_process");
 
 const {
   createToolbar
@@ -26,34 +32,16 @@ const {
 );
 
 const {
-  ensureDirectory,
-  ensureFile,
-  readJson,
-  writeJson
+  ensureFile
 }=require("./utils/file");
+
+const storage=
+  require("./utils/storage");
 
 const {
   getDisplays,
   getPrimaryDisplay
 }=require("./utils/screen");
-
-const DATA_DIR=
-  path.join(
-    __dirname,
-    "data"
-  );
-
-const QUESTIONS_FILE=
-  path.join(
-    DATA_DIR,
-    "quests.json"
-  );
-
-const SETTINGS_FILE=
-  path.join(
-    DATA_DIR,
-    "settings.json"
-  );
 
 /* =========================
    STATE
@@ -62,6 +50,9 @@ const SETTINGS_FILE=
 let mainWindow=null;
 let controlsWindow=null;
 let gameState=null;
+
+let allowApplicationQuit=false;
+let cleanupLocalDataOnQuit=false;
 
 /* =========================
    HELPERS
@@ -187,23 +178,225 @@ function normalizeAppearanceSettings(
 }
 
 /* =========================
-   DATA
+   DATA / STORAGE
 ========================= */
 
-function ensureDataFiles(){
-  ensureDirectory(
-    DATA_DIR
+function completeConfiguration(){
+  const existing=
+    storage.readSettings(
+      {}
+    );
+
+  const completed=
+    structuredClone(
+      DEFAULT_SETTINGS
+    );
+
+  deepMerge(
+    completed,
+    existing&&
+    typeof existing==="object"&&
+    !Array.isArray(existing)
+      ? existing
+      : {}
   );
 
-  ensureFile(
-    QUESTIONS_FILE,
-    []
+  storage.writeSettings(
+    completed
   );
 
-  ensureFile(
-    SETTINGS_FILE,
-    DEFAULT_SETTINGS
+  return completed;
+}
+
+async function handleBootloaderResult(
+  bootResult
+){
+  if(
+    !bootResult||
+    !bootResult.success
+  ){
+    return bootResult||{
+      success:false
+    };
+  }
+
+  if(
+    !mainWindow||
+    mainWindow.isDestroyed()
+  ){
+    return bootResult;
+  }
+
+  console.log(
+    "[App] Bootloader zakończony. Otwieranie menu głównego."
   );
+
+  await mainWindow.loadFile(
+    path.join(
+      __dirname,
+      "views",
+      "index.html"
+    )
+  );
+
+  return bootResult;
+}
+
+async function rerunBootloader(){
+  if(
+    !mainWindow||
+    mainWindow.isDestroyed()
+  ){
+    return{
+      success:false
+    };
+  }
+
+  const bootResult=
+    await runBootloader(
+      mainWindow
+    );
+
+  return handleBootloaderResult(
+    bootResult
+  );
+}
+
+async function handleLoaderAction(
+  actionId
+){
+  if(
+    !mainWindow||
+    mainWindow.isDestroyed()
+  ){
+    return{
+      success:false
+    };
+  }
+
+  try{
+    switch(actionId){
+      case "storage:create-default":{
+        storage.createDefaultStorage();
+
+        return rerunBootloader();
+      }
+
+      case "storage:select":{
+        const result=
+          await dialog.showOpenDialog(
+            mainWindow,
+            {
+              title:
+                "Wybierz miejsce przechowywania danych",
+              buttonLabel:
+                "Wybierz folder",
+              properties:[
+                "openDirectory",
+                "createDirectory"
+              ]
+            }
+          );
+
+        if(
+          result.canceled||
+          !result.filePaths?.[0]
+        ){
+          return{
+            success:false,
+            canceled:true
+          };
+        }
+
+        const selectedDirectory=
+          result.filePaths[0];
+
+        const finalDirectory=
+          path.basename(
+            selectedDirectory
+          ).toLowerCase()===
+          storage.STORAGE_DIRECTORY_NAME
+            .toLowerCase()
+            ? selectedDirectory
+            : path.join(
+                selectedDirectory,
+                storage.STORAGE_DIRECTORY_NAME
+              );
+
+        storage.createStorage(
+          finalDirectory
+        );
+
+        return rerunBootloader();
+      }
+
+      case "storage:retry":{
+        storage.clearDataDirectory();
+
+        storage.loadRememberedStorage();
+
+        return rerunBootloader();
+      }
+
+      case "configuration:create":{
+        ensureFile(
+          storage.getSettingsFile(),
+          structuredClone(
+            DEFAULT_SETTINGS
+          )
+        );
+
+        return rerunBootloader();
+      }
+
+      case "configuration:complete":{
+        completeConfiguration();
+
+        return rerunBootloader();
+      }
+
+      case "configuration:repair":{
+        storage.writeSettings(
+          structuredClone(
+            DEFAULT_SETTINGS
+          )
+        );
+
+        return rerunBootloader();
+      }
+
+      case "questions:create":{
+        ensureFile(
+          storage.getQuestionsFile(),
+          []
+        );
+
+        return rerunBootloader();
+      }
+
+      case "questions:repair":{
+        storage.writeQuestions(
+          []
+        );
+
+        return rerunBootloader();
+      }
+
+      default:
+        return{
+          success:false
+        };
+    }
+  }catch(error){
+    console.error(
+      "[Loader] Nie udało się wykonać operacji:",
+      error
+    );
+
+    return{
+      success:false
+    };
+  }
 }
 
 /* =========================
@@ -211,26 +404,15 @@ function ensureDataFiles(){
 ========================= */
 
 function readQuestions(){
-  ensureDataFiles();
-
-  const questions=
-    readJson(
-      QUESTIONS_FILE,
-      []
-    );
-
-  return Array.isArray(questions)
-    ? questions
-    : [];
+  return storage.readQuestions(
+    []
+  );
 }
 
 function saveQuestions(
   questions
 ){
-  ensureDataFiles();
-
-  return writeJson(
-    QUESTIONS_FILE,
+  return storage.writeQuestions(
     questions
   );
 }
@@ -432,11 +614,8 @@ function deleteQuestion(
 ========================= */
 
 function readSettings(){
-  ensureDataFiles();
-
   const settings=
-    readJson(
-      SETTINGS_FILE,
+    storage.readSettings(
       {}
     );
 
@@ -513,8 +692,6 @@ function readSettings(){
 function saveSettings(
   settings
 ){
-  ensureDataFiles();
-
   const normalized=
     structuredClone(
       DEFAULT_SETTINGS
@@ -582,8 +759,7 @@ function saveSettings(
     settings?.dataStorage||{}
   );
 
-  writeJson(
-    SETTINGS_FILE,
+  storage.writeSettings(
     normalized
   );
 
@@ -591,10 +767,7 @@ function saveSettings(
 }
 
 function resetSettings(){
-  ensureDataFiles();
-
-  writeJson(
-    SETTINGS_FILE,
+  storage.writeSettings(
     structuredClone(
       DEFAULT_SETTINGS
     )
@@ -656,12 +829,246 @@ function handleMainWindowNavigation(
 }
 
 /* =========================
+   WINDOWS CLEANUP
+========================= */
+
+function scheduleWindowsLocalDataCleanup(){
+  if(process.platform!=="win32"){
+    return false;
+  }
+
+  const localDirectory=
+    storage.getLocalApplicationDirectory();
+
+  if(!localDirectory){
+    throw new Error(
+      "Nie udało się ustalić katalogu danych lokalnych."
+    );
+  }
+
+  const parentPid=
+    process.pid;
+
+  const cleanerFile=
+    path.join(
+      app.getPath("temp"),
+      `HTGMilionerzy-cleanup-${parentPid}.cmd`
+    );
+
+  const reportFile=
+    path.join(
+      app.getPath("documents"),
+      "HTGMilionerzy-cleanup-error.txt"
+    );
+
+  console.log(
+    "[App][Cleanup] PID:",
+    parentPid
+  );
+
+  console.log(
+    "[App][Cleanup] Katalog:",
+    localDirectory
+  );
+
+  console.log(
+    "[App][Cleanup] Cleaner:",
+    cleanerFile
+  );
+
+  const script=[
+    "@echo off",
+    "setlocal EnableExtensions",
+    "",
+    `set "TARGET=${localDirectory}"`,
+    `set "REPORT=${reportFile}"`,
+    "",
+    "timeout /t 4 /nobreak >nul",
+    "",
+    "set ATTEMPT=0",
+    "",
+    ":DELETE_RETRY",
+    "set /a ATTEMPT+=1",
+    "",
+    "if exist \"%TARGET%\" (",
+    "  rmdir /S /Q \"%TARGET%\" >nul 2>&1",
+    ")",
+    "",
+    "if not exist \"%TARGET%\" goto SUCCESS",
+    "",
+    "if %ATTEMPT% GEQ 15 goto FAILED",
+    "",
+    "timeout /t 1 /nobreak >nul",
+    "goto DELETE_RETRY",
+    "",
+    ":SUCCESS",
+    "del \"%REPORT%\" >nul 2>&1",
+    "del \"%~f0\" >nul 2>&1",
+    "exit /b 0",
+    "",
+    ":FAILED",
+    "(",
+    "  echo HTGMilionerzy - blad czyszczenia danych lokalnych",
+    "  echo.",
+    "  echo Data: %DATE% %TIME%",
+    "  echo System: win32",
+    "  echo Katalog: %TARGET%",
+    "  echo Liczba prob: %ATTEMPT%",
+    "  echo.",
+    "  echo Nie udalo sie usunac lokalnych danych programu.",
+    ") > \"%REPORT%\"",
+    "",
+    "start \"HTGMilionerzy - Cleanup Error\" cmd /k type \"%REPORT%\"",
+    "",
+    "del \"%~f0\" >nul 2>&1",
+    "exit /b 1"
+  ].join("\r\n");
+
+  fs.writeFileSync(
+    cleanerFile,
+    script,
+    "utf8"
+  );
+
+  if(!fs.existsSync(cleanerFile)){
+    throw new Error(
+      "Nie udało się utworzyć skryptu czyszczącego."
+    );
+  }
+
+  console.log(
+    "[App][Cleanup] Utworzono skrypt czyszczący"
+  );
+
+  const cleaner=
+    spawn(
+      cleanerFile,
+      [],
+      {
+        detached:true,
+        windowsHide:true,
+        stdio:"ignore",
+        shell:true
+      }
+    );
+
+  cleaner.unref();
+
+  console.log(
+    "[App][Cleanup] Cleaner uruchomiony bezpośrednio:",
+    cleanerFile
+  );
+
+  return true;
+}
+
+/* =========================
+   APPLICATION EXIT
+========================= */
+
+function requestApplicationQuit(){
+  if(
+    !mainWindow||
+    mainWindow.isDestroyed()
+  ){
+    return false;
+  }
+
+  console.log(
+    "[App] Żądanie otwarcia menu wyjścia"
+  );
+
+  mainWindow
+    .webContents
+    .send(
+      "app:exit-requested"
+    );
+
+  return true;
+}
+
+async function cleanupAndQuitApplication(){
+  console.log(
+    "[App] Zaplanowano usunięcie lokalnych danych przy zamknięciu"
+  );
+
+  allowApplicationQuit=true;
+
+  /*
+   * Windows nie pozwala niezawodnie
+   * usunąć aktywnego userData z procesu
+   * Electron, który sam z niego korzysta.
+   */
+
+  if(process.platform==="win32"){
+    try{
+      scheduleWindowsLocalDataCleanup();
+
+      console.log(
+        "[App] Windows - zewnętrzne czyszczenie przygotowane"
+      );
+
+      app.quit();
+
+      return{
+        success:true
+      };
+    }catch(error){
+      console.error(
+        "[App] Windows - nie udało się przygotować czyszczenia:",
+        error
+      );
+
+      allowApplicationQuit=false;
+
+      return{
+        success:false,
+        error:
+          error?.message||
+          "Nie udało się przygotować czyszczenia."
+      };
+    }
+  }
+
+  /*
+   * Linux:
+   * zachowujemy obecny działający system.
+   */
+
+  cleanupLocalDataOnQuit=true;
+
+  app.quit();
+
+  return{
+    success:true
+  };
+}
+
+function quitApplication(){
+  console.log(
+    "[App] Potwierdzono zamknięcie programu"
+  );
+
+  allowApplicationQuit=true;
+
+  app.quit();
+
+  return true;
+}
+
+/* =========================
    MAIN WINDOW
 ========================= */
 
 function createWindow(){
   const settings=
-    readSettings();
+    storage.hasDataDirectory()&&
+    storage.storageExists()&&
+    storage.storageAccessible()
+      ? readSettings()
+      : structuredClone(
+          DEFAULT_SETTINGS
+        );
 
   const screenSettings=
     settings.screen||
@@ -840,32 +1247,32 @@ function createWindow(){
     )
   );
 
-  mainWindow.webContents.once(
-    "did-finish-load",
-    ()=>{
-      setTimeout(
-        ()=>{
-          if(
-            mainWindow &&
-            !mainWindow.isDestroyed()
-          ){
-            mainWindow.loadFile(
-              path.join(
-                __dirname,
-                "views/index.html"
-              )
-            );
-          }
-        },
-        2000
-      );
-    }
-  );
 
   mainWindow.once(
     "ready-to-show",
     ()=>{
       mainWindow.show();
+    }
+  );
+
+  mainWindow.on(
+    "close",
+    event=>{
+      if(allowApplicationQuit){
+        console.log(
+          "[App] Zamknięcie okna dozwolone"
+        );
+
+        return;
+      }
+
+      event.preventDefault();
+
+      console.log(
+        "[App] Przechwycono próbę zamknięcia głównego okna"
+      );
+
+      requestApplicationQuit();
     }
   );
 
@@ -1063,7 +1470,12 @@ function registerApplicationIpc(){
     },
 
     getDisplays,
-    getPrimaryDisplay
+    getPrimaryDisplay,
+
+    handleLoaderAction,
+
+    quitApplication,
+    cleanupAndQuitApplication
   });
 }
 
@@ -1073,8 +1485,6 @@ function registerApplicationIpc(){
 
 app.whenReady().then(
   async()=>{
-    ensureDataFiles();
-
     registerApplicationIpc();
 
     createWindow();
@@ -1108,22 +1518,8 @@ app.whenReady().then(
             return;
           }
 
-          setTimeout(
-            ()=>{
-              if(
-                mainWindow&&
-                !mainWindow.isDestroyed()
-              ){
-                mainWindow.loadFile(
-                  path.join(
-                    __dirname,
-                    "views",
-                    "index.html"
-                  )
-                );
-              }
-            },
-            2000
+          await handleBootloaderResult(
+            bootResult
           );
         }
       }
@@ -1146,6 +1542,42 @@ app.whenReady().then(
         }
       }
     );
+  }
+);
+
+app.on(
+  "will-quit",
+  ()=>{
+    /*
+     * Windows korzysta z osobnego procesu,
+     * który wykona czyszczenie dopiero po
+     * zakończeniu Electrona.
+     */
+
+    if(process.platform==="win32"){
+      return;
+    }
+
+    if(!cleanupLocalDataOnQuit){
+      return;
+    }
+
+    console.log(
+      "[App] Usuwanie lokalnych danych programu"
+    );
+
+    try{
+      storage.deleteLocalApplicationData();
+
+      console.log(
+        "[App] Lokalne dane programu zostały usunięte"
+      );
+    }catch(error){
+      console.error(
+        "[App] Błąd usuwania lokalnych danych:",
+        error
+      );
+    }
   }
 );
 

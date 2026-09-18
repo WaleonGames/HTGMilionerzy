@@ -966,48 +966,138 @@ input[type="color"] {
    MODAL
 ========================= */
 
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
 }
 
-.modal-backdrop[hidden] {
-  display: none;
+.modal-backdrop[hidden]{
+  display:none;
 }
 
-.modal {
-  width: min(580px, 100%);
-  max-height: calc(100vh - 32px);
-  overflow: auto;
-  padding: 18px;
-  border: 1px solid;
-  border-radius: 13px;
+.modal{
+  width:min(580px,100%);
+  max-height:calc(100vh - 40px);
+
+  overflow:auto;
+
+  padding:24px 20px 18px;
+
+  border:1px solid;
+  border-radius:14px;
 }
 
-.modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
+/* =========================
+   MODAL HEADER
+========================= */
+
+.modal-header{
+  position:relative;
+
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+
+  margin-bottom:18px;
 }
 
-.modal-header h2 {
-  margin-top: 3px;
-  font-size: 22px;
+.modal-header-main{
+  width:100%;
+  padding:0 48px;
+
+  text-align:center;
 }
 
-.modal-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 9px;
-  margin-top: 18px;
+.modal-header-main .eyebrow{
+  text-align:center;
+}
+
+.modal-header-main h2{
+  text-align:center;
+}
+
+.modal-header > .button-icon{
+  position:absolute;
+  top:0;
+  right:0;
+}
+
+.modal-header > div{
+  width:100%;
+  min-width:0;
+}
+
+.modal-header .eyebrow{
+  margin-bottom:8px;
+  text-align:center;
+}
+
+.modal-header h2{
+  margin:0;
+
+  font-size:22px;
+  font-weight:800;
+  line-height:1.25;
+
+  text-align:center;
+}
+
+.modal-header .page-description{
+  margin:8px auto 0;
+
+  font-size:14px;
+  line-height:1.5;
+
+  text-align:center;
+}
+
+/* =========================
+   MODAL CONTENT
+========================= */
+
+.modal-content{
+  min-width:0;
+}
+
+/* =========================
+   MODAL ACTIONS
+========================= */
+
+.modal-actions{
+  display:flex;
+  align-items:stretch;
+  justify-content:flex-end;
+  gap:9px;
+
+  margin-top:18px;
+}
+
+.modal-actions .button{
+  min-width:0;
+  min-height:40px;
+}
+
+/* 3 przyciski */
+
+.modal-actions:has(.button:nth-child(3)){
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.modal-actions:has(.button:nth-child(3)) .button{
+  width:100%;
+  padding:7px 12px;
+
+  line-height:1.05;
+  text-align:center;
+  white-space:normal;
 }
 
 /* =========================
@@ -1608,6 +1698,25 @@ select {
   .question-meta {
     width: 100%;
   }
+  
+  .modal-backdrop{
+    padding:12px;
+  }
+
+  .modal{
+    max-height:calc(100vh - 24px);
+    padding:20px 16px 16px;
+  }
+
+  .modal-header h2{
+    font-size:20px;
+  }
+
+  .modal-actions,
+  .modal-actions:has(.button:nth-child(3)){
+    display:flex;
+    flex-direction:column;
+  }
 
   .modal-actions,
   .form-actions {
@@ -2101,3 +2210,25 @@ select {
   }
 }
 
+
+.exit-cleanup-info{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+
+  padding:12px 14px;
+
+  border:1px solid;
+  border-radius:10px;
+
+  font-size:12px;
+  line-height:1.5;
+}
+
+.exit-cleanup-info strong{
+  font-size:13px;
+}
+
+.exit-cleanup-info p{
+  margin:0;
+}

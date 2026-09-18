@@ -964,21 +964,6 @@ const gameEndAnimationDuration=
   );
 
 /* =========================
-   DATA STORAGE
-========================= */
-
-const autoSave=
-  document.getElementById("autoSave");
-
-const autoBackup=
-  document.getElementById("autoBackup");
-
-const backupInterval=
-  document.getElementById(
-    "backupInterval"
-  );
-
-/* =========================
    SHORTCUTS
 ========================= */
 
@@ -3156,22 +3141,7 @@ function collectSettings(){
     },
 
     shortcuts:
-      collectShortcutSettings(),
-
-    dataStorage:{
-      autoSave:
-        autoSave.checked,
-
-      autoBackup:
-        autoBackup.checked,
-
-      backupInterval:
-        normalizeNumber(
-          backupInterval.value,
-          30,
-          1
-        )
-    }
+      collectShortcutSettings()
   };
 }
 
@@ -3587,9 +3557,6 @@ function applySettings(settings){
   const shortcuts=
     settings?.shortcuts||{};
 
-  const dataStorage=
-    settings?.dataStorage||{};
-
   /* GENERAL */
 
   gameTitle.value=
@@ -3751,19 +3718,6 @@ function applySettings(settings){
     shortcuts
   );
 
-  /* DATA STORAGE */
-
-  autoSave.checked=
-    dataStorage.autoSave??
-    true;
-
-  autoBackup.checked=
-    dataStorage.autoBackup??
-    false;
-
-  backupInterval.value=
-    dataStorage.backupInterval??
-    30;
 }
 
 /* =========================

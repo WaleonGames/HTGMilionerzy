@@ -315,7 +315,26 @@ exitButton
   ?.addEventListener(
     "click",
     ()=>{
-      window.close();
+      console.log(
+        "[Main] Otwieranie menu wyjścia"
+      );
+
+      const exitMenu=
+        window.MillionaireExitMenu;
+
+      if(
+        !exitMenu||
+        typeof exitMenu.open!==
+        "function"
+      ){
+        console.error(
+          "[Main] MillionaireExitMenu nie jest dostępne"
+        );
+
+        return;
+      }
+
+      exitMenu.open();
     }
   );
 
